@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "qr-menu-database"
+  },
+  "targets": {
+    "qr-menu-database": {
+      "hosting": {
+        "superadmin": [
+          "qr-menu-superadmin"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
