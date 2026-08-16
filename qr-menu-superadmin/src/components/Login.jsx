@@ -10,46 +10,46 @@ import {inputStyle} from '@/';
 
 const Login = () => {
     const [email, setEmail] = useState('');
-    const [sifre, setSifre] = useState('');
-    const [hata, setHata] = useState('');
-    const [bilgi, setBilgi] = useState('');
-    const [yukleniyor, setYukleniyor] = useState(false);
-    const [sifreGoster, setSifreGoster] = useState(false);
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [info, setInfo] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const girisYap = async (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        setYukleniyor(true);
-        setHata('');
-        setBilgi('');
+        setLoading(true);
+        setError('');
+        setInfo('');
         try {
             await setPersistence(auth, browserSessionPersistence);
-            await signInWithEmailAndPassword(auth, email, sifre);
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (err) {
-            setHata('Hatalı e-posta veya şifre!');
-            setYukleniyor(false);
-            setSifre('');
+            setError('Hatalı e-posta veya şifre!');
+            setLoading(false);
+            setPassword('');
         }
     };
 
-    const sifremiUnuttum = async () => {
+    const handleForgotPassword = async () => {
         if (!email)
-            return setHata('Lütfen önce e-posta adresinizi kutuya yazın.');
+            return setError('Lütfen önce e-posta adresinizi kutuya yazın.');
         try {
-            setYukleniyor(true);
-            setHata('');
-            setBilgi('');
+            setLoading(true);
+            setError('');
+            setInfo('');
             await sendPasswordResetEmail(auth, email);
-            setBilgi(
+            setInfo(
                 'Şifre sıfırlama linki e-postanıza gönderildi! Gelen kutunuzu kontrol edin.'
             );
         } catch (err) {
-            setHata('Şifre sıfırlama e-postası gönderilemedi.');
+            setError('Şifre sıfırlama e-postası gönderilemedi.');
         } finally {
-            setYukleniyor(false);
+            setLoading(false);
         }
     };
 
-    const labelStili = {
+    const labelStyle = {
         display: 'block',
         marginBottom: '8px',
         fontSize: 'var(--font-caption)',
@@ -139,7 +139,7 @@ const Login = () => {
                     </p>
                 </div>
 
-                {hata && (
+                {error && (
                     <div
                         style={{
                             color: 'var(--danger)',
@@ -168,11 +168,11 @@ const Login = () => {
                             <line x1="12" y1="8" x2="12" y2="12"></line>
                             <line x1="12" y1="16" x2="12.01" y2="16"></line>
                         </svg>
-                        {hata}
+                        {error}
                     </div>
                 )}
 
-                {bilgi && (
+                {info && (
                     <div
                         style={{
                             color: 'var(--success)',
@@ -200,12 +200,12 @@ const Login = () => {
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
-                        {bilgi}
+                        {info}
                     </div>
                 )}
 
                 <form
-                    onSubmit={girisYap}
+                    onSubmit={handleSignIn}
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -213,7 +213,7 @@ const Login = () => {
                     }}
                 >
                     <div>
-                        <label style={labelStili}>E-posta</label>
+                        <label style={labelStyle}>E-posta</label>
                         <input
                             type="email"
                             required
@@ -243,13 +243,13 @@ const Login = () => {
                                 marginBottom: '8px',
                             }}
                         >
-                            <label style={{...labelStili, marginBottom: 0}}>
+                            <label style={{...labelStyle, marginBottom: 0}}>
                                 Şifre
                             </label>
                             <button
                                 type="button"
-                                onClick={sifremiUnuttum}
-                                disabled={yukleniyor}
+                                onClick={handleForgotPassword}
+                                disabled={loading}
                                 style={{
                                     background: 'none',
                                     border: 'none',
@@ -279,16 +279,16 @@ const Login = () => {
                             }}
                         >
                             <input
-                                type={sifreGoster ? 'text' : 'password'}
+                                type={showPassword ? 'text' : 'password'}
                                 required
                                 placeholder="••••••••"
-                                value={sifre}
-                                onChange={(e) => setSifre(e.target.value)}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 style={{
                                     ...inputStyle,
                                     // Şifre boşken normal padding, doluyken ikonun metinle çakışmaması için sağa boşluk
                                     paddingRight:
-                                        sifre.length > 0 ? '40px' : '16px',
+                                        password.length > 0 ? '40px' : '16px',
                                     transition:
                                         'border-color 0.2s, padding-right 0.2s',
                                 }}
@@ -303,19 +303,19 @@ const Login = () => {
                             />
 
                             {/* Sadece şifre alanına bir şey yazıldığında ikonu göster */}
-                            {sifre.length > 0 && (
+                            {password.length > 0 && (
                                 <button
                                     type="button"
                                     // Masaüstü için bas-çek olayları
-                                    onMouseDown={() => setSifreGoster(true)}
-                                    onMouseUp={() => setSifreGoster(false)}
-                                    onMouseLeave={() => setSifreGoster(false)}
+                                    onMouseDown={() => setShowPassword(true)}
+                                    onMouseUp={() => setShowPassword(false)}
+                                    onMouseLeave={() => setShowPassword(false)}
                                     // Mobil dokunmatik ekranlar için bas-çek olayları
                                     onTouchStart={(e) => {
                                         e.preventDefault(); // Mobilde metin seçimini veya klavye kaymasını önler
-                                        setSifreGoster(true);
+                                        setShowPassword(true);
                                     }}
-                                    onTouchEnd={() => setSifreGoster(false)}
+                                    onTouchEnd={() => setShowPassword(false)}
                                     title="Şifreyi görmek için basılı tutun"
                                     style={{
                                         position: 'absolute',
@@ -324,7 +324,7 @@ const Login = () => {
                                         border: 'none',
                                         cursor: 'pointer',
                                         // Basılı tutulduğunda rengi canlandır
-                                        color: sifreGoster
+                                        color: showPassword
                                             ? 'var(--primary)'
                                             : 'var(--textMuted)',
                                         display: 'flex',
@@ -338,7 +338,7 @@ const Login = () => {
                                         WebkitTapHighlightColor: 'transparent',
                                     }}
                                 >
-                                    {sifreGoster ? (
+                                    {showPassword ? (
                                         /* Göz Açık İkonu (Basılı tutulurken) */
                                         <svg
                                             width="20"
@@ -385,7 +385,7 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        disabled={yukleniyor}
+                        disabled={loading}
                         style={{
                             padding: '14px',
                             backgroundColor: 'var(--primary)',
@@ -394,23 +394,23 @@ const Login = () => {
                             borderRadius: 'var(--radiusSmall)',
                             fontWeight: 'var(--font-semibold)',
                             fontSize: 'var(--font-body)',
-                            cursor: yukleniyor ? 'wait' : 'pointer',
+                            cursor: loading ? 'wait' : 'pointer',
                             marginTop: '10px',
                             transition: 'background-color 0.2s',
-                            opacity: yukleniyor ? 0.8 : 1,
+                            opacity: loading ? 0.8 : 1,
                         }}
                         onMouseEnter={(e) => {
-                            if (!yukleniyor)
+                            if (!loading)
                                 e.target.style.backgroundColor =
                                     'var(--primaryHover)';
                         }}
                         onMouseLeave={(e) => {
-                            if (!yukleniyor)
+                            if (!loading)
                                 e.target.style.backgroundColor =
                                     'var(--primary)';
                         }}
                     >
-                        {yukleniyor ? 'İşlem Yapılıyor...' : 'Giriş Yap'}
+                        {loading ? 'İşlem Yapılıyor...' : 'Giriş Yap'}
                     </button>
                 </form>
             </div>

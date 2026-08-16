@@ -1,74 +1,74 @@
 import {useState, useEffect} from 'react';
 import {doc, updateDoc} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
-import {resimYukleVeUrlAl, useToast} from '@/';
+import {uploadImageAndGetUrl, useToast} from '@/';
 
-export const useRestaurantSettings = (restoranId, restoranData) => {
+export const useRestaurantSettings = (restaurantId, restaurantData) => {
     const toast = useToast();
-    const [ad, setAd] = useState('');
+    const [name, setName] = useState('');
     const [logo, setLogo] = useState('');
-    const [wifiAgAdi, setWifiAgAdi] = useState('');
-    const [wifiSifre, setWifiSifre] = useState('');
+    const [wifiNetworkName, setWifiNetworkName] = useState('');
+    const [wifiPassword, setWifiPassword] = useState('');
     const [instagram, setInstagram] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
-    const [logoYukleniyor, setLogoYukleniyor] = useState(false);
+    const [isLogoLoading, setIsLogoLoading] = useState(false);
 
     useEffect(() => {
-        if (restoranData) {
-            setAd(restoranData.name || '');
-            setLogo(restoranData.logo || '');
-            setWifiAgAdi(restoranData.wifiAgAdi || '');
-            setWifiSifre(restoranData.wifiSifre || '');
-            setInstagram(restoranData.instagram || '');
-            setWhatsapp(restoranData.whatsapp || '');
+        if (restaurantData) {
+            setName(restaurantData.name || '');
+            setLogo(restaurantData.logo || '');
+            setWifiNetworkName(restaurantData.wifiNetworkName || '');
+            setWifiPassword(restaurantData.wifiPassword || '');
+            setInstagram(restaurantData.instagram || '');
+            setWhatsapp(restaurantData.whatsapp || '');
         }
-    }, [restoranData]);
+    }, [restaurantData]);
 
-    const alaniGuncelle = async (alanAdi, yeniDeger) => {
-        if (restoranData && restoranData[alanAdi] === yeniDeger) return;
+    const updateField = async (fieldName, newValue) => {
+        if (restaurantData && restaurantData[fieldName] === newValue) return;
         try {
-            await updateDoc(doc(db, 'restaurants', restoranId), {
-                [alanAdi]: yeniDeger,
+            await updateDoc(doc(db, 'restaurants', restaurantId), {
+                [fieldName]: newValue,
             });
-            console.log(`${alanAdi} başarıyla güncellendi!`);
+            console.log(`${fieldName} başarıyla güncellendi!`);
         } catch (error) {
             console.error('Güncelleme hatası:', error);
         }
     };
 
-    const logoDosyasiSecildi = async (e) => {
-        const dosya = e.target.files[0];
-        if (dosya) {
-            setLogoYukleniyor(true);
-            const url = await resimYukleVeUrlAl(dosya, () => {});
+    const handleLogoFileSelect = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setIsLogoLoading(true);
+            const url = await uploadImageAndGetUrl(file, () => {});
             if (url) {
                 setLogo(url);
-                await alaniGuncelle('logo', url);
+                await updateField('logo', url);
             } else {
                 toast.error('Logo yüklenirken hata oluştu.');
             }
-            setLogoYukleniyor(false);
+            setIsLogoLoading(false);
         }
     };
 
     return {
         state: {
-            ad,
+            name,
             logo,
-            wifiAgAdi,
-            wifiSifre,
+            wifiNetworkName,
+            wifiPassword,
             instagram,
             whatsapp,
-            logoYukleniyor,
+            isLogoLoading,
         },
         setters: {
-            setAd,
+            setName,
             setLogo,
-            setWifiAgAdi,
-            setWifiSifre,
+            setWifiNetworkName,
+            setWifiPassword,
             setInstagram,
             setWhatsapp,
         },
-        handlers: {alaniGuncelle, logoDosyasiSecildi},
+        handlers: {updateField, handleLogoFileSelect},
     };
 };

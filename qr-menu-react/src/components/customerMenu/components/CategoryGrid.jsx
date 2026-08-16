@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CategoryGrid = ({kategoriler, menu, kategoriyeKaydir}) => {
+const CategoryGrid = ({categories, menu, scrollToCategory}) => {
     return (
         <div
             style={{
@@ -10,17 +10,17 @@ const CategoryGrid = ({kategoriler, menu, kategoriyeKaydir}) => {
                 padding: '20px',
             }}
         >
-            {kategoriler.map((kat) => {
+            {categories.map((category) => {
                 // Sadece içinde ürün olan kategorileri gösteriyoruz
-                const oKategorininYemekleri = menu.filter(
-                    (y) => y.kategoriId === kat.id
+                const categoryItems = menu.filter(
+                    (item) => item.categoryId === category.id
                 );
-                if (oKategorininYemekleri.length === 0) return null;
+                if (categoryItems.length === 0) return null;
 
                 return (
                     <div
-                        key={`grid-${kat.id}`}
-                        onClick={() => kategoriyeKaydir(kat.id)}
+                        key={`grid-${category.id}`}
+                        onClick={() => scrollToCategory(category.id)}
                         style={{
                             backgroundColor: 'var(--surface)',
                             border: '1px solid var(--border)',
@@ -46,10 +46,10 @@ const CategoryGrid = ({kategoriler, menu, kategoriyeKaydir}) => {
                             e.currentTarget.style.transform = 'translateY(0)';
                         }}
                     >
-                        {kat.gorsel ? (
+                        {category.image ? (
                             <img
-                                src={kat.gorsel}
-                                alt={kat.ad}
+                                src={category.image}
+                                alt={category.name}
                                 style={{
                                     width: '72px',
                                     height: '72px',
@@ -84,7 +84,7 @@ const CategoryGrid = ({kategoriler, menu, kategoriyeKaydir}) => {
                                 textAlign: 'center',
                             }}
                         >
-                            {kat.ad}
+                            {category.name}
                         </h2>
                     </div>
                 );

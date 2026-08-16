@@ -2,33 +2,33 @@ import React from 'react';
 import {PageHeader, useResponsive} from '@/';
 
 const ProductHeader = ({
-    topluSilModu,
-    setTopluSilModu,
-    secilenUrunler,
-    setSecilenUrunler,
-    setAktifForm,
-    kategoriler,
-    topluUrunSil,
+    isBulkDeleteMode,
+    setIsBulkDeleteMode,
+    selectedProducts,
+    setSelectedProducts,
+    setActiveForm,
+    categories,
+    bulkDeleteProducts,
 }) => {
     const {isMobile} = useResponsive();
 
-    const yeniUrunTiklandi = () => {
-        setAktifForm({
-            ad: '',
-            kategoriId: kategoriler.length > 0 ? kategoriler[0].id : '',
-            fiyat: '',
-            resim: '',
-            aciklama: '',
+    const handleNewProductClick = () => {
+        setActiveForm({
+            name: '',
+            categoryId: categories.length > 0 ? categories[0].id : '',
+            price: '',
+            image: '',
+            description: '',
         });
-        setTopluSilModu(false);
+        setIsBulkDeleteMode(false);
     };
 
     /* Toplu sil butonları mobile/desktop aynı → tek kez yaz */
-    const aksiyonButonlari = (
+    const actionButtons = (
         <div style={{display: 'flex', gap: '10px'}}>
-            {!topluSilModu ? (
+            {!isBulkDeleteMode ? (
                 <button
-                    onClick={() => setTopluSilModu(true)}
+                    onClick={() => setIsBulkDeleteMode(true)}
                     style={{
                         padding: '10px 16px',
                         backgroundColor: 'var(--surface)',
@@ -47,8 +47,8 @@ const ProductHeader = ({
                 <>
                     <button
                         onClick={() => {
-                            setTopluSilModu(false);
-                            setSecilenUrunler([]);
+                            setIsBulkDeleteMode(false);
+                            setSelectedProducts([]);
                         }}
                         style={{
                             padding: '10px 16px',
@@ -64,7 +64,7 @@ const ProductHeader = ({
                         İptal
                     </button>
                     <button
-                        onClick={topluUrunSil}
+                        onClick={bulkDeleteProducts}
                         style={{
                             padding: '10px 16px',
                             backgroundColor: 'var(--dangerBg)',
@@ -76,7 +76,7 @@ const ProductHeader = ({
                             fontSize: '13px',
                         }}
                     >
-                        Seçilenleri Sil ({secilenUrunler.length})
+                        Seçilenleri Sil ({selectedProducts.length})
                     </button>
                 </>
             )}
@@ -84,7 +84,7 @@ const ProductHeader = ({
             {/* Desktop: buton grubu içinde */}
             {!isMobile && (
                 <button
-                    onClick={yeniUrunTiklandi}
+                    onClick={handleNewProductClick}
                     style={{
                         padding: '10px 20px',
                         backgroundColor: 'var(--primary)',
@@ -128,13 +128,13 @@ const ProductHeader = ({
                             : 'Menüdeki ürünleri yönetin, ekleyin veya silin.'
                     }
                 />
-                {aksiyonButonlari}
+                {actionButtons}
             </div>
 
             {/* Mobile: tam genişlik buton altta */}
             {isMobile && (
                 <button
-                    onClick={yeniUrunTiklandi}
+                    onClick={handleNewProductClick}
                     style={{
                         width: '100%',
                         padding: '14px 20px',

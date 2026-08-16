@@ -4,14 +4,14 @@ import {inputStyle} from '@/';
 const RestaurantAddModal = ({
     isModalOpen,
     setIsModalOpen,
-    handleYeniRestoranEkle,
-    yeniId,
-    setYeniId,
-    yeniAd,
-    setYeniAd,
-    yeniEmail,
-    setYeniEmail,
-    islemYapiliyor,
+    handleAddNewRestaurant,
+    newId,
+    setNewId,
+    newName,
+    setNewName,
+    newEmail,
+    setNewEmail,
+    isProcessing,
 }) => {
     if (!isModalOpen) return null;
 
@@ -53,7 +53,7 @@ const RestaurantAddModal = ({
                 </h3>
 
                 <form
-                    onSubmit={handleYeniRestoranEkle}
+                    onSubmit={handleAddNewRestaurant}
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -64,8 +64,8 @@ const RestaurantAddModal = ({
                         type="text"
                         placeholder="Sistem ID (örn: mutlu-kebap)"
                         required
-                        value={yeniId}
-                        onChange={(e) => setYeniId(e.target.value)}
+                        value={newId}
+                        onChange={(e) => setNewId(e.target.value)}
                         style={{...inputStyle, padding: '12px'}}
                     />
 
@@ -73,8 +73,8 @@ const RestaurantAddModal = ({
                         type="text"
                         placeholder="Restoran Adı"
                         required
-                        value={yeniAd}
-                        onChange={(e) => setYeniAd(e.target.value)}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
                         style={{...inputStyle, padding: '12px'}}
                     />
 
@@ -82,8 +82,8 @@ const RestaurantAddModal = ({
                         type="email"
                         placeholder="Yönetici E-Posta"
                         required
-                        value={yeniEmail}
-                        onChange={(e) => setYeniEmail(e.target.value)}
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
                         style={{...inputStyle, padding: '12px'}}
                     />
 
@@ -113,7 +113,7 @@ const RestaurantAddModal = ({
 
                         <button
                             type="submit"
-                            disabled={islemYapiliyor}
+                            disabled={isProcessing}
                             style={{
                                 flex: 1,
                                 padding: '12px',
@@ -121,11 +121,11 @@ const RestaurantAddModal = ({
                                 backgroundColor: 'var(--primary)',
                                 color: 'var(--textWhite)',
                                 borderRadius: 'var(--radiusSmall)',
-                                cursor: islemYapiliyor ? 'wait' : 'pointer',
+                                cursor: isProcessing ? 'wait' : 'pointer',
                                 fontWeight: 'var(--font-medium)',
                             }}
                         >
-                            {islemYapiliyor ? 'Oluşturuluyor...' : 'Oluştur'}
+                            {isProcessing ? 'Oluşturuluyor...' : 'Oluştur'}
                         </button>
                     </div>
                 </form>

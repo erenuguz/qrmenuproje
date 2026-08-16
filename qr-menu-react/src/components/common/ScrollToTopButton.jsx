@@ -2,20 +2,20 @@ import React from 'react';
 import {useScroll} from '@/';
 
 const ScrollToTopButton = () => {
-    const {goster, usteCik} = useScroll(300);
+    const {show, scrollToTop} = useScroll(300);
 
-    if (!goster) return null;
+    if (!show) return null;
 
     return (
         <button
-            onClick={usteCik}
+            onClick={scrollToTop}
             style={{
                 position: 'fixed',
                 bottom: '25px',
                 right: '25px',
                 zIndex: 1000,
                 backgroundColor: 'var(--primary)',
-                color: '#ffffff',
+                color: 'var(--textWhite)',
                 border: 'none',
                 borderRadius: '50%',
                 width: '50px',

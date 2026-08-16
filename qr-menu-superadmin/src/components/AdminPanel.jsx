@@ -12,20 +12,20 @@ import {
     adminMenuItems,
 } from '@/';
 
-const AdminPanel = ({restoranId}) => {
-    const {menu, yukleniyor: menuYukleniyor} = useMenu(restoranId);
+const AdminPanel = ({restaurantId}) => {
+    const {menu, loading: menuLoading} = useMenu(restaurantId);
 
-    const {restoranData, yukleniyor: restoranYukleniyor} =
-        useRestaurantDoc(restoranId);
+    const {restaurantData, loading: restaurantLoading} =
+        useRestaurantDoc(restaurantId);
 
-    const {aktifSekme, setAktifSekme, sidebarAcik, setSidebarAcik} =
-        useAdminShell('urunler');
+    const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
+        useAdminShell('products');
 
     const {isMobile} = useResponsive();
 
-    const yukleniyor = restoranYukleniyor || menuYukleniyor;
+    const loading = restaurantLoading || menuLoading;
 
-    if (yukleniyor)
+    if (loading)
         return (
             <div
                 style={{
@@ -50,9 +50,9 @@ const AdminPanel = ({restoranId}) => {
             }}
         >
             <Header
-                sidebarAcik={sidebarAcik}
-                setSidebarAcik={setSidebarAcik}
-                restoranData={restoranData}
+                isSidebarOpen={isSidebarOpen}
+                setIsSidebarOpen={setIsSidebarOpen}
+                restaurantData={restaurantData}
             />
 
             {/* Ana İçerik Düzeni */}
@@ -65,10 +65,10 @@ const AdminPanel = ({restoranId}) => {
             >
                 <SideBar
                     menuItems={adminMenuItems}
-                    aktifSekme={aktifSekme}
-                    setAktifSekme={setAktifSekme}
-                    sidebarAcik={sidebarAcik}
-                    setSidebarAcik={setSidebarAcik}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
                 />
 
                 {/* Sağ Alan */}
@@ -77,7 +77,7 @@ const AdminPanel = ({restoranId}) => {
                         flex: 1,
                         marginLeft: isMobile
                             ? '0'
-                            : sidebarAcik
+                            : isSidebarOpen
                               ? '250px'
                               : '0',
                         padding: '30px',
@@ -86,18 +86,18 @@ const AdminPanel = ({restoranId}) => {
                     }}
                 >
                     {/* İçerikler */}
-                    {aktifSekme === 'urunler' && (
-                        <ProductTab restoranId={restoranId} menu={menu} />
+                    {activeTab === 'products' && (
+                        <ProductTab restaurantId={restaurantId} menu={menu} />
                     )}
 
-                    {aktifSekme === 'kategoriler' && (
-                        <CategoryTab restoranId={restoranId} menu={menu} />
+                    {activeTab === 'categories' && (
+                        <CategoryTab restaurantId={restaurantId} menu={menu} />
                     )}
 
-                    {aktifSekme === 'ayarlar' && (
+                    {activeTab === 'settings' && (
                         <SettingsTab
-                            restoranId={restoranId}
-                            restoranData={restoranData}
+                            restaurantId={restaurantId}
+                            restaurantData={restaurantData}
                         />
                     )}
                 </div>

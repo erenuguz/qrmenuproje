@@ -9,6 +9,7 @@ export {default as PageHeader} from '@/components/common/PageHeader';
 export {default as EmptyState} from '@/components/common/EmptyState';
 export {default as Badge} from '@/components/common/Badge';
 export {default as Toast} from '@/components/common/Toast';
+export {ToastContainer} from '@/components/common/Toast';
 
 export {superAdminMenuItems, adminMenuItems} from '@/constants/menuItems';
 
@@ -19,7 +20,7 @@ export {
     iconContainerStyle,
 } from '@/styles/shared.js';
 
-export {resimYukleVeUrlAl} from '@/tools/helpers.js';
+export {uploadImageAndGetUrl} from '@/tools/helpers.js';
 
 export {default as Header} from '@/components/layout/Header';
 export {default as SideBar} from '@/components/layout/SideBar';
@@ -45,9 +46,9 @@ export {default as RestaurantTable} from '@/components/tabs/restaurantManagement
 export {default as RestaurantTableRow} from '@/components/tabs/restaurantManagementTab/components/RestaurantTableRow';
 
 export {default as SettingsTab} from '@/components/tabs/settingsTab/SettingsTab';
-export {default as GenelBilgiler} from '@/components/tabs/settingsTab/components/GenelBilgiler';
-export {default as MusteriWifi} from '@/components/tabs/settingsTab/components/MusteriWifi';
-export {default as SosyalMedya} from '@/components/tabs/settingsTab/components/SosyalMedya';
+export {default as GeneralInfo} from '@/components/tabs/settingsTab/components/GeneralInfo';
+export {default as CustomerWifi} from '@/components/tabs/settingsTab/components/CustomerWifi';
+export {default as SocialMedia} from '@/components/tabs/settingsTab/components/SocialMedia';
 
 export {useAuthUser} from '@/hooks/useAuthUser';
 export {useRestaurants} from '@/hooks/useRestaurants';

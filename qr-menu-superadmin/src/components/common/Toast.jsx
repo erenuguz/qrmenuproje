@@ -1,12 +1,12 @@
 import React from 'react';
 
-const RENK = {
+const COLORS = {
     success: {border: 'var(--success)', icon: 'var(--success)'},
     error: {border: 'var(--danger)', icon: 'var(--danger)'},
     info: {border: 'var(--info)', icon: 'var(--info)'},
 };
 
-const ICON = {
+const ICONS = {
     success: (
         <svg
             width="18"
@@ -56,7 +56,7 @@ const ICON = {
     ),
 };
 
-const ToastContainer = ({toasts, onDismiss}) => {
+export const ToastContainer = ({toasts, onDismiss}) => {
     if (toasts.length === 0) return null;
 
     return (
@@ -77,17 +77,17 @@ const ToastContainer = ({toasts, onDismiss}) => {
                 pointerEvents: 'none',
             }}
         >
-            {toasts.map((t) => (
+            {toasts.map((toast) => (
                 <div
-                    key={t.id}
-                    onClick={() => onDismiss(t.id)}
+                    key={toast.id}
+                    onClick={() => onDismiss(toast.id)}
                     style={{
                         pointerEvents: 'auto',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px',
                         backgroundColor: 'var(--surface)',
-                        border: `1px solid ${RENK[t.type].border}`,
+                        border: `1px solid ${COLORS[toast.type].border}`,
                         borderRadius: 'var(--radiusSmall)',
                         boxShadow: 'var(--shadow)',
                         padding: '12px 16px',
@@ -96,12 +96,12 @@ const ToastContainer = ({toasts, onDismiss}) => {
                 >
                     <span
                         style={{
-                            color: RENK[t.type].icon,
+                            color: COLORS[toast.type].icon,
                             display: 'flex',
                             flexShrink: 0,
                         }}
                     >
-                        {ICON[t.type]}
+                        {ICONS[toast.type]}
                     </span>
                     <span
                         style={{
@@ -110,7 +110,7 @@ const ToastContainer = ({toasts, onDismiss}) => {
                             fontWeight: 'var(--font-medium)',
                         }}
                     >
-                        {t.message}
+                        {toast.message}
                     </span>
                 </div>
             ))}

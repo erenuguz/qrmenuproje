@@ -14,19 +14,18 @@ const App = () => {
 
     if (!id) return <WelcomeScreen />;
 
-    const [restoranId] = useState(id);
-    const {restoranData: restoranBilgi, yukleniyor: sayfaYukleniyor} =
-        useRestaurantDoc(restoranId);
-    const bulunduMu = restoranBilgi !== null && restoranBilgi !== undefined;
-    const [aktifKategori, setAktifKategori] = useState(null);
+    const [restaurantId] = useState(id);
+    const {restaurantData, loading} = useRestaurantDoc(restaurantId);
+    const isFound = restaurantData !== null && restaurantData !== undefined;
+    const [activeCategory, setActiveCategory] = useState(null);
 
-    if (sayfaYukleniyor) {
-        return <LoadingSpinner mesaj="Restoran Bilgileri Yükleniyor..." />;
+    if (loading) {
+        return <LoadingSpinner message="Restoran Bilgileri Yükleniyor..." />;
     }
 
     return (
         <div>
-            {!bulunduMu && (
+            {!isFound && (
                 <div
                     style={{
                         display: 'flex',
@@ -81,22 +80,22 @@ const App = () => {
                 </div>
             )}
 
-            {bulunduMu && (
+            {isFound && (
                 <>
                     <Header
-                        aktifKategori={aktifKategori}
-                        geriDon={() => setAktifKategori(null)}
-                        restoranAd={restoranBilgi.name}
-                        restoranLogo={restoranBilgi.logo}
+                        activeCategory={activeCategory}
+                        onBack={() => setActiveCategory(null)}
+                        restaurantName={restaurantData.name}
+                        restaurantLogo={restaurantData.logo}
                     />
 
                     <CustomerMenu
-                        restoranId={restoranId}
-                        aktifKategori={aktifKategori}
-                        setAktifKategori={setAktifKategori}
+                        restaurantId={restaurantId}
+                        activeCategory={activeCategory}
+                        setActiveCategory={setActiveCategory}
                     />
 
-                    <Footer restoranBilgi={restoranBilgi} />
+                    <Footer restaurantData={restaurantData} />
                     <ScrollToTopButton />
                 </>
             )}

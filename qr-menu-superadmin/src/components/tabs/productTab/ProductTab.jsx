@@ -11,121 +11,126 @@ import {
 } from '@/';
 
 const ProductTab = ({
-    restoranId,
+    restaurantId,
     menu = [],
-    restoranlar,
-    seciliRestoranId,
-    setSeciliRestoranId,
+    restaurants,
+    selectedRestaurantId,
+    setSelectedRestaurantId,
 }) => {
-    const [aktifForm, setAktifForm] = useState(null);
-    const [resimYukleniyor, setResimYukleniyor] = useState(false);
-    const [topluSilModu, setTopluSilModu] = useState(false);
-    const [secilenUrunler, setSecilenUrunler] = useState([]);
+    const [activeForm, setActiveForm] = useState(null);
+    const [isImageLoading, setIsImageLoading] = useState(false);
+    const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
+    const [selectedProducts, setSelectedProducts] = useState([]);
 
     // Kategori filtresi state'i kalıyor (aramaMetni state'i useSearch'e devredildi)
-    const [seciliKategoriFiltresi, setSeciliKategoriFiltresi] =
+    const [selectedCategoryFilter, setSelectedCategoryFilter] =
         useState('Hepsi');
 
-    const {kategoriler} = useCategories(restoranId);
-    const {urunSil, formuKaydet, topluUrunSil} = useProductActions(restoranId);
+    const {categories} = useCategories(restaurantId);
+    const {deleteProduct, saveForm, bulkDeleteProducts} =
+        useProductActions(restaurantId);
 
     // 2. Kategori filtresini useCallback ile sabitliyoruz
-    const kategoriFiltresi = useCallback(
-        (urun) =>
-            seciliKategoriFiltresi === 'Hepsi' ||
-            urun.kategoriId === seciliKategoriFiltresi,
-        [seciliKategoriFiltresi]
+    const categoryFilter = useCallback(
+        (product) =>
+            selectedCategoryFilter === 'Hepsi' ||
+            product.categoryId === selectedCategoryFilter,
+        [selectedCategoryFilter]
     );
 
     // 3. useSearch Hook'unun Doğru Kullanımı
     const {
-        aramaMetni,
-        setAramaMetni,
-        filtrelenmisVeri: aramaSonuclari,
-    } = useSearch(menu, ['ad'], {extraFilter: kategoriFiltresi});
+        searchQuery,
+        setSearchQuery,
+        filteredData: searchResults,
+    } = useSearch(menu, ['name'], {extraFilter: categoryFilter});
 
     // Formu Kaydetme Handleri
-    const handleFormuKaydet = () => {
-        formuKaydet(aktifForm, resimYukleniyor, () => {
-            setAktifForm(null);
+    const handleSaveForm = () => {
+        saveForm(activeForm, isImageLoading, () => {
+            setActiveForm(null);
         });
     };
 
     // Toplu Silme Handleri
-    const handleTopluSil = () => {
-        topluUrunSil(secilenUrunler, () => {
-            setSecilenUrunler([]);
-            setTopluSilModu(false);
+    const handleBulkDelete = () => {
+        bulkDeleteProducts(selectedProducts, () => {
+            setSelectedProducts([]);
+            setIsBulkDeleteMode(false);
         });
     };
 
     // Seçim kutucuğu mantığı
-    const urunSecimiDegistir = (urunId) => {
-        if (secilenUrunler.includes(urunId)) {
-            setSecilenUrunler(secilenUrunler.filter((id) => id !== urunId));
+    const handleProductSelectionChange = (productId) => {
+        if (selectedProducts.includes(productId)) {
+            setSelectedProducts(
+                selectedProducts.filter((id) => id !== productId)
+            );
         } else {
-            setSecilenUrunler([...secilenUrunler, urunId]);
+            setSelectedProducts([...selectedProducts, productId]);
         }
     };
 
     // useMemo ile Gösterilecek Kategorileri Filtreleme
-    const gosterilecekKategoriler = useMemo(() => {
-        return seciliKategoriFiltresi === 'Hepsi'
-            ? kategoriler
-            : kategoriler.filter((k) => k.id === seciliKategoriFiltresi);
-    }, [kategoriler, seciliKategoriFiltresi]);
+    const displayedCategories = useMemo(() => {
+        return selectedCategoryFilter === 'Hepsi'
+            ? categories
+            : categories.filter((k) => k.id === selectedCategoryFilter);
+    }, [categories, selectedCategoryFilter]);
 
     return (
         <div style={{backgroundColor: 'var(--background)'}}>
-            {aktifForm ? (
+            {activeForm ? (
                 <ProductForm
-                    aktifForm={aktifForm}
-                    setAktifForm={setAktifForm}
-                    kategoriler={kategoriler}
-                    resimYukleniyor={resimYukleniyor}
-                    setResimYukleniyor={setResimYukleniyor}
-                    formuKaydet={handleFormuKaydet}
+                    activeForm={activeForm}
+                    setActiveForm={setActiveForm}
+                    categories={categories}
+                    isImageLoading={isImageLoading}
+                    setIsImageLoading={setIsImageLoading}
+                    saveForm={handleSaveForm}
                 />
             ) : (
                 <div>
                     <ProductHeader
-                        topluSilModu={topluSilModu}
-                        setTopluSilModu={setTopluSilModu}
-                        secilenUrunler={secilenUrunler}
-                        setSecilenUrunler={setSecilenUrunler}
-                        setAktifForm={setAktifForm}
-                        kategoriler={kategoriler}
-                        topluUrunSil={handleTopluSil}
+                        isBulkDeleteMode={isBulkDeleteMode}
+                        setIsBulkDeleteMode={setIsBulkDeleteMode}
+                        selectedProducts={selectedProducts}
+                        setSelectedProducts={setSelectedProducts}
+                        setActiveForm={setActiveForm}
+                        categories={categories}
+                        bulkDeleteProducts={handleBulkDelete}
                     />
 
-                    {restoranlar && (
+                    {restaurants && (
                         <RestaurantSelector
-                            restoranlar={restoranlar}
-                            seciliRestoranId={seciliRestoranId}
-                            setSeciliRestoranId={setSeciliRestoranId}
-                            toplamUrun={menu.length}
+                            restaurants={restaurants}
+                            selectedRestaurantId={selectedRestaurantId}
+                            setSelectedRestaurantId={setSelectedRestaurantId}
+                            totalProducts={menu.length}
                         />
                     )}
 
                     <ProductFilters
-                        aramaMetni={aramaMetni}
-                        setAramaMetni={setAramaMetni}
-                        seciliKategoriFiltresi={seciliKategoriFiltresi}
-                        setSeciliKategoriFiltresi={setSeciliKategoriFiltresi}
-                        kategoriler={kategoriler}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        selectedCategoryFilter={selectedCategoryFilter}
+                        setSelectedCategoryFilter={setSelectedCategoryFilter}
+                        categories={categories}
                     />
 
                     <ProductList
                         menu={menu}
-                        kategoriler={kategoriler}
-                        aramaMetni={aramaMetni}
-                        aramaSonuclari={aramaSonuclari}
-                        gosterilecekKategoriler={gosterilecekKategoriler}
-                        topluSilModu={topluSilModu}
-                        secilenUrunler={secilenUrunler}
-                        urunSecimiDegistir={urunSecimiDegistir}
-                        setAktifForm={setAktifForm}
-                        urunSil={urunSil}
+                        categories={categories}
+                        searchQuery={searchQuery}
+                        searchResults={searchResults}
+                        displayedCategories={displayedCategories}
+                        isBulkDeleteMode={isBulkDeleteMode}
+                        selectedProducts={selectedProducts}
+                        handleProductSelectionChange={
+                            handleProductSelectionChange
+                        }
+                        setActiveForm={setActiveForm}
+                        deleteProduct={deleteProduct}
                     />
                 </div>
             )}

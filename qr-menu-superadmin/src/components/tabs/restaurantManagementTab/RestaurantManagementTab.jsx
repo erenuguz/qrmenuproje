@@ -7,54 +7,55 @@ import {
     useSearch,
 } from '@/';
 
-const RestaurantManagementTab = ({restoranlar = []}) => {
+const RestaurantManagementTab = ({restaurants = []}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [yeniId, setYeniId] = useState('');
-    const [yeniAd, setYeniAd] = useState('');
-    const [yeniEmail, setYeniEmail] = useState('');
+    const [newId, setNewId] = useState('');
+    const [newName, setNewName] = useState('');
+    const [newEmail, setNewEmail] = useState('');
 
-    const {restoranEkle, restoranSil, islemYapiliyor} = useRestaurantActions();
+    const {addRestaurant, deleteRestaurant, isProcessing} =
+        useRestaurantActions();
 
-    const handleYeniRestoranEkle = (e) => {
+    const handleAddNewRestaurant = (e) => {
         e.preventDefault();
-        restoranEkle(yeniId, yeniAd, yeniEmail, () => {
-            setYeniId('');
-            setYeniAd('');
-            setYeniEmail('');
+        addRestaurant(newId, newName, newEmail, () => {
+            setNewId('');
+            setNewName('');
+            setNewEmail('');
             setIsModalOpen(false);
         });
     };
 
     // Arama Filtresi
     const {
-        aramaMetni,
-        setAramaMetni,
-        filtrelenmisVeri: filtrelenmisRestoranlar,
-    } = useSearch(restoranlar, ['name', 'id', 'admin_email']);
+        searchQuery,
+        setSearchQuery,
+        filteredData: filteredRestaurants,
+    } = useSearch(restaurants, ['name', 'id', 'admin_email']);
 
     return (
         <div>
-            <RestaurantManagementTabHeader restoranlar={restoranlar} />
+            <RestaurantManagementTabHeader restaurants={restaurants} />
 
             <RestaurantTable
-                aramaMetni={aramaMetni}
-                setAramaMetni={setAramaMetni}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
                 setIsModalOpen={setIsModalOpen}
-                filtrelenmisRestoranlar={filtrelenmisRestoranlar}
-                handleSil={restoranSil}
+                filteredRestaurants={filteredRestaurants}
+                handleDelete={deleteRestaurant}
             />
 
             <RestaurantAddModal
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
-                handleYeniRestoranEkle={handleYeniRestoranEkle}
-                yeniId={yeniId}
-                setYeniId={setYeniId}
-                yeniAd={yeniAd}
-                setYeniAd={setYeniAd}
-                yeniEmail={yeniEmail}
-                setYeniEmail={setYeniEmail}
-                islemYapiliyor={islemYapiliyor}
+                handleAddNewRestaurant={handleAddNewRestaurant}
+                newId={newId}
+                setNewId={setNewId}
+                newName={newName}
+                setNewName={setNewName}
+                newEmail={newEmail}
+                setNewEmail={setNewEmail}
+                isProcessing={isProcessing}
             />
         </div>
     );

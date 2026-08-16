@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoadingSpinner = ({mesaj = 'Yükleniyor...'}) => {
+const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
     return (
         <div
             style={{
@@ -47,7 +47,7 @@ const LoadingSpinner = ({mesaj = 'Yükleniyor...'}) => {
                     letterSpacing: '0.01em',
                 }}
             >
-                {mesaj}
+                {message}
             </p>
 
             {/* Animasyon keyframe */}

@@ -2,30 +2,30 @@ import {useState, useEffect} from 'react';
 import {doc, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
-export const useRestaurantDoc = (restoranId) => {
-    const [restoranData, setRestoranData] = useState(null);
-    const [yukleniyor, setYukleniyor] = useState(true);
+export const useRestaurantDoc = (restaurantId) => {
+    const [restaurantData, setRestaurantData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!restoranId) {
-            setYukleniyor(false);
+        if (!restaurantId) {
+            setLoading(false);
             return;
         }
 
-        const unsubRestoran = onSnapshot(
-            doc(db, 'restaurants', restoranId),
+        const unsubRestaurant = onSnapshot(
+            doc(db, 'restaurants', restaurantId),
             (docSnap) => {
                 if (docSnap.exists()) {
-                    setRestoranData(docSnap.data());
+                    setRestaurantData(docSnap.data());
                 } else {
-                    setRestoranData(null);
+                    setRestaurantData(null);
                 }
-                setYukleniyor(false);
+                setLoading(false);
             }
         );
 
-        return () => unsubRestoran();
-    }, [restoranId]);
+        return () => unsubRestaurant();
+    }, [restaurantId]);
 
-    return {restoranData, yukleniyor};
+    return {restaurantData, loading};
 };

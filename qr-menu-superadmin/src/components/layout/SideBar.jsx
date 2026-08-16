@@ -2,10 +2,10 @@ import React, {useEffect, useRef} from 'react';
 
 const SideBar = ({
     menuItems,
-    aktifSekme,
-    setAktifSekme,
-    sidebarAcik,
-    setSidebarAcik,
+    activeTab,
+    setActiveTab,
+    isSidebarOpen,
+    setIsSidebarOpen,
 }) => {
     const sidebarRef = useRef(null);
 
@@ -13,40 +13,40 @@ const SideBar = ({
         const handleClickOutside = (event) => {
             // Eğer sidebar açık ise VE tıklanan yer sidebar'ın veya hamburger butonunun içinde DEĞİLSE kapat
             if (
-                sidebarAcik &&
+                isSidebarOpen &&
                 sidebarRef.current &&
                 !sidebarRef.current.contains(event.target) &&
                 !event.target.closest('.hamburger-btn') // Hamburger butonunu tıklama dışı bırakıyoruz
             ) {
-                setSidebarAcik(false);
+                setIsSidebarOpen(false);
             }
         };
 
         // Dinleyiciyi ekle
         document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside); // Mobil dokunmatik desteği
+        document.addEventListener('touchstart', handleClickOutside);
 
         return () => {
             // Temizlik
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('touchstart', handleClickOutside);
         };
-    }, [sidebarAcik, setSidebarAcik]);
+    }, [isSidebarOpen, setIsSidebarOpen]);
 
     return (
         <div
             ref={sidebarRef}
             style={{
-                width: sidebarAcik ? '250px' : '0px',
-                minWidth: sidebarAcik ? '250px' : '0px',
+                width: isSidebarOpen ? '250px' : '0px',
+                minWidth: isSidebarOpen ? '250px' : '0px',
                 backgroundColor: 'var(--sidebar)',
 
-                borderTop: sidebarAcik ? '1px solid var(--border)' : 'none',
-                borderRight: sidebarAcik ? '1px solid var(--border)' : 'none',
+                borderTop: isSidebarOpen ? '1px solid var(--border)' : 'none',
+                borderRight: isSidebarOpen ? '1px solid var(--border)' : 'none',
 
-                padding: sidebarAcik ? '24px 16px' : '0px 16px',
-                opacity: sidebarAcik ? 1 : 0,
-                visibility: sidebarAcik ? 'visible' : 'hidden',
+                padding: isSidebarOpen ? '24px 16px' : '0px 16px',
+                opacity: isSidebarOpen ? 1 : 0,
+                visibility: isSidebarOpen ? 'visible' : 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '4px',
@@ -76,13 +76,13 @@ const SideBar = ({
             </span>
 
             {menuItems.map((item) => {
-                const isSelected = aktifSekme === item.id;
+                const isSelected = activeTab === item.id;
 
                 return (
                     <button
                         key={item.id}
                         onClick={() => {
-                            setAktifSekme(item.id);
+                            setActiveTab(item.id);
                         }}
                         style={{
                             padding: '10px 12px',

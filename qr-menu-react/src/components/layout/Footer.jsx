@@ -1,22 +1,24 @@
 import React, {useState} from 'react';
 
-const Footer = ({restoranBilgi}) => {
+const Footer = ({restaurantData}) => {
     const {
-        wifiAgAdi = '',
-        wifiSifre = '',
+        wifiNetworkName = '',
+        wifiPassword = '',
         instagram = '',
         whatsapp = '',
-    } = restoranBilgi || {};
+    } = restaurantData || {};
 
-    const [kopyalandi, setKopyalandi] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
 
-    if (!wifiAgAdi && !instagram && !whatsapp) return null;
+    if (!wifiNetworkName && !wifiPassword && !instagram && !whatsapp) {
+        return null;
+    }
 
-    const sifreKopyala = () => {
-        if (!wifiSifre) return;
-        navigator.clipboard?.writeText(wifiSifre);
-        setKopyalandi(true);
-        setTimeout(() => setKopyalandi(false), 1500);
+    const copyPassword = () => {
+        if (!wifiPassword) return;
+        navigator.clipboard?.writeText(wifiPassword);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 1500);
     };
 
     return (
@@ -44,7 +46,7 @@ const Footer = ({restoranBilgi}) => {
                     </span>
                 </div>
 
-                {(wifiAgAdi || wifiSifre) && (
+                {(wifiNetworkName || wifiPassword) && (
                     <div
                         style={{
                             backgroundColor: 'var(--surface)',
@@ -79,7 +81,7 @@ const Footer = ({restoranBilgi}) => {
                             </div>
 
                             <div style={{flex: 1, minWidth: 0}}>
-                                {wifiAgAdi && (
+                                {wifiNetworkName && (
                                     <div
                                         style={{
                                             fontSize: 'var(--font-small)',
@@ -90,7 +92,7 @@ const Footer = ({restoranBilgi}) => {
                                         Ağ Adı
                                     </div>
                                 )}
-                                {wifiAgAdi && (
+                                {wifiNetworkName && (
                                     <div
                                         style={{
                                             fontSize: 'var(--font-body)',
@@ -101,27 +103,27 @@ const Footer = ({restoranBilgi}) => {
                                             textOverflow: 'ellipsis',
                                         }}
                                     >
-                                        {wifiAgAdi}
+                                        {wifiNetworkName}
                                     </div>
                                 )}
                             </div>
 
-                            {wifiSifre && (
+                            {wifiPassword && (
                                 <button
-                                    onClick={sifreKopyala}
+                                    onClick={copyPassword}
                                     style={{
                                         flexShrink: 0,
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '6px',
                                         border: '1px solid',
-                                        borderColor: kopyalandi
+                                        borderColor: isCopied
                                             ? 'var(--success)'
                                             : 'var(--border)',
-                                        backgroundColor: kopyalandi
+                                        backgroundColor: isCopied
                                             ? 'var(--successBg)'
                                             : 'var(--background)',
-                                        color: kopyalandi
+                                        color: isCopied
                                             ? 'var(--success)'
                                             : 'var(--text)',
                                         borderRadius: 'var(--radiusSmall)',
@@ -133,8 +135,8 @@ const Footer = ({restoranBilgi}) => {
                                         transition: 'all 0.15s ease',
                                     }}
                                 >
-                                    {kopyalandi ? <CheckIcon /> : <CopyIcon />}
-                                    {kopyalandi ? 'Kopyalandı' : wifiSifre}
+                                    {isCopied ? <CheckIcon /> : <CopyIcon />}
+                                    {isCopied ? 'Kopyalandı' : wifiPassword}
                                 </button>
                             )}
                         </div>

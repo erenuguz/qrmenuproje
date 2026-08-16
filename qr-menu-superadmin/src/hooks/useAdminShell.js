@@ -1,8 +1,8 @@
 import {useState} from 'react';
 
-export const useAdminShell = (varsayilanSekme = 'restoranlar') => {
-    const [aktifSekme, setAktifSekme] = useState(varsayilanSekme);
-    const [sidebarAcik, setSidebarAcik] = useState(false);
+export const useAdminShell = (defaultTab = 'restoranlar') => {
+    const [activeTab, setActiveTab] = useState(defaultTab);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    return {aktifSekme, setAktifSekme, sidebarAcik, setSidebarAcik};
+    return {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen};
 };

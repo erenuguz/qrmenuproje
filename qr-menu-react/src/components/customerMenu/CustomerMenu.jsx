@@ -9,20 +9,21 @@ import {
     MenuListView,
 } from '@/';
 
-const CustomerMenu = ({restoranId, aktifKategori, setAktifKategori}) => {
-    const {menu, yukleniyor: menuYukleniyor} = useMenu(restoranId);
-    const {kategoriler, yukleniyor: katYukleniyor} = useCategories(restoranId);
+const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
+    const {menu, loading: isMenuLoading} = useMenu(restaurantId);
+    const {categories, loading: isCategoriesLoading} =
+        useCategories(restaurantId);
 
-    const {kategoriyeKaydir} = useCategoryScrollSpy(
-        kategoriler,
-        aktifKategori,
-        setAktifKategori
+    const {scrollToCategory} = useCategoryScrollSpy(
+        categories,
+        activeCategory,
+        setActiveCategory
     );
     const {dragRef, isDragging, dragHandlers} = useDraggable();
 
-    const yukleniyor = menuYukleniyor || katYukleniyor;
+    const loading = isMenuLoading || isCategoriesLoading;
 
-    if (yukleniyor) return <LoadingSpinner mesaj="Menü Yükleniyor..." />;
+    if (loading) return <LoadingSpinner message="Menü Yükleniyor..." />;
 
     return (
         <div
@@ -34,18 +35,18 @@ const CustomerMenu = ({restoranId, aktifKategori, setAktifKategori}) => {
             }}
         >
             <div style={{maxWidth: '600px', margin: '0 auto'}}>
-                {aktifKategori === null ? (
+                {activeCategory === null ? (
                     <CategoryGrid
-                        kategoriler={kategoriler}
+                        categories={categories}
                         menu={menu}
-                        kategoriyeKaydir={kategoriyeKaydir}
+                        scrollToCategory={scrollToCategory}
                     />
                 ) : (
                     <MenuListView
-                        kategoriler={kategoriler}
+                        categories={categories}
                         menu={menu}
-                        aktifKategori={aktifKategori}
-                        kategoriyeKaydir={kategoriyeKaydir}
+                        activeCategory={activeCategory}
+                        scrollToCategory={scrollToCategory}
                         navRef={dragRef}
                         isDragging={isDragging}
                         dragHandlers={dragHandlers}

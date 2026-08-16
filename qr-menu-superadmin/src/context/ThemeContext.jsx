@@ -1,7 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 
-export const VARSAYILAN_TEMA = {
-    mod: 'light',
+export const DEFAULT_THEME = {
+    mode: 'light',
 
     colors: {
         // ==========================
@@ -129,11 +129,11 @@ export const VARSAYILAN_TEMA = {
 
 const ThemeContext = createContext(null);
 
-function cssUygula(tema) {
+function applyCss(theme) {
     const el = document.documentElement;
 
-    const c = tema.colors || VARSAYILAN_TEMA.colors;
-    const t = tema.typography || VARSAYILAN_TEMA.typography;
+    const c = theme.colors || DEFAULT_THEME.colors;
+    const t = theme.typography || DEFAULT_THEME.typography;
 
     // ==========================
     // Colors
@@ -216,7 +216,7 @@ function cssUygula(tema) {
     // Theme Mode
     // ==========================
 
-    if (tema.mod === 'dark') {
+    if (theme.mode === 'dark') {
         el.classList.add('dark');
     } else {
         el.classList.remove('dark');
@@ -225,17 +225,17 @@ function cssUygula(tema) {
 
 // 3. PROVIDER
 export function ThemeProvider({children}) {
-    const [aktifTema] = useState(VARSAYILAN_TEMA);
+    const [activeTheme] = useState(DEFAULT_THEME);
 
     useEffect(() => {
-        cssUygula(VARSAYILAN_TEMA);
+        applyCss(DEFAULT_THEME);
     }, []);
 
     return (
         <ThemeContext.Provider
             value={{
-                aktifTema,
-                yukleniyor: false,
+                activeTheme,
+                loading: false,
             }}
         >
             <div
@@ -252,6 +252,6 @@ export function ThemeProvider({children}) {
     );
 }
 
-export function useTema() {
+export function useTheme() {
     return useContext(ThemeContext);
 }

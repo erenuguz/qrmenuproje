@@ -2,10 +2,10 @@ import React from 'react';
 import {MenuItemCard, CategoryBar} from '@/';
 
 const MenuListView = ({
-    kategoriler,
+    categories,
     menu,
-    aktifKategori,
-    kategoriyeKaydir,
+    activeCategory,
+    scrollToCategory,
     navRef,
     isDragging,
     dragHandlers,
@@ -14,9 +14,9 @@ const MenuListView = ({
         <>
             {/* ÜST YAPISKAN MENÜ */}
             <CategoryBar
-                kategoriler={kategoriler}
-                aktifKategori={aktifKategori}
-                kategoriyeKaydir={kategoriyeKaydir}
+                categories={categories}
+                activeCategory={activeCategory}
+                scrollToCategory={scrollToCategory}
                 navRef={navRef}
                 isDragging={isDragging}
                 dragHandlers={dragHandlers}
@@ -31,16 +31,16 @@ const MenuListView = ({
                     gap: '36px',
                 }}
             >
-                {kategoriler.map((kat) => {
-                    const oKategorininYemekleri = menu.filter(
-                        (y) => y.kategoriId === kat.id
+                {categories.map((category) => {
+                    const categoryItems = menu.filter(
+                        (item) => item.categoryId === category.id
                     );
-                    if (oKategorininYemekleri.length === 0) return null;
+                    if (categoryItems.length === 0) return null;
 
                     return (
                         <div
-                            key={`section-${kat.id}`}
-                            id={`kategori-${kat.id}`}
+                            key={`section-${category.id}`}
+                            id={`category-${category.id}`}
                         >
                             {/* Kategori Başlığı */}
                             <div
@@ -62,7 +62,7 @@ const MenuListView = ({
                                         letterSpacing: '-0.01em',
                                     }}
                                 >
-                                    {kat.ad}
+                                    {category.name}
                                 </h2>
                             </div>
 
@@ -74,8 +74,8 @@ const MenuListView = ({
                                     gap: '12px',
                                 }}
                             >
-                                {oKategorininYemekleri.map((urun) => (
-                                    <MenuItemCard key={urun.id} urun={urun} />
+                                {categoryItems.map((item) => (
+                                    <MenuItemCard key={item.id} item={item} />
                                 ))}
                             </div>
                         </div>

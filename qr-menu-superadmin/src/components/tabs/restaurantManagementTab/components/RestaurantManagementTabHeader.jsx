@@ -1,7 +1,7 @@
 import React from 'react';
 import {StatCard, PageHeader} from '@/';
 
-const RestaurantManagementHeader = ({restoranlar}) => {
+const RestaurantManagementHeader = ({restaurants}) => {
     return (
         <div style={{marginBottom: '30px'}}>
             {/* BAŞLIK */}
@@ -22,7 +22,7 @@ const RestaurantManagementHeader = ({restoranlar}) => {
                     size="lg"
                     bgColor="var(--info)"
                     iconColor="var(--textWhite)"
-                    value={restoranlar?.length || 0}
+                    value={restaurants?.length || 0}
                     label="Toplam Restoran"
                     icon={
                         <svg
@@ -45,7 +45,7 @@ const RestaurantManagementHeader = ({restoranlar}) => {
                     size="lg"
                     bgColor="var(--successBg)"
                     iconColor="var(--success)"
-                    value={restoranlar?.length || 0}
+                    value={restaurants?.length || 0}
                     label="Aktif Menü"
                     icon={
                         <svg
@@ -68,7 +68,7 @@ const RestaurantManagementHeader = ({restoranlar}) => {
                     size="lg"
                     bgColor="var(--badge)"
                     iconColor="var(--badgeText)"
-                    value={restoranlar?.length || 0}
+                    value={restaurants?.length || 0}
                     label="Toplam Kullanıcı"
                     icon={
                         <svg

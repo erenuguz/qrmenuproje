@@ -1,14 +1,14 @@
-const IMGBB_API_KEY = 'fdf64556ac25daf69d608d8fc66e23f3';
+const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY;
 
-export const resimYukleVeUrlAl = async (dosya, setResimYukleniyor) => {
-    if (!dosya) return null;
+export const uploadImageAndGetUrl = async (file, setImageLoading) => {
+    if (!file) return null;
 
-    setResimYukleniyor(true);
+    setImageLoading(true);
 
     try {
         const formData = new FormData();
 
-        formData.append('image', dosya);
+        formData.append('image', file);
 
         const response = await fetch(
             `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
@@ -18,7 +18,7 @@ export const resimYukleVeUrlAl = async (dosya, setResimYukleniyor) => {
         const data = await response.json();
 
         if (data.success) {
-            setResimYukleniyor(false);
+            setImageLoading(false);
 
             return data.data.url;
         } else {
@@ -26,7 +26,7 @@ export const resimYukleVeUrlAl = async (dosya, setResimYukleniyor) => {
         }
     } catch (error) {
         console.error(error);
-        setResimYukleniyor(false);
+        setImageLoading(false);
         return null;
     }
 };

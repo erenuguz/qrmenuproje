@@ -2,8 +2,8 @@ import React from 'react';
 import {signOut} from 'firebase/auth';
 import {auth} from '@/firebaseConfig';
 
-const Header = ({sidebarAcik, setSidebarAcik, restoranData}) => {
-    const cikisYap = () => {
+const Header = ({isSidebarOpen, setIsSidebarOpen, restaurantData}) => {
+    const handleSignOut = () => {
         signOut(auth).catch((error) => console.error('Çıkış hatası:', error));
     };
 
@@ -35,7 +35,7 @@ const Header = ({sidebarAcik, setSidebarAcik, restoranData}) => {
                     {/* Hamburger */}
                     <button
                         className="hamburger-btn"
-                        onClick={() => setSidebarAcik(!sidebarAcik)}
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                         style={{
                             background: 'transparent',
                             border: 'none',
@@ -110,14 +110,14 @@ const Header = ({sidebarAcik, setSidebarAcik, restoranData}) => {
                                 fontWeight: 'var(--font-semibold)',
                             }}
                         >
-                            {restoranData?.name || 'Admin Paneli'}
+                            {restaurantData?.name || 'Admin Paneli'}
                         </h2>
                     </div>
                 </div>
 
                 {/* Çıkış */}
                 <button
-                    onClick={cikisYap}
+                    onClick={handleSignOut}
                     style={{
                         padding: '8px 15px',
                         backgroundColor: 'transparent',

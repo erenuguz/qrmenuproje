@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MenuItemCard = ({urun}) => {
+const MenuItemCard = ({item}) => {
     return (
         <div
             style={{
@@ -15,10 +15,10 @@ const MenuItemCard = ({urun}) => {
         >
             <img
                 src={
-                    urun.resim ||
+                    item.image ||
                     'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300'
                 }
-                alt={urun.ad}
+                alt={item.name}
                 style={{
                     width: '84px',
                     height: '84px',
@@ -50,9 +50,9 @@ const MenuItemCard = ({urun}) => {
                         textOverflow: 'ellipsis',
                     }}
                 >
-                    {urun.ad}
+                    {item.name}
                 </h3>
-                {urun.aciklama && (
+                {item.description && (
                     <p
                         style={{
                             margin: 0,
@@ -65,7 +65,7 @@ const MenuItemCard = ({urun}) => {
                             overflow: 'hidden',
                         }}
                     >
-                        {urun.aciklama}
+                        {item.description}
                     </p>
                 )}
                 <span
@@ -76,7 +76,7 @@ const MenuItemCard = ({urun}) => {
                         marginTop: '2px',
                     }}
                 >
-                    {urun.fiyat} ₺
+                    {item.price} ₺
                 </span>
             </div>
         </div>

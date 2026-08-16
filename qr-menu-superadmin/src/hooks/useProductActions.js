@@ -11,55 +11,55 @@ import {
 import {db} from '@/firebaseConfig';
 import {useToast} from '@/';
 
-export const useProductActions = (restoranId) => {
-    const [islemYapiliyor, setIslemYapiliyor] = useState(false);
+export const useProductActions = (restaurantId) => {
+    const [isProcessing, setIsProcessing] = useState(false);
     const toast = useToast();
 
     // Tekli Ürün Sil
-    const urunSil = async (id, ad) => {
-        if (!window.confirm(`"${ad}" ürününü silmek istediğine emin misin?`))
+    const deleteProduct = async (id, name) => {
+        if (!window.confirm(`"${name}" ürününü silmek istediğine emin misin?`))
             return;
 
         try {
-            setIslemYapiliyor(true);
-            await deleteDoc(doc(db, 'restaurants', restoranId, 'menu', id));
+            setIsProcessing(true);
+            await deleteDoc(doc(db, 'restaurants', restaurantId, 'menu', id));
         } catch (error) {
             console.error('Ürün silme hatası:', error);
             toast.error('Ürün silinirken bir hata oluştu.');
         } finally {
-            setIslemYapiliyor(false);
+            setIsProcessing(false);
         }
     };
 
     // Formu Kaydet (Ekle veya Güncelle)
-    const formuKaydet = async (aktifForm, resimYukleniyor, onSuccess) => {
-        if (resimYukleniyor)
+    const saveForm = async (activeForm, isImageLoading, onSuccess) => {
+        if (isImageLoading)
             return toast.error('Resim yükleniyor, lütfen bekleyin!');
-        if (!aktifForm.ad || !aktifForm.fiyat || !aktifForm.kategoriId)
+        if (!activeForm.name || !activeForm.price || !activeForm.categoryId)
             return toast.error('Ad, Fiyat ve Kategori seçimi zorunludur!');
 
         const payload = {
-            ad: aktifForm.ad,
-            kategoriId: aktifForm.kategoriId,
-            resim:
-                aktifForm.resim ||
+            name: activeForm.name,
+            categoryId: activeForm.categoryId,
+            image:
+                activeForm.image ||
                 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300',
-            fiyat: Number(aktifForm.fiyat),
-            aciklama: aktifForm.aciklama || '',
+            price: Number(activeForm.price),
+            description: activeForm.description || '',
             updatedAt: serverTimestamp(),
         };
 
         try {
-            setIslemYapiliyor(true);
-            if (aktifForm.id) {
+            setIsProcessing(true);
+            if (activeForm.id) {
                 await updateDoc(
-                    doc(db, 'restaurants', restoranId, 'menu', aktifForm.id),
+                    doc(db, 'restaurants', restaurantId, 'menu', activeForm.id),
                     payload
                 );
             } else {
                 payload.createdAt = serverTimestamp();
                 await addDoc(
-                    collection(db, 'restaurants', restoranId, 'menu'),
+                    collection(db, 'restaurants', restaurantId, 'menu'),
                     payload
                 );
             }
@@ -68,24 +68,24 @@ export const useProductActions = (restoranId) => {
             console.error('Ürün kaydetme hatası:', error);
             toast.error('Ürün kaydedilirken hata oluştu.');
         } finally {
-            setIslemYapiliyor(false);
+            setIsProcessing(false);
         }
     };
 
     // Toplu Ürün Sil
-    const topluUrunSil = async (secilenUrunler, onSuccess) => {
-        if (!secilenUrunler || secilenUrunler.length === 0) return;
+    const deleteMultipleProducts = async (selectedProducts, onSuccess) => {
+        if (!selectedProducts || selectedProducts.length === 0) return;
         const onay = window.confirm(
-            `Seçtiğiniz ${secilenUrunler.length} adet ürünü silmek istediğinize emin misiniz?`
+            `Seçtiğiniz ${selectedProducts.length} adet ürünü silmek istediğinize emin misiniz?`
         );
         if (!onay) return;
 
         try {
-            setIslemYapiliyor(true);
+            setIsProcessing(true);
             const batch = writeBatch(db);
-            secilenUrunler.forEach((urunId) => {
+            selectedProducts.forEach((productId) => {
                 batch.delete(
-                    doc(db, 'restaurants', restoranId, 'menu', urunId)
+                    doc(db, 'restaurants', restaurantId, 'menu', productId)
                 );
             });
             await batch.commit();
@@ -94,9 +94,9 @@ export const useProductActions = (restoranId) => {
             console.error('Toplu silme hatası:', error);
             toast.error('Ürünler silinirken hata oluştu.');
         } finally {
-            setIslemYapiliyor(false);
+            setIsProcessing(false);
         }
     };
 
-    return {urunSil, formuKaydet, topluUrunSil, islemYapiliyor};
+    return {deleteProduct, saveForm, deleteMultipleProducts, isProcessing};
 };

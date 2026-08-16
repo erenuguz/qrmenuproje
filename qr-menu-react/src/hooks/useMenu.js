@@ -2,31 +2,31 @@ import {useState, useEffect} from 'react';
 import {collection, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
-export const useMenu = (restoranId) => {
+export const useMenu = (restaurantId) => {
     const [menu, setMenu] = useState([]);
-    const [yukleniyor, setYukleniyor] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!restoranId) {
-            setYukleniyor(false);
+        if (!restaurantId) {
+            setLoading(false);
             return;
         }
 
         const unsubMenu = onSnapshot(
-            collection(db, 'restaurants', restoranId, 'menu'),
+            collection(db, 'restaurants', restaurantId, 'menu'),
             (snapshot) => {
                 setMenu(
-                    snapshot.docs.map((belge) => ({
-                        id: belge.id,
-                        ...belge.data(),
+                    snapshot.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data(),
                     }))
                 );
-                setYukleniyor(false);
+                setLoading(false);
             }
         );
 
         return () => unsubMenu();
-    }, [restoranId]);
+    }, [restaurantId]);
 
-    return {menu, yukleniyor};
+    return {menu, loading};
 };

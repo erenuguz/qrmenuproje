@@ -10,36 +10,40 @@ import {
 import {db} from '@/firebaseConfig';
 import {useToast} from '@/';
 
-export const useCategoryActions = (restoranId, kategoriler, menu) => {
+export const useCategoryActions = (restaurantId, categories, menu) => {
     const toast = useToast();
 
-    const kategoriEkle = async (yeniAd) => {
-        const ad = yeniAd.trim();
-        if (!ad) return false;
+    const addCategory = async (newName) => {
+        const name = newName.trim();
+        if (!name) return false;
 
-        if (kategoriler.some((k) => k.ad.toLowerCase() === ad.toLowerCase())) {
+        if (
+            categories.some(
+                (category) => category.name.toLowerCase() === name.toLowerCase()
+            )
+        ) {
             toast.error('Bu kategori zaten mevcut!');
             return false;
         }
 
-        const yeniSira =
-            kategoriler.length > 0
-                ? Math.max(...kategoriler.map((k) => k.sira)) + 1
+        const newOrder =
+            categories.length > 0
+                ? Math.max(...categories.map((category) => category.order)) + 1
                 : 0;
 
         try {
             await addDoc(
-                collection(db, 'restaurants', restoranId, 'categories'),
+                collection(db, 'restaurants', restaurantId, 'categories'),
                 {
-                    ad: ad,
-                    gorsel: '',
-                    sira: yeniSira,
-                    aktif: true,
+                    name: name,
+                    image: '',
+                    order: newOrder,
+                    isActive: true,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
                 }
             );
-            return true; // Başarılı olursa true dönüyoruz ki input'u temizleyelim
+            return true;
         } catch (error) {
             console.error('Kategori eklenirken hata:', error);
             toast.error('Kategori eklenemedi.');
@@ -47,13 +51,14 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
         }
     };
 
-    const kategoriIsminiGuncelle = async (id, eskiAd, yeniAd) => {
-        if (!yeniAd || eskiAd === yeniAd) return;
+    const updateCategoryName = async (id, oldName, newName) => {
+        if (!newName || oldName === newName) return;
 
         if (
-            kategoriler.some(
-                (k) =>
-                    k.id !== id && k.ad.toLowerCase() === yeniAd.toLowerCase()
+            categories.some(
+                (category) =>
+                    category.id !== id &&
+                    category.name.toLowerCase() === newName.toLowerCase()
             )
         ) {
             toast.error('Bu isimde başka kategori var!');
@@ -62,9 +67,9 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
 
         try {
             await updateDoc(
-                doc(db, 'restaurants', restoranId, 'categories', id),
+                doc(db, 'restaurants', restaurantId, 'categories', id),
                 {
-                    ad: yeniAd,
+                    name: newName,
                     updatedAt: serverTimestamp(),
                 }
             );
@@ -74,23 +79,25 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
         }
     };
 
-    const kategoriSil = async (id, ad) => {
-        const buKategoridekiUrunler = menu.filter((y) => y.kategoriId === id);
-        if (buKategoridekiUrunler.length > 0) {
+    const deleteCategory = async (id, name) => {
+        const productsInCategory = menu.filter(
+            (product) => product.categoryId === id
+        );
+        if (productsInCategory.length > 0) {
             toast.error(
-                `"${ad}" kategorisinde ${buKategoridekiUrunler.length} adet ürün var. Önce ürünleri silin!`
+                `"${name}" kategorisinde ${productsInCategory.length} adet ürün var. Önce ürünleri silin!`
             );
             return;
         }
 
         if (
             window.confirm(
-                `"${ad}" kategorisini tamamen silmek istediğine emin misin?`
+                `"${name}" kategorisini tamamen silmek istediğine emin misin?`
             )
         ) {
             try {
                 await deleteDoc(
-                    doc(db, 'restaurants', restoranId, 'categories', id)
+                    doc(db, 'restaurants', restaurantId, 'categories', id)
                 );
             } catch (error) {
                 console.error('Kategori silinirken hata:', error);
@@ -99,12 +106,12 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
         }
     };
 
-    const gorselGuncelle = async (id, url) => {
+    const updateImage = async (id, url) => {
         try {
             await updateDoc(
-                doc(db, 'restaurants', restoranId, 'categories', id),
+                doc(db, 'restaurants', restaurantId, 'categories', id),
                 {
-                    gorsel: url,
+                    image: url,
                     updatedAt: serverTimestamp(),
                 }
             );
@@ -114,10 +121,10 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
         }
     };
 
-    const kategoriyiYukariTasi = async (index) => {
+    const moveCategoryUp = async (index) => {
         if (index === 0) return;
-        const aktifKategori = kategoriler[index];
-        const ustKategori = kategoriler[index - 1];
+        const activeCategory = categories[index];
+        const upperCategory = categories[index - 1];
 
         try {
             const batch = writeBatch(db);
@@ -125,33 +132,33 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
                 doc(
                     db,
                     'restaurants',
-                    restoranId,
+                    restaurantId,
                     'categories',
-                    aktifKategori.id
+                    activeCategory.id
                 ),
-                {sira: ustKategori.sira}
+                {order: upperCategory.order}
             );
             batch.update(
                 doc(
                     db,
                     'restaurants',
-                    restoranId,
+                    restaurantId,
                     'categories',
-                    ustKategori.id
+                    upperCategory.id
                 ),
-                {sira: aktifKategori.sira}
+                {order: activeCategory.order}
             );
             await batch.commit();
         } catch (error) {
             console.error('Kategori yukarı taşınırken hata:', error);
-            toast.error('Görsel güncellenemedi.');
+            toast.error('Sıralama güncellenemedi.');
         }
     };
 
-    const kategoriyiAsagiTasi = async (index) => {
-        if (index === kategoriler.length - 1) return;
-        const aktifKategori = kategoriler[index];
-        const altKategori = kategoriler[index + 1];
+    const moveCategoryDown = async (index) => {
+        if (index === categories.length - 1) return;
+        const activeCategory = categories[index];
+        const lowerCategory = categories[index + 1];
 
         try {
             const batch = writeBatch(db);
@@ -159,21 +166,21 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
                 doc(
                     db,
                     'restaurants',
-                    restoranId,
+                    restaurantId,
                     'categories',
-                    aktifKategori.id
+                    activeCategory.id
                 ),
-                {sira: altKategori.sira}
+                {order: lowerCategory.order}
             );
             batch.update(
                 doc(
                     db,
                     'restaurants',
-                    restoranId,
+                    restaurantId,
                     'categories',
-                    altKategori.id
+                    lowerCategory.id
                 ),
-                {sira: aktifKategori.sira}
+                {order: activeCategory.order}
             );
             await batch.commit();
         } catch (error) {
@@ -183,11 +190,11 @@ export const useCategoryActions = (restoranId, kategoriler, menu) => {
     };
 
     return {
-        kategoriEkle,
-        kategoriIsminiGuncelle,
-        kategoriSil,
-        gorselGuncelle,
-        kategoriyiYukariTasi,
-        kategoriyiAsagiTasi,
+        addCategory,
+        updateCategoryName,
+        deleteCategory,
+        updateImage,
+        moveCategoryUp,
+        moveCategoryDown,
     };
 };

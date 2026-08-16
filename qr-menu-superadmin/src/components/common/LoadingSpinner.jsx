@@ -1,23 +1,62 @@
 import React from 'react';
 
-// Dışarıdan özel bir mesaj gelmezse varsayılan olarak "Yükleniyor..." yazar
-const LoadingSpinner = ({mesaj = 'Yükleniyor...'}) => {
+const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
     return (
         <div
             style={{
-                minHeight: '100vh',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '50px',
-                textAlign: 'center',
-                color: 'var(--textSecondary)',
-                fontSize: 'var(--font-body)',
-                fontWeight: 'var(--font-bold)',
-                backgroundColor: 'var(--background)',
+                minHeight: '200px',
+                gap: '16px',
+                fontFamily: 'var(--font-family)',
             }}
         >
-            ⏳ {mesaj}
+            {/* Spinner Halkası */}
+            <div style={{position: 'relative', width: '48px', height: '48px'}}>
+                {/* Arka plan halkası */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '50%',
+                        border: '3px solid var(--border)',
+                    }}
+                />
+                {/* Dönen halka */}
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '50%',
+                        border: '3px solid transparent',
+                        borderTopColor: 'var(--primary)',
+                        animation: 'spin 0.8s linear infinite',
+                    }}
+                />
+            </div>
+
+            {/* Mesaj */}
+            <p
+                style={{
+                    margin: 0,
+                    color: 'var(--textSecondary)',
+                    fontSize: 'var(--font-caption)',
+                    fontWeight: 'var(--font-medium)',
+                    letterSpacing: '0.01em',
+                }}
+            >
+                {message}
+            </p>
+
+            {/* Animasyon keyframe */}
+            <style>{`
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to   { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 };

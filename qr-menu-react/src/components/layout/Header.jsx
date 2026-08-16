@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Header = ({aktifKategori, geriDon, restoranAd, restoranLogo}) => {
+const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
     return (
         <div
             style={{
@@ -20,9 +20,9 @@ const Header = ({aktifKategori, geriDon, restoranAd, restoranLogo}) => {
             }}
         >
             <div style={{width: '38px', display: 'flex', alignItems: 'center'}}>
-                {aktifKategori !== null && (
+                {activeCategory !== null && (
                     <button
-                        onClick={geriDon}
+                        onClick={onBack}
                         aria-label="Geri dön"
                         style={{
                             background: 'var(--background)',
@@ -89,10 +89,10 @@ const Header = ({aktifKategori, geriDon, restoranAd, restoranLogo}) => {
                         minWidth: 0,
                     }}
                 >
-                    {restoranLogo ? (
+                    {restaurantLogo ? (
                         <img
-                            src={restoranLogo}
-                            alt={restoranAd || 'Logo'}
+                            src={restaurantLogo}
+                            alt={restaurantName || 'Logo'}
                             style={{
                                 width: '34px',
                                 height: '34px',
@@ -132,7 +132,7 @@ const Header = ({aktifKategori, geriDon, restoranAd, restoranLogo}) => {
                             textOverflow: 'ellipsis',
                         }}
                     >
-                        {restoranAd}
+                        {restaurantName}
                     </h1>
                 </div>
             </div>

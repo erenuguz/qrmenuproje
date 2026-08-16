@@ -1,4 +1,4 @@
-import {resimYukleVeUrlAl, useToast} from '@/';
+import {uploadImageAndGetUrl, useToast} from '@/';
 
 // ── Shared stil nesneleri ──
 const labelStyle = {
@@ -21,12 +21,12 @@ const inputStyle = {
 };
 
 export default function ProductForm({
-    aktifForm,
-    setAktifForm,
-    kategoriler,
-    resimYukleniyor,
-    setResimYukleniyor,
-    formuKaydet,
+    activeForm,
+    setActiveForm,
+    categories,
+    isImageLoading,
+    setIsImageLoading,
+    saveForm,
 }) {
     const toast = useToast();
     return (
@@ -57,7 +57,7 @@ export default function ProductForm({
                         fontWeight: 'var(--font-bold)',
                     }}
                 >
-                    {aktifForm.id ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle'}
+                    {activeForm.id ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle'}
                 </h2>
                 <p
                     style={{
@@ -83,9 +83,9 @@ export default function ProductForm({
                     <label style={labelStyle}>Ürün Adı</label>
                     <input
                         type="text"
-                        value={aktifForm.ad}
+                        value={activeForm.name}
                         onChange={(e) =>
-                            setAktifForm({...aktifForm, ad: e.target.value})
+                            setActiveForm({...activeForm, name: e.target.value})
                         }
                         style={inputStyle}
                     />
@@ -93,11 +93,11 @@ export default function ProductForm({
                 <div style={{flex: '1 1 200px'}}>
                     <label style={labelStyle}>Kategori</label>
                     <select
-                        value={aktifForm.kategoriId || ''}
+                        value={activeForm.categoryId || ''}
                         onChange={(e) =>
-                            setAktifForm({
-                                ...aktifForm,
-                                kategoriId: e.target.value,
+                            setActiveForm({
+                                ...activeForm,
+                                categoryId: e.target.value,
                             })
                         }
                         style={{...inputStyle, cursor: 'pointer'}}
@@ -105,9 +105,9 @@ export default function ProductForm({
                         <option value="" disabled>
                             -- Kategori Seç --
                         </option>
-                        {kategoriler.map((kat) => (
-                            <option key={kat.id} value={kat.id}>
-                                {kat.ad}
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
                             </option>
                         ))}
                     </select>
@@ -127,9 +127,12 @@ export default function ProductForm({
                     <label style={labelStyle}>Fiyat (₺)</label>
                     <input
                         type="number"
-                        value={aktifForm.fiyat}
+                        value={activeForm.price}
                         onChange={(e) =>
-                            setAktifForm({...aktifForm, fiyat: e.target.value})
+                            setActiveForm({
+                                ...activeForm,
+                                price: e.target.value,
+                            })
                         }
                         style={inputStyle}
                     />
@@ -139,11 +142,11 @@ export default function ProductForm({
                     <div style={{display: 'flex', gap: '8px'}}>
                         <input
                             type="text"
-                            value={aktifForm.resim}
+                            value={activeForm.image}
                             onChange={(e) =>
-                                setAktifForm({
-                                    ...aktifForm,
-                                    resim: e.target.value,
+                                setActiveForm({
+                                    ...activeForm,
+                                    image: e.target.value,
                                 })
                             }
                             placeholder="Link yapıştırın..."
@@ -181,16 +184,16 @@ export default function ProductForm({
                                 type="file"
                                 accept="image/*"
                                 onChange={async (e) => {
-                                    const dosya = e.target.files[0];
-                                    if (dosya) {
-                                        const url = await resimYukleVeUrlAl(
-                                            dosya,
-                                            setResimYukleniyor
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        const url = await uploadImageAndGetUrl(
+                                            file,
+                                            setIsImageLoading
                                         );
                                         if (url) {
-                                            setAktifForm({
-                                                ...aktifForm,
-                                                resim: url,
+                                            setActiveForm({
+                                                ...activeForm,
+                                                image: url,
                                             });
                                         } else {
                                             toast.error(
@@ -210,9 +213,9 @@ export default function ProductForm({
                             />
                         </div>
                     </div>
-                    {aktifForm.resim && (
+                    {activeForm.image && (
                         <img
-                            src={aktifForm.resim}
+                            src={activeForm.image}
                             alt="ürün"
                             style={{
                                 width: '64px',
@@ -231,9 +234,12 @@ export default function ProductForm({
             <div style={{marginBottom: '30px'}}>
                 <label style={labelStyle}>Açıklama</label>
                 <textarea
-                    value={aktifForm.aciklama}
+                    value={activeForm.description}
                     onChange={(e) =>
-                        setAktifForm({...aktifForm, aciklama: e.target.value})
+                        setActiveForm({
+                            ...activeForm,
+                            description: e.target.value,
+                        })
                     }
                     style={{
                         ...inputStyle,
@@ -253,7 +259,7 @@ export default function ProductForm({
                 }}
             >
                 <button
-                    onClick={() => setAktifForm(null)}
+                    onClick={() => setActiveForm(null)}
                     style={{
                         padding: '10px 20px',
                         backgroundColor: 'transparent',
@@ -268,8 +274,8 @@ export default function ProductForm({
                     İptal
                 </button>
                 <button
-                    onClick={formuKaydet}
-                    disabled={resimYukleniyor}
+                    onClick={saveForm}
+                    disabled={isImageLoading}
                     style={{
                         padding: '10px 24px',
                         backgroundColor: 'var(--primary)',
@@ -277,11 +283,11 @@ export default function ProductForm({
                         border: 'none',
                         borderRadius: 'var(--radiusSmall)',
                         fontWeight: 'bold',
-                        cursor: resimYukleniyor ? 'wait' : 'pointer',
+                        cursor: isImageLoading ? 'wait' : 'pointer',
                         fontSize: '14px',
                     }}
                 >
-                    {resimYukleniyor ? 'Yükleniyor...' : 'Kaydet'}
+                    {isImageLoading ? 'Yükleniyor...' : 'Kaydet'}
                 </button>
             </div>
         </div>

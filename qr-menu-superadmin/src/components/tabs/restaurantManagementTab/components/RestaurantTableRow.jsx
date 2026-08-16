@@ -2,17 +2,17 @@ import React, {useState, useEffect} from 'react';
 import {collection, getCountFromServer} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
-const RestaurantTableRow = ({res, isLast, handleSil}) => {
-    const isPasif = res.durum === 'pasif';
-    const [urunSayisi, setUrunSayisi] = useState('...');
-    const [kategoriSayisi, setKategoriSayisi] = useState('...');
+const RestaurantTableRow = ({res, isLast, handleDelete}) => {
+    const isInactive = res.status === 'pasif';
+    const [productCount, setProductCount] = useState('...');
+    const [categoryCount, setCategoryCount] = useState('...');
 
     useEffect(() => {
         if (!res.id) return;
 
-        const sayilariGetir = async () => {
+        const fetchCounts = async () => {
             try {
-                const [urunSnap, kategoriSnap] = await Promise.all([
+                const [productSnap, categorySnap] = await Promise.all([
                     getCountFromServer(
                         collection(db, 'restaurants', res.id, 'menu')
                     ),
@@ -20,16 +20,16 @@ const RestaurantTableRow = ({res, isLast, handleSil}) => {
                         collection(db, 'restaurants', res.id, 'categories')
                     ),
                 ]);
-                setUrunSayisi(urunSnap.data().count);
-                setKategoriSayisi(kategoriSnap.data().count);
+                setProductCount(productSnap.data().count);
+                setCategoryCount(categorySnap.data().count);
             } catch (err) {
                 console.error('Sayı getirilemedi:', err);
-                setUrunSayisi('?');
-                setKategoriSayisi('?');
+                setProductCount('?');
+                setCategoryCount('?');
             }
         };
 
-        sayilariGetir();
+        fetchCounts();
     }, [res.id]);
 
     return (
@@ -77,7 +77,7 @@ const RestaurantTableRow = ({res, isLast, handleSil}) => {
                     {res.name}
                 </div>
                 <div style={{fontSize: '12px', color: 'var(--textMuted)'}}>
-                    {urunSayisi} ürün · {kategoriSayisi} kategori
+                    {productCount} ürün · {categoryCount} kategori
                 </div>
             </td>
 
@@ -118,10 +118,10 @@ const RestaurantTableRow = ({res, isLast, handleSil}) => {
                         gap: '6px',
                         padding: '4px 8px',
                         borderRadius: 'var(--radiusSmall)',
-                        backgroundColor: isPasif
+                        backgroundColor: isInactive
                             ? 'var(--dangerBg)'
                             : 'var(--successBg)',
-                        color: isPasif ? 'var(--danger)' : 'var(--success)',
+                        color: isInactive ? 'var(--danger)' : 'var(--success)',
                         fontSize: '12px',
                         fontWeight: 600,
                     }}
@@ -134,14 +134,14 @@ const RestaurantTableRow = ({res, isLast, handleSil}) => {
                             backgroundColor: 'currentColor',
                         }}
                     />
-                    {isPasif ? 'Pasif' : 'Aktif'}
+                    {isInactive ? 'Pasif' : 'Aktif'}
                 </div>
             </td>
 
             {/* İŞLEM */}
             <td style={{padding: '16px 24px', textAlign: 'right'}}>
                 <button
-                    onClick={() => handleSil(res.id, res.name)}
+                    onClick={() => handleDelete(res.id, res.name)}
                     style={{
                         background: 'transparent',
                         border: 'none',

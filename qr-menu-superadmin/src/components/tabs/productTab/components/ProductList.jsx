@@ -3,33 +3,32 @@ import {ProductCard, EmptyState, Badge} from '@/';
 
 const ProductList = ({
     menu,
-    kategoriler,
-    aramaMetni,
-    aramaSonuclari,
-    gosterilecekKategoriler,
-    topluSilModu,
-    secilenUrunler,
-    urunSecimiDegistir,
-    setAktifForm,
-    urunSil,
+    categories,
+    searchQuery,
+    searchResults,
+    displayedCategories,
+    isBulkDeleteMode,
+    selectedProducts,
+    handleProductSelectionChange,
+    setActiveForm,
+    deleteProduct,
 }) => {
     return (
         <div>
-            {aramaMetni.trim() !== '' ? (
-                // ARAMA SONUÇLARI KUTUSU (kategori filtresine de uyar)
+            {searchQuery.trim() !== '' ? (
                 <div
                     style={{
-                        backgroundColor: 'var(--surface)', // --card yerine --surface güncellendi
+                        backgroundColor: 'var(--surface)',
                         border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius)', // 12px yerine tema değişkeni
-                        boxShadow: 'var(--shadow)', // Derinlik için eklendi
+                        borderRadius: 'var(--radius)',
+                        boxShadow: 'var(--shadow)',
                         overflow: 'hidden',
                     }}
                 >
                     <div
                         style={{
                             padding: '14px 20px',
-                            borderBottom: '1px solid var(--borderLight)', // İç ayırıcılar için borderLight
+                            borderBottom: '1px solid var(--borderLight)',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '8px',
@@ -52,48 +51,52 @@ const ProductList = ({
                             flexDirection: 'column',
                         }}
                     >
-                        {aramaSonuclari.map((yemek, index) => {
+                        {searchResults.map((product, index) => {
                             return (
                                 <ProductCard
-                                    key={yemek.id}
-                                    yemek={yemek}
-                                    kategoriAdi={
-                                        kategoriler.find(
-                                            (k) => k.id === yemek.kategoriId
-                                        )?.ad
+                                    key={product.id}
+                                    product={product}
+                                    categoryName={
+                                        categories.find(
+                                            (category) =>
+                                                category.id ===
+                                                product.categoryId
+                                        )?.name
                                     }
-                                    topluSilModu={topluSilModu}
-                                    secilenUrunler={secilenUrunler}
-                                    urunSecimiDegistir={urunSecimiDegistir}
-                                    setAktifForm={setAktifForm}
-                                    urunSil={urunSil}
-                                    isLast={index === aramaSonuclari.length - 1}
+                                    isBulkDeleteMode={isBulkDeleteMode}
+                                    selectedProducts={selectedProducts}
+                                    handleProductSelectionChange={
+                                        handleProductSelectionChange
+                                    }
+                                    setActiveForm={setActiveForm}
+                                    deleteProduct={deleteProduct}
+                                    isLast={index === searchResults.length - 1}
                                 />
                             );
                         })}
-                        {aramaSonuclari.length === 0 && (
+                        {searchResults.length === 0 && (
                             <EmptyState message="Sonuç bulunamadı." />
                         )}
                     </div>
                 </div>
             ) : (
                 // KATEGORİLERE GÖRE GRUPLANMIŞ LİSTE
-                gosterilecekKategoriler.map((kategori) => {
-                    const oKategorininYemekleri = menu.filter(
-                        (y) => y.kategoriId === kategori.id
+                displayedCategories.map((category) => {
+                    const categoryProducts = menu.filter(
+                        (product) => product.categoryId === category.id
                     );
-                    if (oKategorininYemekleri.length === 0) return null;
+                    if (categoryProducts.length === 0) return null;
 
                     return (
                         <div
-                            key={kategori.id}
+                            key={category.id}
                             style={{
-                                backgroundColor: 'var(--surface)', // --card yerine --surface
+                                backgroundColor: 'var(--surface)',
                                 border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius)', // 12px yerine tema değişkeni
-                                boxShadow: 'var(--shadow)', // Derinlik için eklendi
+                                borderRadius: 'var(--radius)',
+                                boxShadow: 'var(--shadow)',
                                 marginBottom: '24px',
-                                overflow: 'hidden', // Kart içindeki son elemanın taşmasını önler
+                                overflow: 'hidden',
                             }}
                         >
                             {/* Kategori Başlığı ve Etiket (Badge) */}
@@ -101,7 +104,7 @@ const ProductList = ({
                                 style={{
                                     padding: '14px 20px',
                                     borderBottom:
-                                        '1px solid var(--borderLight)', // İç ayırıcılar için borderLight
+                                        '1px solid var(--borderLight)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '10px',
@@ -132,11 +135,9 @@ const ProductList = ({
                                         fontWeight: 'bold',
                                     }}
                                 >
-                                    {kategori.ad}
+                                    {category.name}
                                 </h4>
-                                <Badge>
-                                    {oKategorininYemekleri.length} ürün
-                                </Badge>
+                                <Badge>{categoryProducts.length} ürün</Badge>
                             </div>
 
                             {/* Kategori İçindeki Ürünler */}
@@ -146,19 +147,21 @@ const ProductList = ({
                                     flexDirection: 'column',
                                 }}
                             >
-                                {oKategorininYemekleri.map((yemek, index) => (
+                                {categoryProducts.map((product, index) => (
                                     <ProductCard
-                                        key={yemek.id}
-                                        yemek={yemek}
-                                        kategoriAdi={kategori.ad}
-                                        topluSilModu={topluSilModu}
-                                        secilenUrunler={secilenUrunler}
-                                        urunSecimiDegistir={urunSecimiDegistir}
-                                        setAktifForm={setAktifForm}
-                                        urunSil={urunSil}
+                                        key={product.id}
+                                        product={product}
+                                        categoryName={category.name}
+                                        isBulkDeleteMode={isBulkDeleteMode}
+                                        selectedProducts={selectedProducts}
+                                        handleProductSelectionChange={
+                                            handleProductSelectionChange
+                                        }
+                                        setActiveForm={setActiveForm}
+                                        deleteProduct={deleteProduct}
                                         isLast={
                                             index ===
-                                            oKategorininYemekleri.length - 1
+                                            categoryProducts.length - 1
                                         }
                                     />
                                 ))}

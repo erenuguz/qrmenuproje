@@ -1,15 +1,15 @@
 import React, {useRef} from 'react';
 import {cardStyle, inputStyle, smallLabelStyle, iconContainerStyle} from '@/';
 
-const GenelBilgiler = ({
-    ad,
-    setAd,
+const GeneralInfo = ({
+    name,
+    setName,
     logo,
-    logoYukleniyor,
-    logoDosyasiSecildi,
-    alaniGuncelle,
+    isLogoLoading,
+    handleLogoFileSelect,
+    updateField,
 }) => {
-    const dosyaInputRef = useRef(null);
+    const fileInputRef = useRef(null);
 
     return (
         <div style={cardStyle}>
@@ -72,9 +72,9 @@ const GenelBilgiler = ({
                     <label style={smallLabelStyle}>RESTORAN ADI</label>
                     <input
                         type="text"
-                        value={ad}
-                        onChange={(e) => setAd(e.target.value)}
-                        onBlur={(e) => alaniGuncelle('name', e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onBlur={(e) => updateField('name', e.target.value)}
                         placeholder="Restoran adını girin"
                         style={inputStyle}
                     />
@@ -104,7 +104,7 @@ const GenelBilgiler = ({
                                 flexShrink: 0,
                             }}
                         >
-                            {logoYukleniyor ? (
+                            {isLogoLoading ? (
                                 <span
                                     style={{
                                         fontSize: '12px',
@@ -131,8 +131,8 @@ const GenelBilgiler = ({
                                         color: 'var(--textMuted)',
                                     }}
                                 >
-                                    {ad
-                                        ? ad.substring(0, 2).toUpperCase()
+                                    {name
+                                        ? name.substring(0, 2).toUpperCase()
                                         : 'LG'}
                                 </span>
                             )}
@@ -148,7 +148,7 @@ const GenelBilgiler = ({
                             }}
                         >
                             <button
-                                onClick={() => dosyaInputRef.current.click()}
+                                onClick={() => fileInputRef.current.click()}
                                 style={{
                                     padding: '10px 16px',
                                     backgroundColor: 'var(--surface)',
@@ -183,8 +183,8 @@ const GenelBilgiler = ({
                             <input
                                 type="file"
                                 accept="image/*"
-                                onChange={logoDosyasiSecildi}
-                                ref={dosyaInputRef}
+                                onChange={handleLogoFileSelect}
+                                ref={fileInputRef}
                                 style={{display: 'none'}}
                             />
                             <span
@@ -203,4 +203,4 @@ const GenelBilgiler = ({
     );
 };
 
-export default GenelBilgiler;
+export default GeneralInfo;

@@ -1,12 +1,12 @@
 import React from 'react';
 import {cardStyle, inputStyle, smallLabelStyle, iconContainerStyle} from '@/';
 
-const MusteriWifi = ({
-    wifiAgAdi,
-    setWifiAgAdi,
-    wifiSifre,
-    setWifiSifre,
-    alaniGuncelle,
+const CustomerWifi = ({
+    wifiNetworkName,
+    setWifiNetworkName,
+    wifiPassword,
+    setWifiPassword,
+    updateField,
 }) => {
     return (
         <div style={cardStyle}>
@@ -69,10 +69,10 @@ const MusteriWifi = ({
                     <label style={smallLabelStyle}>AĞ ADI (SSID)</label>
                     <input
                         type="text"
-                        value={wifiAgAdi}
-                        onChange={(e) => setWifiAgAdi(e.target.value)}
+                        value={wifiNetworkName}
+                        onChange={(e) => setWifiNetworkName(e.target.value)}
                         onBlur={(e) =>
-                            alaniGuncelle('wifiAgAdi', e.target.value)
+                            updateField('wifiNetworkName', e.target.value)
                         }
                         placeholder="Örn: MutluKebap_Misafir"
                         style={inputStyle}
@@ -82,10 +82,10 @@ const MusteriWifi = ({
                     <label style={smallLabelStyle}>ŞİFRE</label>
                     <input
                         type="text"
-                        value={wifiSifre}
-                        onChange={(e) => setWifiSifre(e.target.value)}
+                        value={wifiPassword}
+                        onChange={(e) => setWifiPassword(e.target.value)}
                         onBlur={(e) =>
-                            alaniGuncelle('wifiSifre', e.target.value)
+                            updateField('wifiPassword', e.target.value)
                         }
                         placeholder="Örn: 12345678"
                         style={inputStyle}
@@ -96,4 +96,4 @@ const MusteriWifi = ({
     );
 };
 
-export default MusteriWifi;
+export default CustomerWifi;

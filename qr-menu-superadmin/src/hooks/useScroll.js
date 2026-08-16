@@ -1,21 +1,21 @@
 import {useState, useEffect} from 'react';
 
 export const useScroll = (limit = 300) => {
-    const [goster, setGoster] = useState(false);
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-        const kontrolEt = () => {
-            setGoster(window.scrollY > limit);
+        const checkScroll = () => {
+            setShow(window.scrollY > limit);
         };
 
-        window.addEventListener('scroll', kontrolEt);
+        window.addEventListener('scroll', checkScroll);
 
-        return () => window.removeEventListener('scroll', kontrolEt);
+        return () => window.removeEventListener('scroll', checkScroll);
     }, [limit]);
 
-    const usteCik = () => {
+    const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    return {goster, usteCik};
+    return {show, scrollToTop};
 };

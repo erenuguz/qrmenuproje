@@ -2,13 +2,13 @@ import React from 'react';
 import {useScroll} from '@/';
 
 const ScrollToTopButton = () => {
-    const {goster, usteCik} = useScroll(300);
+    const {show, scrollToTop} = useScroll(300);
 
-    if (!goster) return null;
+    if (!show) return null;
 
     return (
         <button
-            onClick={usteCik}
+            onClick={scrollToTop}
             style={{
                 position: 'fixed',
                 bottom: '25px',

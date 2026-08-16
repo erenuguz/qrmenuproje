@@ -2,11 +2,11 @@ import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 
 const ProductFilters = ({
-    aramaMetni,
-    setAramaMetni,
-    seciliKategoriFiltresi,
-    setSeciliKategoriFiltresi,
-    kategoriler,
+    searchQuery,
+    setSearchQuery,
+    selectedCategoryFilter,
+    setSelectedCategoryFilter,
+    categories,
 }) => {
     const {isMobile} = useResponsive();
 
@@ -46,8 +46,8 @@ const ProductFilters = ({
                 <input
                     type="text"
                     placeholder="Ürün ara..."
-                    value={aramaMetni}
-                    onChange={(e) => setAramaMetni(e.target.value)}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     style={{
                         width: '100%',
                         height: isMobile ? '42px' : '45px',
@@ -102,8 +102,8 @@ const ProductFilters = ({
                 )}
 
                 <select
-                    value={seciliKategoriFiltresi}
-                    onChange={(e) => setSeciliKategoriFiltresi(e.target.value)}
+                    value={selectedCategoryFilter}
+                    onChange={(e) => setSelectedCategoryFilter(e.target.value)}
                     style={{
                         width: '100%',
                         height: isMobile ? '42px' : '45px',
@@ -125,9 +125,9 @@ const ProductFilters = ({
                     }}
                 >
                     <option value="Hepsi">Tümü</option>
-                    {kategoriler.map((kat) => (
-                        <option key={kat.id} value={kat.id}>
-                            {kat.ad}
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                            {category.name}
                         </option>
                     ))}
                 </select>

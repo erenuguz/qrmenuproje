@@ -1,56 +1,60 @@
 import {useEffect, useRef} from 'react';
 
 export const useCategoryScrollSpy = (
-    kategoriler,
-    aktifKategori,
-    setAktifKategori
+    categories,
+    activeCategory,
+    setActiveCategory
 ) => {
     const isClickScrolling = useRef(false);
 
     // Ekran kaydırıldıkça hangi kategorinin ekranda olduğunu bulma
     useEffect(() => {
         const handleScroll = () => {
-            if (aktifKategori === null || isClickScrolling.current) return;
+            if (activeCategory === null || isClickScrolling.current) return;
 
             const scrollPosition = window.scrollY + 80;
-            let ekrandakiKategoriId = null;
+            let currentCategoryId = null;
 
-            for (const kat of kategoriler) {
-                const element = document.getElementById(`kategori-${kat.id}`);
+            for (const category of categories) {
+                const element = document.getElementById(
+                    `category-${category.id}`
+                );
                 if (element && element.offsetTop <= scrollPosition) {
-                    ekrandakiKategoriId = kat.id;
+                    currentCategoryId = category.id;
                 }
             }
-            if (ekrandakiKategoriId && ekrandakiKategoriId !== aktifKategori) {
-                setAktifKategori(ekrandakiKategoriId);
+            if (currentCategoryId && currentCategoryId !== activeCategory) {
+                setActiveCategory(currentCategoryId);
             }
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [kategoriler, aktifKategori, setAktifKategori]);
+    }, [categories, activeCategory, setActiveCategory]);
 
     // Aktif kategori değiştiğinde üst menüdeki butonu ortalayarak gösterme
     useEffect(() => {
-        if (aktifKategori) {
-            const aktifButon = document.getElementById(`btn-${aktifKategori}`);
-            if (aktifButon) {
-                aktifButon.scrollIntoView({
+        if (activeCategory) {
+            const activeButton = document.getElementById(
+                `btn-${activeCategory}`
+            );
+            if (activeButton) {
+                activeButton.scrollIntoView({
                     behavior: 'smooth',
                     inline: 'center',
                     block: 'nearest',
                 });
             }
         }
-    }, [aktifKategori]);
+    }, [activeCategory]);
 
     // Kullanıcı menüden bir kategoriye tıkladığında oraya kaydırma
-    const kategoriyeKaydir = (katId) => {
+    const scrollToCategory = (categoryId) => {
         isClickScrolling.current = true;
-        setAktifKategori(katId);
+        setActiveCategory(categoryId);
 
         setTimeout(() => {
-            const element = document.getElementById(`kategori-${katId}`);
+            const element = document.getElementById(`category-${categoryId}`);
             if (element) {
                 const y =
                     element.getBoundingClientRect().top + window.scrollY - 60;
@@ -66,5 +70,5 @@ export const useCategoryScrollSpy = (
         }, 100);
     };
 
-    return {kategoriyeKaydir};
+    return {scrollToCategory};
 };

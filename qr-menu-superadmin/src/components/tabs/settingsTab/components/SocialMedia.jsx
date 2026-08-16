@@ -6,7 +6,7 @@ const SosyalMedya = ({
     setInstagram,
     whatsapp,
     setWhatsapp,
-    alaniGuncelle,
+    updateField,
 }) => {
     return (
         <div style={cardStyle}>
@@ -123,7 +123,7 @@ const SosyalMedya = ({
                             value={instagram}
                             onChange={(e) => setInstagram(e.target.value)}
                             onBlur={(e) =>
-                                alaniGuncelle('instagram', e.target.value)
+                                updateField('instagram', e.target.value)
                             }
                             placeholder="kullaniciadi"
                             style={{
@@ -164,7 +164,7 @@ const SosyalMedya = ({
                             value={whatsapp}
                             onChange={(e) => setWhatsapp(e.target.value)}
                             onBlur={(e) =>
-                                alaniGuncelle('whatsapp', e.target.value)
+                                updateField('whatsapp', e.target.value)
                             }
                             placeholder="05551234567"
                             style={{

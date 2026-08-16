@@ -2,13 +2,13 @@ import React from 'react';
 import {CategoryItem, EmptyState, Badge} from '@/';
 
 const CategoryList = ({
-    kategoriler,
+    categories,
     menu,
-    kategoriyiYukariTasi,
-    kategoriyiAsagiTasi,
-    kategoriSil,
-    kategoriIsminiGuncelle,
-    gorselGuncelle,
+    moveCategoryUp,
+    moveCategoryDown,
+    deleteCategory,
+    updateCategoryName,
+    updateImage,
 }) => {
     return (
         <div
@@ -54,7 +54,7 @@ const CategoryList = ({
                     >
                         Kategori Listesi
                     </h3>
-                    <Badge>{kategoriler.length} kategori</Badge>
+                    <Badge>{categories.length} kategori</Badge>
                 </div>
                 <span
                     style={{
@@ -68,28 +68,28 @@ const CategoryList = ({
 
             {/* Liste İçeriği */}
             <div style={{display: 'flex', flexDirection: 'column'}}>
-                {kategoriler.map((kat, index) => {
-                    const urunSayisi = menu.filter(
-                        (y) => y.kategoriId === kat.id
+                {categories.map((category, index) => {
+                    const productCount = menu.filter(
+                        (product) => product.categoryId === category.id
                     ).length;
 
                     return (
                         <CategoryItem
-                            key={kat.id}
-                            kat={kat}
+                            key={category.id}
+                            category={category}
                             index={index}
-                            toplamKategoriSayisi={kategoriler.length}
-                            urunSayisi={urunSayisi}
-                            kategoriyiYukariTasi={kategoriyiYukariTasi}
-                            kategoriyiAsagiTasi={kategoriyiAsagiTasi}
-                            kategoriSil={kategoriSil}
-                            kategoriIsminiGuncelle={kategoriIsminiGuncelle}
-                            gorselGuncelle={gorselGuncelle}
+                            totalCategoryCount={categories.length}
+                            productCount={productCount}
+                            moveCategoryUp={moveCategoryUp}
+                            moveCategoryDown={moveCategoryDown}
+                            deleteCategory={deleteCategory}
+                            updateCategoryName={updateCategoryName}
+                            updateImage={updateImage}
                         />
                     );
                 })}
 
-                {kategoriler.length === 0 && (
+                {categories.length === 0 && (
                     <EmptyState message="Henüz kategori eklenmemiş." />
                 )}
             </div>

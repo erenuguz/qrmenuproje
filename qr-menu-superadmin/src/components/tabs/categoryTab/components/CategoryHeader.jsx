@@ -2,9 +2,9 @@ import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import {StatCard, PageHeader} from '@/';
 
-const CategoryHeader = ({kategoriler, menu}) => {
-    const toplamKategori = kategoriler.length;
-    const toplamUrun = menu.length;
+const CategoryHeader = ({categories, menu}) => {
+    const totalCategories = categories.length;
+    const totalProducts = menu.length;
     const {isMobile} = useResponsive();
 
     return (
@@ -37,7 +37,7 @@ const CategoryHeader = ({kategoriler, menu}) => {
                 <StatCard
                     bgColor="var(--badge)"
                     iconColor="var(--info)"
-                    value={toplamKategori}
+                    value={totalCategories}
                     label="Toplam Kategori"
                     icon={
                         <svg
@@ -57,7 +57,7 @@ const CategoryHeader = ({kategoriler, menu}) => {
                 <StatCard
                     bgColor="var(--successBg)"
                     iconColor="var(--success)"
-                    value={toplamUrun}
+                    value={totalProducts}
                     label="Toplam Ürün"
                     icon={
                         <svg

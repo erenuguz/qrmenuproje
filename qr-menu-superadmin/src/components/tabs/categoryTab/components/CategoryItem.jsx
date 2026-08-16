@@ -1,33 +1,33 @@
 import React, {useState} from 'react';
-import {useResponsive, useToast, resimYukleVeUrlAl} from '@/';
+import {useResponsive, useToast, uploadImageAndGetUrl} from '@/';
 
 const CategoryItem = ({
-    kat,
+    category,
     index,
-    toplamKategoriSayisi,
-    urunSayisi,
-    kategoriyiYukariTasi,
-    kategoriyiAsagiTasi,
-    kategoriSil,
-    kategoriIsminiGuncelle,
-    gorselGuncelle,
+    totalCategoryCount,
+    productCount,
+    moveCategoryUp,
+    moveCategoryDown,
+    deleteCategory,
+    updateCategoryName,
+    updateImage,
 }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [editAd, setEditAd] = useState(kat.ad);
+    const [editName, setEditName] = useState(category.name);
     const [isUploading, setIsUploading] = useState(false);
     const {isMobile} = useResponsive();
     const toast = useToast();
-    const isLast = index === toplamKategoriSayisi - 1;
+    const isLast = index === totalCategoryCount - 1;
 
-    const handleKaydet = () => {
-        if (editAd.trim() !== kat.ad) {
-            kategoriIsminiGuncelle(kat.id, kat.ad, editAd.trim());
+    const handleSave = () => {
+        if (editName.trim() !== category.name) {
+            updateCategoryName(category.id, category.name, editName.trim());
         }
         setIsEditing(false);
     };
 
     /* ── Shared: Görsel ── */
-    const gorselDiv = (
+    const imageDiv = (
         <div
             style={{
                 width: '46px',
@@ -42,10 +42,10 @@ const CategoryItem = ({
                 flexShrink: 0,
             }}
         >
-            {kat.gorsel ? (
+            {category.image ? (
                 <img
-                    src={kat.gorsel}
-                    alt={kat.ad}
+                    src={category.image}
+                    alt={category.name}
                     style={{width: '100%', height: '100%', objectFit: 'cover'}}
                 />
             ) : (
@@ -55,12 +55,12 @@ const CategoryItem = ({
     );
 
     /* ── Shared: Düzenleme formu ── */
-    const duzenleFormu = (
+    const editForm = (
         <div style={{display: 'flex', gap: '10px', flex: 1, flexWrap: 'wrap'}}>
             <input
                 type="text"
-                value={editAd}
-                onChange={(e) => setEditAd(e.target.value)}
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
                 autoFocus
                 style={{
                     flex: 1,
@@ -75,7 +75,7 @@ const CategoryItem = ({
                 }}
             />
             <button
-                onClick={handleKaydet}
+                onClick={handleSave}
                 style={{
                     padding: '6px 12px',
                     borderRadius: 'var(--radiusSmall)',
@@ -95,7 +95,7 @@ const CategoryItem = ({
             <button
                 onClick={() => {
                     setIsEditing(false);
-                    setEditAd(kat.ad);
+                    setEditName(category.name);
                 }}
                 style={{
                     padding: '6px 12px',
@@ -117,7 +117,7 @@ const CategoryItem = ({
     );
 
     /* ── Shared: Kategori bilgisi ── */
-    const kategoriInfo = (
+    const categoryInfo = (
         <div style={{display: 'flex', flexDirection: 'column'}}>
             <h4
                 style={{
@@ -127,7 +127,7 @@ const CategoryItem = ({
                     fontWeight: 'var(--font-semibold)',
                 }}
             >
-                {kat.ad}
+                {category.name}
             </h4>
             <div
                 style={{
@@ -148,13 +148,13 @@ const CategoryItem = ({
                 >
                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 </svg>
-                {urunSayisi} ürün
+                {productCount} ürün
             </div>
         </div>
     );
 
     /* ── Shared: Aksiyon butonları ── */
-    const aksiyonButonlari = (
+    const actionButtons = (
         <div
             style={{
                 display: 'flex',
@@ -204,15 +204,15 @@ const CategoryItem = ({
                     accept="image/*"
                     disabled={isUploading}
                     onChange={async (e) => {
-                        const dosya = e.target.files[0];
-                        if (dosya) {
+                        const file = e.target.files[0];
+                        if (file) {
                             setIsUploading(true);
-                            const url = await resimYukleVeUrlAl(
-                                dosya,
+                            const url = await uploadImageAndGetUrl(
+                                file,
                                 () => {}
                             );
                             if (url) {
-                                gorselGuncelle(kat.id, url);
+                                updateImage(category.id, url);
                             } else {
                                 toast.error('Resim yüklenirken hata oluştu.');
                             }
@@ -252,7 +252,7 @@ const CategoryItem = ({
             </button>
 
             <button
-                onClick={() => kategoriSil(kat.id, kat.ad)}
+                onClick={() => deleteCategory(category.id, category.name)}
                 style={{
                     ...(isMobile && {flex: 1}),
                     padding: isMobile ? '8px 12px' : '4px 10px',
@@ -313,7 +313,7 @@ const CategoryItem = ({
                         }}
                     >
                         <button
-                            onClick={() => kategoriyiYukariTasi(index)}
+                            onClick={() => moveCategoryUp(index)}
                             disabled={index === 0}
                             style={{
                                 background: 'transparent',
@@ -339,7 +339,7 @@ const CategoryItem = ({
                             </svg>
                         </button>
                         <button
-                            onClick={() => kategoriyiAsagiTasi(index)}
+                            onClick={() => moveCategoryDown(index)}
                             disabled={isLast}
                             style={{
                                 background: 'transparent',
@@ -377,12 +377,12 @@ const CategoryItem = ({
                     </span>
                 </div>
 
-                {gorselDiv}
-                {isEditing ? duzenleFormu : kategoriInfo}
+                {imageDiv}
+                {isEditing ? editForm : categoryInfo}
             </div>
 
             {/* Aksiyon butonları: mobilde alt satır, desktopda sağ taraf */}
-            {!isEditing && aksiyonButonlari}
+            {!isEditing && actionButtons}
         </div>
     );
 };

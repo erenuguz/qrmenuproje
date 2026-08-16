@@ -7,48 +7,48 @@ import {
     useCategories,
 } from '@/';
 
-const CategoryTab = ({restoranId, menu}) => {
-    const [yeniKategoriAd, setYeniKategoriAd] = useState('');
+const CategoryTab = ({restaurantId, menu}) => {
+    const [newCategoryName, setNewCategoryName] = useState('');
 
     // Veriyi Çek
-    const {kategoriler} = useCategories(restoranId);
+    const {categories} = useCategories(restaurantId);
 
     // İşlemleri Çek
     const {
-        kategoriEkle,
-        kategoriIsminiGuncelle,
-        kategoriSil,
-        gorselGuncelle,
-        kategoriyiYukariTasi,
-        kategoriyiAsagiTasi,
-    } = useCategoryActions(restoranId, kategoriler, menu);
+        addCategory,
+        updateCategoryName,
+        deleteCategory,
+        updateImage,
+        moveCategoryUp,
+        moveCategoryDown,
+    } = useCategoryActions(restaurantId, categories, menu);
 
     // Ekleme başarılı olursa input'u temizle
-    const handleKategoriEkle = async () => {
-        const basarili = await kategoriEkle(yeniKategoriAd);
-        if (basarili) {
-            setYeniKategoriAd('');
+    const handleAddCategory = async () => {
+        const success = await addCategory(newCategoryName);
+        if (success) {
+            setNewCategoryName('');
         }
     };
 
     return (
         <div>
-            <CategoryHeader kategoriler={kategoriler} menu={menu} />
+            <CategoryHeader categories={categories} menu={menu} />
 
             <CategoryAdd
-                yeniKategoriAd={yeniKategoriAd}
-                setYeniKategoriAd={setYeniKategoriAd}
-                kategoriEkle={handleKategoriEkle}
+                newCategoryName={newCategoryName}
+                setNewCategoryName={setNewCategoryName}
+                addCategory={handleAddCategory}
             />
 
             <CategoryList
-                kategoriler={kategoriler}
+                categories={categories}
                 menu={menu}
-                kategoriyiYukariTasi={kategoriyiYukariTasi}
-                kategoriyiAsagiTasi={kategoriyiAsagiTasi}
-                kategoriSil={kategoriSil}
-                kategoriIsminiGuncelle={kategoriIsminiGuncelle}
-                gorselGuncelle={gorselGuncelle}
+                moveCategoryUp={moveCategoryUp}
+                moveCategoryDown={moveCategoryDown}
+                deleteCategory={deleteCategory}
+                updateCategoryName={updateCategoryName}
+                updateImage={updateImage}
             />
         </div>
     );

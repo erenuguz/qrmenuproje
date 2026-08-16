@@ -2,19 +2,19 @@ import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 
 export default function ProductCard({
-    yemek,
-    kategoriAdi,
-    topluSilModu,
-    secilenUrunler,
-    urunSecimiDegistir,
-    setAktifForm,
-    urunSil,
+    product,
+    categoryName,
+    isBulkDeleteMode,
+    selectedProducts,
+    handleProductSelectionChange,
+    setActiveForm,
+    deleteProduct,
     isLast,
 }) {
     const {isMobile} = useResponsive();
 
     /* ── Shared: Görsel ── */
-    const gorsel = (
+    const image = (
         <div
             style={{
                 width: '44px',
@@ -26,7 +26,7 @@ export default function ProductCard({
             }}
         >
             <img
-                src={yemek.resim}
+                src={product.image}
                 alt="ürün"
                 style={{width: '100%', height: '100%', objectFit: 'cover'}}
             />
@@ -34,17 +34,17 @@ export default function ProductCard({
     );
 
     /* ── Shared: Checkbox ── */
-    const checkbox = topluSilModu && (
+    const checkbox = isBulkDeleteMode && (
         <input
             type="checkbox"
-            checked={secilenUrunler.includes(yemek.id)}
-            onChange={() => urunSecimiDegistir(yemek.id)}
+            checked={selectedProducts.includes(product.id)}
+            onChange={() => handleProductSelectionChange(product.id)}
             style={{transform: 'scale(1.3)', cursor: 'pointer', flexShrink: 0}}
         />
     );
 
     /* ── Shared: Butonlar (flex farkı koşullu) ── */
-    const butonlar = (
+    const buttons = (
         <div
             style={{
                 display: 'flex',
@@ -53,7 +53,7 @@ export default function ProductCard({
             }}
         >
             <button
-                onClick={() => setAktifForm(yemek)}
+                onClick={() => setActiveForm(product)}
                 style={{
                     flex: isMobile ? 1 : undefined,
                     padding: '4px 10px',
@@ -69,7 +69,7 @@ export default function ProductCard({
                 Düzenle
             </button>
             <button
-                onClick={() => urunSil(yemek.id, yemek.ad)}
+                onClick={() => deleteProduct(product.id, product.name)}
                 style={{
                     flex: isMobile ? 1 : undefined,
                     padding: '4px 10px',
@@ -100,7 +100,7 @@ export default function ProductCard({
                     style={{display: 'flex', alignItems: 'center', gap: '12px'}}
                 >
                     {checkbox}
-                    {gorsel}
+                    {image}
                     <div style={{flex: 1, minWidth: 0}}>
                         <h5
                             style={{
@@ -113,7 +113,7 @@ export default function ProductCard({
                                 textOverflow: 'ellipsis',
                             }}
                         >
-                            {yemek.ad}
+                            {product.name}
                         </h5>
                         <span
                             style={{
@@ -125,7 +125,7 @@ export default function ProductCard({
                                 textOverflow: 'ellipsis',
                             }}
                         >
-                            {yemek.aciklama}
+                            {product.description}
                         </span>
                     </div>
                     <span
@@ -136,10 +136,10 @@ export default function ProductCard({
                             flexShrink: 0,
                         }}
                     >
-                        ₺{yemek.fiyat}
+                        ₺{product.price}
                     </span>
                 </div>
-                {butonlar}
+                {buttons}
             </div>
         );
     }
@@ -164,7 +164,7 @@ export default function ProductCard({
                 }}
             >
                 {checkbox}
-                {gorsel}
+                {image}
                 <div>
                     <h5
                         style={{
@@ -174,7 +174,7 @@ export default function ProductCard({
                             fontWeight: 'bold',
                         }}
                     >
-                        {yemek.ad}
+                        {product.name}
                     </h5>
                     <span
                         style={{
@@ -182,7 +182,7 @@ export default function ProductCard({
                             color: 'var(--textSecondary)',
                         }}
                     >
-                        {yemek.aciklama}
+                        {product.description}
                     </span>
                 </div>
             </div>
@@ -194,9 +194,9 @@ export default function ProductCard({
                         fontWeight: 'bold',
                     }}
                 >
-                    ₺{yemek.fiyat}
+                    ₺{product.price}
                 </span>
-                {butonlar}
+                {buttons}
             </div>
         </div>
     );

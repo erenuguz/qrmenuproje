@@ -3,10 +3,10 @@ import {useResponsive} from '@/hooks/useResponsive';
 import {Badge} from '@/';
 
 const RestaurantSelector = ({
-    restoranlar,
-    seciliRestoranId,
-    setSeciliRestoranId,
-    toplamUrun,
+    restaurants,
+    selectedRestaurantId,
+    setSelectedRestaurantId,
+    totalProducts,
 }) => {
     const {isMobile} = useResponsive();
 
@@ -64,8 +64,8 @@ const RestaurantSelector = ({
                 </span>
 
                 <select
-                    value={seciliRestoranId}
-                    onChange={(e) => setSeciliRestoranId(e.target.value)}
+                    value={selectedRestaurantId}
+                    onChange={(e) => setSelectedRestaurantId(e.target.value)}
                     style={{
                         padding: '10px 14px',
                         border: '1px solid var(--inputBorder)',
@@ -86,7 +86,7 @@ const RestaurantSelector = ({
                             : {minWidth: '220px'}),
                     }}
                 >
-                    {restoranlar.map((res) => (
+                    {restaurants.map((res) => (
                         <option key={res.id} value={res.id}>
                             {res.name} (ID: {res.id})
                         </option>
@@ -101,7 +101,7 @@ const RestaurantSelector = ({
                     flexShrink: isMobile ? 0 : undefined,
                 }}
             >
-                <Badge>{toplamUrun} toplam ürün</Badge>
+                <Badge>{totalProducts} toplam ürün</Badge>
             </div>
         </div>
     );

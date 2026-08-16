@@ -1,9 +1,9 @@
 import React from 'react';
 import {cardStyle, inputStyle, useResponsive} from '@/';
 
-const CategoryAdd = ({yeniKategoriAd, setYeniKategoriAd, kategoriEkle}) => {
+const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
     const {isMobile} = useResponsive();
-    const aktif = yeniKategoriAd.trim();
+    const isActive = newCategoryName.trim();
 
     return (
         <div style={cardStyle}>
@@ -57,29 +57,31 @@ const CategoryAdd = ({yeniKategoriAd, setYeniKategoriAd, kategoriEkle}) => {
                                 ? 'Kategori adı girin'
                                 : 'Kategori adı girin (örn. Çorbalar)'
                         }
-                        value={yeniKategoriAd}
-                        onChange={(e) => setYeniKategoriAd(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && kategoriEkle()}
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && addCategory()}
                         style={{...inputStyle, padding: '12px 16px 12px 42px'}}
                     />
                 </div>
 
                 {/* Buton */}
                 <button
-                    onClick={kategoriEkle}
-                    disabled={!aktif}
+                    onClick={addCategory}
+                    disabled={!isActive}
                     style={{
                         width: isMobile ? '100%' : 'auto',
                         padding: isMobile ? '12px 16px' : '10px 16px',
-                        backgroundColor: aktif
+                        backgroundColor: isActive
                             ? 'var(--primary)'
                             : 'var(--badge)',
-                        color: aktif ? 'var(--textWhite)' : 'var(--textMuted)',
+                        color: isActive
+                            ? 'var(--textWhite)'
+                            : 'var(--textMuted)',
                         border: 'none',
                         borderRadius: 'var(--radiusSmall)',
                         fontSize: '14px',
                         fontWeight: 'var(--font-medium)',
-                        cursor: aktif ? 'pointer' : 'not-allowed',
+                        cursor: isActive ? 'pointer' : 'not-allowed',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

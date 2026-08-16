@@ -2,33 +2,33 @@ import {useState, useEffect} from 'react';
 import {collection, query, orderBy, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
-export const useCategories = (restoranId) => {
-    const [kategoriler, setKategoriler] = useState([]);
-    const [yukleniyor, setYukleniyor] = useState(true);
+export const useCategories = (restaurantId) => {
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!restoranId) {
-            setKategoriler([]);
-            setYukleniyor(false);
+        if (!restaurantId) {
+            setCategories([]);
+            setLoading(false);
             return;
         }
 
         const q = query(
-            collection(db, 'restaurants', restoranId, 'categories'),
-            orderBy('sira', 'asc')
+            collection(db, 'restaurants', restaurantId, 'categories'),
+            orderBy('order', 'asc')
         );
 
         const unsub = onSnapshot(q, (snapshot) => {
-            const veriler = snapshot.docs.map((doc) => ({
+            const data = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
             }));
-            setKategoriler(veriler);
-            setYukleniyor(false);
+            setCategories(data);
+            setLoading(false);
         });
 
         return () => unsub();
-    }, [restoranId]);
+    }, [restaurantId]);
 
-    return {kategoriler, yukleniyor};
+    return {categories, loading};
 };

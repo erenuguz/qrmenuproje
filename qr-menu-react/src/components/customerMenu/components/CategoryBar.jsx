@@ -1,9 +1,9 @@
 import React from 'react';
 
 const CategoryBar = ({
-    kategoriler,
-    aktifKategori,
-    kategoriyeKaydir,
+    categories,
+    activeCategory,
+    scrollToCategory,
     navRef,
     isDragging,
     dragHandlers,
@@ -31,13 +31,13 @@ const CategoryBar = ({
             }}
         >
             <style>{`div::-webkit-scrollbar { display: none; }`}</style>
-            {kategoriler.map((kat) => {
-                const aktif = aktifKategori === kat.id;
+            {categories.map((category) => {
+                const isActive = activeCategory === category.id;
                 return (
                     <button
-                        key={`topbar-${kat.id}`}
-                        id={`btn-${kat.id}`}
-                        onClick={() => kategoriyeKaydir(kat.id)}
+                        key={`topbar-${category.id}`}
+                        id={`btn-${category.id}`}
+                        onClick={() => scrollToCategory(category.id)}
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -48,12 +48,14 @@ const CategoryBar = ({
                             flexShrink: 0,
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
-                            backgroundColor: aktif
+                            backgroundColor: isActive
                                 ? 'var(--primary)'
                                 : 'var(--surface)',
-                            color: aktif ? 'var(--textWhite)' : 'var(--text)',
+                            color: isActive
+                                ? 'var(--textWhite)'
+                                : 'var(--text)',
                             border: '1px solid',
-                            borderColor: aktif
+                            borderColor: isActive
                                 ? 'var(--primary)'
                                 : 'var(--border)',
                             fontWeight: 'var(--font-semibold)',
@@ -61,7 +63,7 @@ const CategoryBar = ({
                             fontFamily: 'var(--font-family)',
                         }}
                     >
-                        {kat.ad}
+                        {category.name}
                     </button>
                 );
             })}

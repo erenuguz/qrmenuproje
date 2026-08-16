@@ -15,27 +15,31 @@ import {
 } from '@/';
 
 const SuperAdminPanel = () => {
-    const {restoranlar, yukleniyor, seciliRestoranId, setSeciliRestoranId} =
-        useRestaurants();
+    const {
+        restaurants,
+        loading,
+        selectedRestaurantId,
+        setSelectedRestaurantId,
+    } = useRestaurants();
 
-    const {menu: seciliMenu, yukleniyor: menuYukleniyor} =
-        useMenu(seciliRestoranId);
+    const {menu: selectedMenu, loading: menuLoading} =
+        useMenu(selectedRestaurantId);
 
-    const {aktifSekme, setAktifSekme, sidebarAcik, setSidebarAcik} =
-        useAdminShell('restoranlar');
+    const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
+        useAdminShell('restaurants');
 
     const {
-        restoranData: seciliRestoranData,
-        yukleniyor: restoranDocYukleniyor,
-    } = useRestaurantDoc(seciliRestoranId);
+        restaurantData: selectedRestaurantData,
+        loading: restaurantDocLoading,
+    } = useRestaurantDoc(selectedRestaurantId);
 
     const {isMobile} = useResponsive();
 
-    const genelYukleniyor =
-        yukleniyor ||
-        (seciliRestoranId && (restoranDocYukleniyor || menuYukleniyor));
+    const generalLoading =
+        loading ||
+        (selectedRestaurantId && (restaurantDocLoading || menuLoading));
 
-    if (genelYukleniyor)
+    if (generalLoading)
         return (
             <div
                 style={{
@@ -58,7 +62,10 @@ const SuperAdminPanel = () => {
                 display: 'flex',
             }}
         >
-            <Header sidebarAcik={sidebarAcik} setSidebarAcik={setSidebarAcik} />
+            <Header
+                isSidebarOpen={isSidebarOpen}
+                setIsSidebarOpen={setIsSidebarOpen}
+            />
 
             {/* Ana İçerik Düzeni */}
             <div
@@ -70,10 +77,10 @@ const SuperAdminPanel = () => {
             >
                 <SideBar
                     menuItems={superAdminMenuItems}
-                    aktifSekme={aktifSekme}
-                    setAktifSekme={setAktifSekme}
-                    sidebarAcik={sidebarAcik}
-                    setSidebarAcik={setSidebarAcik} // <-- Bunu eklemeyi unutma
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen} // <-- Bunu eklemeyi unutma
                 />
 
                 {/* Sağ Alan */}
@@ -82,7 +89,7 @@ const SuperAdminPanel = () => {
                         flex: 1,
                         marginLeft: isMobile
                             ? '0'
-                            : sidebarAcik
+                            : isSidebarOpen
                               ? '250px'
                               : '0',
                         padding: '30px',
@@ -92,31 +99,31 @@ const SuperAdminPanel = () => {
                 >
                     {/* İçerikler */}
 
-                    {aktifSekme === 'restoranlar' && (
-                        <RestaurantManagementTab restoranlar={restoranlar} />
+                    {activeTab === 'restaurants' && (
+                        <RestaurantManagementTab restaurants={restaurants} />
                     )}
 
-                    {aktifSekme === 'urunler' && seciliRestoranId && (
+                    {activeTab === 'products' && selectedRestaurantId && (
                         <ProductTab
-                            restoranId={seciliRestoranId}
-                            menu={seciliMenu}
-                            restoranlar={restoranlar}
-                            seciliRestoranId={seciliRestoranId}
-                            setSeciliRestoranId={setSeciliRestoranId}
+                            restaurantId={selectedRestaurantId}
+                            menu={selectedMenu}
+                            restaurants={restaurants}
+                            selectedRestaurantId={selectedRestaurantId}
+                            setSelectedRestaurantId={setSelectedRestaurantId}
                         />
                     )}
 
-                    {aktifSekme === 'kategoriler' && seciliRestoranId && (
+                    {activeTab === 'categories' && selectedRestaurantId && (
                         <CategoryTab
-                            restoranId={seciliRestoranId}
-                            menu={seciliMenu}
+                            restaurantId={selectedRestaurantId}
+                            menu={selectedMenu}
                         />
                     )}
 
-                    {aktifSekme === 'ayarlar' && seciliRestoranId && (
+                    {activeTab === 'settings' && selectedRestaurantId && (
                         <SettingsTab
-                            restoranId={seciliRestoranId}
-                            restoranData={seciliRestoranData}
+                            restaurantId={selectedRestaurantId}
+                            restaurantData={selectedRestaurantData}
                         />
                     )}
                 </div>

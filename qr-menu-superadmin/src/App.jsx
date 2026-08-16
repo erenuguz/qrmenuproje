@@ -10,25 +10,25 @@ import {
 } from '@/';
 
 function App() {
-    const {kullanici, restoranId, yukleniyor} = useAuthUser();
+    const {user, restaurantId, loading} = useAuthUser();
 
-    if (yukleniyor) return <LoadingSpinner />;
+    if (loading) return <LoadingSpinner />;
 
     // Giriş yapan kimse yoksa
-    if (!kullanici) {
+    if (!user) {
         return <Login />;
     }
 
-    // Giriş yapan Patron (Sen) isen
-    if (kullanici.email === 'erenuguz301@gmail.com') {
+    // Giriş yapan patron ise
+    if (user.email === 'erenuguz301@gmail.com') {
         return <SuperAdminPanel />;
     }
 
     // Giriş yapan kişi bir Restoran Sahibi ise
-    if (restoranId) {
+    if (restaurantId) {
         return (
             <div>
-                <AdminPanel restoranId={restoranId} />
+                <AdminPanel restaurantId={restaurantId} />
                 <ScrollToTopButton />
             </div>
         );

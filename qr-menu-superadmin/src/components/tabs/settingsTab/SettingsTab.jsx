@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-    GenelBilgiler,
-    MusteriWifi,
-    SosyalMedya,
+    GeneralInfo,
+    CustomerWifi,
+    SocialMedia,
     PageHeader,
     useRestaurantSettings,
 } from '@/';
 
-const SettingsTab = ({restoranId, restoranData}) => {
+const SettingsTab = ({restaurantId, restaurantData}) => {
     const {state, setters, handlers} = useRestaurantSettings(
-        restoranId,
-        restoranData
+        restaurantId,
+        restaurantData
     );
 
     return (
@@ -23,29 +23,29 @@ const SettingsTab = ({restoranId, restoranData}) => {
 
             {/* Ayar Kartları */}
             <div style={{display: 'flex', flexDirection: 'column'}}>
-                <GenelBilgiler
-                    ad={state.ad}
-                    setAd={setters.setAd}
+                <GeneralInfo
+                    name={state.name}
+                    setName={setters.setName}
                     logo={state.logo}
-                    logoYukleniyor={state.logoYukleniyor}
-                    logoDosyasiSecildi={handlers.logoDosyasiSecildi}
-                    alaniGuncelle={handlers.alaniGuncelle}
+                    isLogoLoading={state.isLogoLoading}
+                    handleLogoFileSelect={handlers.handleLogoFileSelect}
+                    updateField={handlers.updateField}
                 />
 
-                <MusteriWifi
-                    wifiAgAdi={state.wifiAgAdi}
-                    setWifiAgAdi={setters.setWifiAgAdi}
-                    wifiSifre={state.wifiSifre}
-                    setWifiSifre={setters.setWifiSifre}
-                    alaniGuncelle={handlers.alaniGuncelle}
+                <CustomerWifi
+                    wifiNetworkName={state.wifiNetworkName}
+                    setWifiNetworkName={setters.setWifiNetworkName}
+                    wifiPassword={state.wifiPassword}
+                    setWifiPassword={setters.setWifiPassword}
+                    updateField={handlers.updateField}
                 />
 
-                <SosyalMedya
+                <SocialMedia
                     instagram={state.instagram}
                     setInstagram={setters.setInstagram}
                     whatsapp={state.whatsapp}
                     setWhatsapp={setters.setWhatsapp}
-                    alaniGuncelle={handlers.alaniGuncelle}
+                    updateField={handlers.updateField}
                 />
             </div>
         </div>

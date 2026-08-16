@@ -1,6 +1,6 @@
 export const superAdminMenuItems = [
     {
-        id: 'restoranlar',
+        id: 'restaurants',
         label: 'Restoran Yönetimi',
         icon: (
             <svg
@@ -21,7 +21,7 @@ export const superAdminMenuItems = [
         ),
     },
     {
-        id: 'urunler',
+        id: 'products',
         label: 'Ürünler',
         icon: (
             <svg
@@ -43,7 +43,7 @@ export const superAdminMenuItems = [
         ),
     },
     {
-        id: 'kategoriler',
+        id: 'categories',
         label: 'Kategoriler',
         icon: (
             <svg
@@ -63,7 +63,7 @@ export const superAdminMenuItems = [
         ),
     },
     {
-        id: 'ayarlar',
+        id: 'settings',
         label: 'Ayarlar',
         icon: (
             <svg
@@ -86,7 +86,7 @@ export const superAdminMenuItems = [
 
 export const adminMenuItems = [
     {
-        id: 'urunler',
+        id: 'products',
         label: 'Ürünler',
         icon: (
             <svg
@@ -108,7 +108,7 @@ export const adminMenuItems = [
         ),
     },
     {
-        id: 'kategoriler',
+        id: 'categories',
         label: 'Kategoriler',
         icon: (
             <svg
@@ -128,7 +128,7 @@ export const adminMenuItems = [
         ),
     },
     {
-        id: 'ayarlar',
+        id: 'settings',
         label: 'Ayarlar',
         icon: (
             <svg

@@ -1,15 +1,15 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {initializeApp, getApps, getApp} from 'firebase/app';
+import {getFirestore} from 'firebase/firestore';
+import {getAuth} from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBn4EWc3H39SXJ32EFm_rCEkT8zaRZ8kp4",
-    authDomain: "qr-menu-database.firebaseapp.com",
-    projectId: "qr-menu-database",
-    storageBucket: "qr-menu-database.firebasestorage.app",
-    messagingSenderId: "380504592953",
-    appId: "1:380504592953:web:5ba68561ad230f34f833e8",
-    measurementId: "G-4FCTP1XPMQ"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Ana Motor (Eğer yoksa kur, varsa olanı kullan - Çökmeyi engeller)
@@ -19,9 +19,9 @@ export const auth = getAuth(app);
 
 // İkincil Motor (SecondaryApp)
 let secondaryApp;
-if (!getApps().some(a => a.name === "SecondaryApp")) {
-    secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+if (!getApps().some((a) => a.name === 'SecondaryApp')) {
+    secondaryApp = initializeApp(firebaseConfig, 'SecondaryApp');
 } else {
-    secondaryApp = getApp("SecondaryApp");
+    secondaryApp = getApp('SecondaryApp');
 }
 export const secondaryAuth = getAuth(secondaryApp);

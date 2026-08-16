@@ -2,11 +2,11 @@ import React from 'react';
 import {RestaurantTableRow, EmptyState} from '@/';
 
 const RestaurantTable = ({
-    aramaMetni,
-    setAramaMetni,
+    searchQuery,
+    setSearchQuery,
     setIsModalOpen,
-    filtrelenmisRestoranlar,
-    handleSil,
+    filteredRestaurants,
+    handleDelete,
 }) => {
     return (
         <div
@@ -67,8 +67,8 @@ const RestaurantTable = ({
                         <input
                             type="text"
                             placeholder="Ara..."
-                            value={aramaMetni}
-                            onChange={(e) => setAramaMetni(e.target.value)}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             style={{
                                 padding: '8px 12px 8px 36px',
                                 borderRadius: 'var(--radiusSmall)',
@@ -142,16 +142,15 @@ const RestaurantTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {filtrelenmisRestoranlar.length > 0 ? (
-                            filtrelenmisRestoranlar.map((res, index) => (
+                        {filteredRestaurants.length > 0 ? (
+                            filteredRestaurants.map((res, index) => (
                                 <RestaurantTableRow
                                     key={res.id || index}
                                     res={res}
                                     isLast={
-                                        index ===
-                                        filtrelenmisRestoranlar.length - 1
+                                        index === filteredRestaurants.length - 1
                                     }
-                                    handleSil={handleSil}
+                                    handleDelete={handleDelete}
                                 />
                             ))
                         ) : (
