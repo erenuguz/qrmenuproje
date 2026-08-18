@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import {NavTabButton} from '@/';
 
 const SideBar = ({
     menuItems,
@@ -79,71 +80,14 @@ const SideBar = ({
                 const isSelected = activeTab === item.id;
 
                 return (
-                    <button
+                    <NavTabButton
                         key={item.id}
-                        onClick={() => {
-                            setActiveTab(item.id);
-                        }}
-                        style={{
-                            padding: '10px 12px',
-                            backgroundColor: isSelected
-                                ? 'var(--primary)'
-                                : 'transparent',
-                            color: isSelected
-                                ? 'var(--textWhite)'
-                                : 'var(--textSecondary)',
-                            border: 'none',
-                            borderRadius: 'var(--radiusSmall)',
-                            fontWeight: isSelected
-                                ? 'var(--font-semibold)'
-                                : 'var(--font-medium)',
-                            fontSize: 'var(--font-caption)',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            width: '100%',
-                            transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                            if (!isSelected) {
-                                e.currentTarget.style.backgroundColor =
-                                    'var(--hover)';
-                                e.currentTarget.style.color = 'var(--text)';
-                                e.currentTarget.querySelector(
-                                    '.menu-icon'
-                                ).style.color = 'var(--textSecondary)';
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!isSelected) {
-                                e.currentTarget.style.backgroundColor =
-                                    'transparent';
-                                e.currentTarget.style.color =
-                                    'var(--textSecondary)';
-                                e.currentTarget.querySelector(
-                                    '.menu-icon'
-                                ).style.color = 'var(--textMuted)';
-                            }
-                        }}
+                        isSelected={isSelected}
+                        onClick={() => setActiveTab(item.id)}
+                        icon={item.icon}
                     >
-                        <span
-                            className="menu-icon"
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                color: isSelected
-                                    ? 'var(--textWhite)'
-                                    : 'var(--textMuted)',
-                                transition: 'color 0.2s ease',
-                            }}
-                        >
-                            {item.icon}
-                        </span>
-
                         {item.label}
-                    </button>
+                    </NavTabButton>
                 );
             })}
         </div>

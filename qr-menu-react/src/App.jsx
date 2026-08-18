@@ -10,18 +10,21 @@ import {
 } from '@/';
 
 const App = () => {
-    const id = window.location.pathname.replace('/', '');
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const restaurantId = pathParts[pathParts.length - 1];
 
-    if (!id) return <WelcomeScreen />;
-
-    const [restaurantId] = useState(id);
     const {restaurantData, loading} = useRestaurantDoc(restaurantId);
-    const isFound = restaurantData !== null && restaurantData !== undefined;
     const [activeCategory, setActiveCategory] = useState(null);
+
+    if (!restaurantId) {
+        return <WelcomeScreen />;
+    }
 
     if (loading) {
         return <LoadingSpinner message="Restoran Bilgileri Yükleniyor..." />;
     }
+
+    const isFound = restaurantData !== null && restaurantData !== undefined;
 
     return (
         <div>

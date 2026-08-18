@@ -1,5 +1,5 @@
 // Ayarlar / kategori ekleme kartlarının dış wrapper'ı
-// (GenelBilgiler, MusteriWifi, SosyalMedya, CategoryAdd)
+// (GeneralInfo, CustomerWifi, SocialMedia, CategoryAdd)
 export const cardStyle = {
     backgroundColor: 'var(--surface)',
     borderRadius: 'var(--radius)',
@@ -10,7 +10,7 @@ export const cardStyle = {
 };
 
 // Standart text input
-// (GenelBilgiler, MusteriWifi, SosyalMedya, CategoryAdd, Login, RestaurantAddModal)
+// (GeneralInfo, CustomerWifi, SocialMedia, CategoryAdd, Login, RestaurantAddModal)
 export const inputStyle = {
     width: '100%',
     padding: '12px 16px',
@@ -24,7 +24,7 @@ export const inputStyle = {
 };
 
 // Büyük harf, küçük puntolu form label'ı
-// (GenelBilgiler, MusteriWifi, SosyalMedya)
+// (GeneralInfo, CustomerWifi, SocialMedia)
 export const smallLabelStyle = {
     display: 'block',
     fontSize: '11px',
@@ -35,7 +35,7 @@ export const smallLabelStyle = {
     letterSpacing: '0.5px',
 };
 
-// Ayar kartlarındaki ikon container (GenelBilgiler, MusteriWifi, SosyalMedya)
+// Ayar kartlarındaki ikon container (GeneralInfo, CustomerWifi, SocialMedia)
 // Kullanım: style={{...iconContainerStyle, backgroundColor: 'var(--infoBg)', color: 'var(--info)'}}
 export const iconContainerStyle = {
     width: '40px',

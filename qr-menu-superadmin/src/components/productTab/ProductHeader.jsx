@@ -1,0 +1,103 @@
+import React from 'react';
+import {PageHeader, useResponsive} from '@/';
+import {CancelButton, DeleteButton, NewProductButton} from '@/';
+
+const ProductHeader = ({
+    isBulkDeleteMode,
+    setIsBulkDeleteMode,
+    selectedProducts,
+    setSelectedProducts,
+    setActiveForm,
+    categories,
+    bulkDeleteProducts,
+}) => {
+    const {isMobile} = useResponsive();
+
+    const handleNewProductClick = () => {
+        setActiveForm({
+            name: '',
+            categoryId: categories.length > 0 ? categories[0].id : '',
+            price: '',
+            image: '',
+            description: '',
+        });
+        setIsBulkDeleteMode(false);
+    };
+
+    // 1. Tekrar eden butonu tek bir değişkende tanımlıyoruz
+    const newProductBtn = (
+        <NewProductButton
+            onClick={handleNewProductClick}
+            style={{
+                width: '100%',
+                justifyContent: 'center',
+            }}
+        />
+    );
+
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: isMobile ? '12px' : '0', // Mobilde alt satırla arasına boşluk ekler
+                marginBottom: '20px',
+            }}
+        >
+            {/* Üst Satır: Başlık ve Butonlar */}
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: isMobile ? 'center' : 'flex-start',
+                    gap: '10px',
+                }}
+            >
+                <PageHeader
+                    title="Ürünler"
+                    subtitle={
+                        isMobile
+                            ? 'Menüdeki ürünleri yönetin'
+                            : 'Menüdeki ürünleri yönetin, ekleyin veya silin.'
+                    }
+                />
+
+                {/* Sağ Üst Aksiyon Butonları */}
+                <div style={{display: 'flex', gap: '10px'}}>
+                    {!isBulkDeleteMode ? (
+                        <DeleteButton
+                            onClick={() => setIsBulkDeleteMode(true)}
+                            borderRadius="24px"
+                        >
+                            Toplu Sil
+                        </DeleteButton>
+                    ) : (
+                        <>
+                            <CancelButton
+                                onClick={() => {
+                                    setIsBulkDeleteMode(false);
+                                    setSelectedProducts([]);
+                                }}
+                                borderRadius="24px"
+                            />
+                            <DeleteButton
+                                onClick={bulkDeleteProducts}
+                                borderRadius="24px"
+                            >
+                                Seçilenleri Sil ({selectedProducts.length})
+                            </DeleteButton>
+                        </>
+                    )}
+
+                    {/* Masaüstünde "Yeni Ürün" butonu burada gösterilir */}
+                    {!isMobile && newProductBtn}
+                </div>
+            </div>
+
+            {/* Mobilde "Yeni Ürün" butonu tam genişlikte alt satırda gösterilir */}
+            {isMobile && newProductBtn}
+        </div>
+    );
+};
+
+export default ProductHeader;

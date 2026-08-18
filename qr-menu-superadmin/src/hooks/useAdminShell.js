@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-export const useAdminShell = (defaultTab = 'restoranlar') => {
+export const useAdminShell = (defaultTab = 'products') => {
     const [activeTab, setActiveTab] = useState(defaultTab);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

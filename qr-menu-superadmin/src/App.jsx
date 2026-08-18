@@ -8,6 +8,8 @@ import {
     LoadingSpinner,
     useAuthUser,
 } from '@/';
+import {AlertCircleIcon} from '@/components/common/icon/Icons';
+import {SignOutButton} from '@/components/common/button/Buttons';
 
 function App() {
     const {user, restaurantId, loading} = useAuthUser();
@@ -72,20 +74,7 @@ function App() {
                         marginBottom: '20px',
                     }}
                 >
-                    <svg
-                        width="28"
-                        height="28"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                    </svg>
+                    <AlertCircleIcon size={28} />
                 </div>
 
                 <h2
@@ -111,29 +100,7 @@ function App() {
                     yöneticisi ile iletişime geçin.
                 </p>
 
-                <button
-                    onClick={() => auth.signOut()}
-                    style={{
-                        width: '100%',
-                        padding: '12px 24px',
-                        backgroundColor: 'var(--primary)',
-                        color: 'var(--textWhite)',
-                        border: 'none',
-                        borderRadius: 'var(--radiusSmall)',
-                        fontWeight: 'var(--font-semibold)',
-                        fontSize: 'var(--font-input)',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) =>
-                        (e.target.style.backgroundColor = 'var(--primaryHover)')
-                    }
-                    onMouseLeave={(e) =>
-                        (e.target.style.backgroundColor = 'var(--primary)')
-                    }
-                >
-                    Çıkış Yap
-                </button>
+                <SignOutButton onClick={() => auth.signOut()} />
             </div>
         </div>
     );

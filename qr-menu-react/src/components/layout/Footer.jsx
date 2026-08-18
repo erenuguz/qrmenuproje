@@ -10,9 +10,14 @@ const Footer = ({restaurantData}) => {
 
     const [isCopied, setIsCopied] = useState(false);
 
-    if (!wifiNetworkName && !wifiPassword && !instagram && !whatsapp) {
-        return null;
-    }
+    if (
+    !wifiNetworkName &&
+    !wifiPassword &&
+    !instagram &&
+    !whatsapp
+) {
+    return null;
+}
 
     const copyPassword = () => {
         if (!wifiPassword) return;

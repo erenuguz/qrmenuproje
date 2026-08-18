@@ -1,55 +1,94 @@
-export {default as Login} from '@/components/Login';
-export {default as AdminPanel} from '@/components/AdminPanel';
-export {default as SuperAdminPanel} from '@/components/SuperAdminPanel';
+/* =========================================
+   1. SAYFALAR (PAGES)
+   Ana ekranlar ve yönlendirme bileşenleri
+========================================= */
+export {default as Login} from '@/pages/Login';
+export {default as AdminPanel} from '@/pages/AdminPanel';
+export {default as SuperAdminPanel} from '@/pages/SuperAdminPanel';
 
-export {default as ScrollToTopButton} from '@/components/common/ScrollToTopButton';
-export {default as LoadingSpinner} from '@/components/common/LoadingSpinner';
-export {default as StatCard} from '@/components/common/StatCard';
-export {default as PageHeader} from '@/components/common/PageHeader';
-export {default as EmptyState} from '@/components/common/EmptyState';
+/* =========================================
+   2. ORTAK BİLEŞENLER (COMMON)
+   Projenin her yerinde kullanılan UI elemanları
+========================================= */
+// Temel UI
+export {default as Input} from '@/components/common/Input';
 export {default as Badge} from '@/components/common/Badge';
+export {default as EmptyState} from '@/components/common/EmptyState';
+export {default as PageHeader} from '@/components/common/PageHeader';
+export {default as StatCard} from '@/components/common/StatCard';
+export {default as LoadingSpinner} from '@/components/common/LoadingSpinner';
+export {default as ScrollToTopButton} from '@/components/common/ScrollToTopButton';
+
+// Butonlar
+export {default as BaseButton} from '@/components/common/button/BaseButton';
+export * from '@/components/common/button/Buttons';
+
+// İkonlar
+export {default as BaseIcon} from '@/components/common/icon/BaseIcon';
+export * from '@/components/common/icon/Icons';
+
+// Bildirimler (Toast)
 export {default as Toast} from '@/components/common/Toast';
 export {ToastContainer} from '@/components/common/Toast';
 
-export {superAdminMenuItems, adminMenuItems} from '@/constants/menuItems';
-
-export {
-    cardStyle,
-    inputStyle,
-    smallLabelStyle,
-    iconContainerStyle,
-} from '@/styles/shared.js';
-
-export {uploadImageAndGetUrl} from '@/tools/helpers.js';
-
+/* =========================================
+   3. DÜZEN (LAYOUT)
+   Sayfa iskeletini oluşturan bileşenler
+========================================= */
 export {default as Header} from '@/components/layout/Header';
 export {default as SideBar} from '@/components/layout/SideBar';
 
-export {default as ProductTab} from '@/components/tabs/productTab/ProductTab';
-export {default as ProductCard} from '@/components/tabs/productTab/components/ProductCard';
-export {default as ProductFilters} from '@/components/tabs/productTab/components/ProductFilters';
-export {default as ProductForm} from '@/components/tabs/productTab/components/ProductForm';
-export {default as ProductHeader} from '@/components/tabs/productTab/components/ProductHeader';
-export {default as ProductList} from '@/components/tabs/productTab/components/ProductList';
-export {default as RestaurantSelector} from '@/components/tabs/productTab/components/RestaurantSelector';
+/* =========================================
+   4. KATEGORİ (CATEGORY)
+   Kategori sekmesine ait tüm bileşenler
+========================================= */
+export {default as CategoryTab} from '@/components/categoryTab/CategoryTab';
+export {default as CategoryHeader} from '@/components/categoryTab/CategoryHeader';
+export {default as CategoryAdd} from '@/components/categoryTab/CategoryAdd';
+export {default as CategoryItem} from '@/components/categoryTab/CategoryItem';
+export {default as CategoryForm} from '@/components/categoryTab/CategoryForm';
+export {default as CategoryItemActions} from '@/components/categoryTab/categoryItem/CategoryItemActions';
+export {default as CategoryItemInfo} from '@/components/categoryTab/categoryItem/CategoryItemInfo';
+export {default as CategoryItemOrder} from '@/components/categoryTab/categoryItem/CategoryItemOrder';
+export {default as CategoryListHeader} from '@/components/categoryTab/categoryItem/CategoryListHeader';
 
-export {default as CategoryTab} from '@/components/tabs/categoryTab/CategoryTab';
-export {default as CategoryAdd} from '@/components/tabs/categoryTab/components/CategoryAdd';
-export {default as CategoryHeader} from '@/components/tabs/categoryTab/components/CategoryHeader';
-export {default as CategoryItem} from '@/components/tabs/categoryTab/components/CategoryItem';
-export {default as CategoryList} from '@/components/tabs/categoryTab/components/CategoryList';
+/* =========================================
+   5. ÜRÜN (PRODUCT)
+   Ürün sekmesine ait tüm bileşenler
+========================================= */
+export {default as ProductTab} from '@/components/productTab/ProductTab';
+export {default as ProductHeader} from '@/components/productTab/ProductHeader';
+export {default as ProductFilters} from '@/components/productTab/ProductFilters';
+export {default as ProductForm} from '@/components/productTab/ProductForm';
+export {default as ProductList} from '@/components/productTab/ProductList';
+export {default as ProductCard} from '@/components/productTab/ProductCard';
+export {default as RestaurantSelector} from '@/components/productTab/RestaurantSelector';
 
-export {default as RestaurantManagementTab} from '@/components/tabs/restaurantManagementTab/RestaurantManagementTab';
-export {default as RestaurantAddModal} from '@/components/tabs/restaurantManagementTab/components/RestaurantAddModal';
-export {default as RestaurantManagementTabHeader} from '@/components/tabs/restaurantManagementTab/components/RestaurantManagementTabHeader';
-export {default as RestaurantTable} from '@/components/tabs/restaurantManagementTab/components/RestaurantTable';
-export {default as RestaurantTableRow} from '@/components/tabs/restaurantManagementTab/components/RestaurantTableRow';
+/* =========================================
+   6. RESTORAN YÖNETİMİ (RESTAURANT)
+   Restoran sekmesine ait tüm bileşenler
+========================================= */
+export {default as RestaurantTab} from '@/components/restaurantTab/RestaurantTab';
+export {default as RestaurantHeader} from '@/components/restaurantTab/RestaurantHeader';
+export {default as RestaurantAddModal} from '@/components/restaurantTab/RestaurantAddModal';
+export {default as RestaurantTable} from '@/components/restaurantTab/RestaurantTable';
+export {default as RestaurantTableHeader} from '@/components/restaurantTab/restaurantTable/restaurantTableHeader';
+export {default as RestaurantTableRow} from '@/components/restaurantTab/restaurantTable/RestaurantTableRow';
 
-export {default as SettingsTab} from '@/components/tabs/settingsTab/SettingsTab';
-export {default as GeneralInfo} from '@/components/tabs/settingsTab/components/GeneralInfo';
-export {default as CustomerWifi} from '@/components/tabs/settingsTab/components/CustomerWifi';
-export {default as SocialMedia} from '@/components/tabs/settingsTab/components/SocialMedia';
+/* =========================================
+   7. AYARLAR (SETTINGS)
+   Ayarlar sekmesine ait tüm bileşenler
+========================================= */
+export {default as SettingsTab} from '@/components/settingsTab/SettingsTab';
+export {default as SectionHeader} from '@/components/settingsTab/SectionHeader';
+export {default as GeneralInfo} from '@/components/settingsTab/GeneralInfo';
+export {default as CustomerWifi} from '@/components/settingsTab/CustomerWifi';
+export {default as SocialMedia} from '@/components/settingsTab/SocialMedia';
 
+/* =========================================
+   8. HOOKS
+   Tüm özel React kancaları
+========================================= */
 export {useAuthUser} from '@/hooks/useAuthUser';
 export {useRestaurants} from '@/hooks/useRestaurants';
 export {useResponsive} from '@/hooks/useResponsive';
@@ -64,3 +103,18 @@ export {useCategories} from '@/hooks/useCategories';
 export {useCategoryActions} from '@/hooks/useCategoryActions';
 export {useToast} from '@/hooks/useToast';
 export {useRestaurantSettings} from '@/hooks/useRestaurantSettings';
+
+/* =========================================
+   9. SABİTLER, STİLLER VE YARDIMCILAR
+   Constants, Styles, Utils
+========================================= */
+export {superAdminMenuItems, adminMenuItems} from '@/constants/menuItems';
+
+export {
+    cardStyle,
+    inputStyle,
+    smallLabelStyle,
+    iconContainerStyle,
+} from '@/styles/shared.js';
+
+export {uploadImageAndGetUrl} from '@/utils/helpers.js';
