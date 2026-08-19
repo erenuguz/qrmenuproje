@@ -70,9 +70,9 @@ export {default as RestaurantSelector} from '@/components/productTab/RestaurantS
 ========================================= */
 export {default as RestaurantTab} from '@/components/restaurantTab/RestaurantTab';
 export {default as RestaurantHeader} from '@/components/restaurantTab/RestaurantHeader';
-export {default as RestaurantAddModal} from '@/components/restaurantTab/RestaurantAddModal';
+export {default as RestaurantAddModal} from '@/components/restaurantTab/restaurantTable/RestaurantAddModal';
 export {default as RestaurantTable} from '@/components/restaurantTab/RestaurantTable';
-export {default as RestaurantTableHeader} from '@/components/restaurantTab/restaurantTable/restaurantTableHeader';
+export {default as RestaurantTableHeader} from '@/components/restaurantTab/restaurantTable/RestaurantTableHeader';
 export {default as RestaurantTableRow} from '@/components/restaurantTab/restaurantTable/RestaurantTableRow';
 
 /* =========================================

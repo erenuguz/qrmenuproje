@@ -17,7 +17,15 @@ const SocialMedia = ({
     updateField,
 }) => {
     return (
-        <div style={cardStyle}>
+        <div
+            style={{
+                ...cardStyle,
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '24px',
+                marginBottom: '20px',
+            }}
+        >
             <SectionHeader
                 title="İletişim & Sosyal Medya"
                 subtitle="İsteğe bağlı — QR menü footer'ında gösterilir"

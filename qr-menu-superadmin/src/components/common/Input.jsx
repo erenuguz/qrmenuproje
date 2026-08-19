@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { inputStyle } from '@/styles/shared';
 
 export const Input = ({
-    label, // Yeni eklendi: Başlık metni
-    labelStyle = {}, // Yeni eklendi: Başlığa özel stil verebilmek için
+    label,
+    labelStyle = {},
     icon = null,
     isMobile = false,
     placeholder = '',
@@ -17,7 +18,7 @@ export const Input = ({
 }) => {
     const [isFocused, setIsFocused] = useState(false);
 
-    // İkon varsa ona göre sol padding, yoksa normal padding
+    // İkon durumuna ve ekrana göre sol padding hesabı
     const paddingLeft = icon
         ? isMobile
             ? '38px'
@@ -25,9 +26,8 @@ export const Input = ({
         : isMobile
           ? '16px'
           : '24px';
-    
+
     return (
-        // Dış Sarmalayıcı (Label ve Input'u alt alta dizmek için)
         <div
             style={{
                 display: 'flex',
@@ -37,7 +37,7 @@ export const Input = ({
                 ...containerStyle,
             }}
         >
-            {/* Label Alanı - Sadece label prop'u doluysa render edilir */}
+            {/* Label Alanı */}
             {label && (
                 <label
                     style={{
@@ -45,14 +45,14 @@ export const Input = ({
                         fontWeight: '600',
                         color: 'var(--textSecondary)',
                         letterSpacing: '0.5px',
-                        ...labelStyle, // Dışarıdan özel stil gelirse buradaki varsayılanları ezer
+                        ...labelStyle,
                     }}
                 >
                     {label}
                 </label>
             )}
 
-            {/* İç Sarmalayıcı (İkon ve Input'u yan yana tutmak için eski kodun aynısı) */}
+            {/* İç Kapsayıcı (İkon + Input) */}
             <div
                 style={{
                     position: 'relative',
@@ -61,7 +61,7 @@ export const Input = ({
                     alignItems: 'center',
                 }}
             >
-                {/* Sol İkon (Sadece verilmişse render edilir) */}
+                {/* Sol İkon */}
                 {icon && (
                     <div
                         style={{
@@ -98,7 +98,7 @@ export const Input = ({
                         if (onBlur) onBlur(e);
                     }}
                     style={{
-                        width: '100%',
+                        ...inputStyle,
                         height: isMobile ? '42px' : '45px',
                         paddingTop: 0,
                         paddingBottom: 0,
@@ -108,15 +108,9 @@ export const Input = ({
                             ? 'var(--radiusSmall)'
                             : 'var(--radiusLarge)',
                         border: `1px solid ${isFocused ? 'var(--primary)' : 'var(--inputBorder)'}`,
-                        background: 'var(--inputBackground)',
                         fontSize: isMobile
                             ? 'var(--font-caption)'
                             : 'var(--font-body)',
-                        color: 'var(--text)',
-                        outline: 'none',
-                        boxSizing: 'border-box',
-                        boxShadow: 'var(--shadow)',
-                        transition: 'border-color 0.2s',
                         ...style,
                     }}
                     {...props}
@@ -125,4 +119,5 @@ export const Input = ({
         </div>
     );
 };
+
 export default Input;

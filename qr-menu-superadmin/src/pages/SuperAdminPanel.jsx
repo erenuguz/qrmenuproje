@@ -26,7 +26,7 @@ const SuperAdminPanel = () => {
         useMenu(selectedRestaurantId);
 
     const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
-        useAdminShell('restaurants');
+        useAdminShell('categories');
 
     const {
         restaurantData: selectedRestaurantData,

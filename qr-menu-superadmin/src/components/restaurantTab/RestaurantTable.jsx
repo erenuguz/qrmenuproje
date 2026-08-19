@@ -1,6 +1,9 @@
 import React from 'react';
-import {RestaurantTableRow, EmptyState} from '@/';
-import RestaurantTableHeader from '@/components/restaurantTab/restaurantTable/restaurantTableHeader';
+import RestaurantTableRow from '@/components/restaurantTab/restaurantTable/RestaurantTableRow';
+import EmptyState from '@/components/common/EmptyState';
+import RestaurantTableHeader from '@/components/restaurantTab/restaurantTable/RestaurantTableHeader';
+import {cardStyle} from '@/styles/shared';
+
 const RestaurantTable = ({
     searchQuery,
     setSearchQuery,
@@ -9,15 +12,7 @@ const RestaurantTable = ({
     handleDelete,
 }) => {
     return (
-        <div
-            style={{
-                backgroundColor: 'var(--surface)',
-                borderRadius: 'var(--radiusLarge)',
-                border: '1px solid var(--border)',
-                overflow: 'hidden',
-                boxShadow: 'var(--shadow)',
-            }}
-        >
+        <div style={cardStyle}>
             {/* Taşıdığımız Header Bileşeni */}
             <RestaurantTableHeader
                 searchQuery={searchQuery}

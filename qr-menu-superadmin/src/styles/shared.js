@@ -1,16 +1,12 @@
-// Ayarlar / kategori ekleme kartlarının dış wrapper'ı
-// (GeneralInfo, CustomerWifi, SocialMedia, CategoryAdd)
 export const cardStyle = {
     backgroundColor: 'var(--surface)',
+
     borderRadius: 'var(--radius)',
     border: '1px solid var(--border)',
-    padding: '24px',
-    marginBottom: '24px',
     boxShadow: 'var(--shadow)',
 };
 
 // Standart text input
-// (GeneralInfo, CustomerWifi, SocialMedia, CategoryAdd, Login, RestaurantAddModal)
 export const inputStyle = {
     width: '100%',
     padding: '12px 16px',
@@ -23,7 +19,7 @@ export const inputStyle = {
     boxSizing: 'border-box',
 };
 
-// Büyük harf, küçük puntolu form label'ı
+// Settings'de büyük harf, küçük puntolu Input başlığı
 // (GeneralInfo, CustomerWifi, SocialMedia)
 export const smallLabelStyle = {
     display: 'block',

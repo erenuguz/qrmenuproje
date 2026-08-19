@@ -1,4 +1,5 @@
 import React, {useRef} from 'react';
+
 import {
     cardStyle,
     inputStyle,
@@ -8,6 +9,7 @@ import {
     SectionHeader,
     Input,
 } from '@/';
+
 import {HomeIcon} from '@/components/common/icon/Icons';
 
 const GeneralInfo = ({
@@ -21,14 +23,30 @@ const GeneralInfo = ({
     const fileInputRef = useRef(null);
 
     return (
-        <div style={cardStyle}>
+        <div
+            style={{
+                ...cardStyle,
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '24px',
+                marginBottom: '20px',
+            }}
+        >
             {/* Kart Başlığı */}
             <SectionHeader
                 title="Genel Bilgiler"
                 subtitle="Restoran adı ve logo ayarları"
-                icon={<HomeIcon size={20} />}
-                iconBg="var(--infoBg)"
-                iconColor="var(--info)"
+                icon={
+                    <div
+                        style={{
+                            ...iconContainerStyle,
+                            backgroundColor: 'var(--infoBg)',
+                            color: 'var(--info)',
+                        }}
+                    >
+                        <HomeIcon size={20} />
+                    </div>
+                }
             />
 
             {/* Form Alanı */}
@@ -37,7 +55,7 @@ const GeneralInfo = ({
                 <div style={{flex: '1 1 300px'}}>
                     <Input
                         label="RESTORAN ADI"
-                        labelStyle={smallLabelStyle} // Eski stilini korumak için doğrudan prop olarak veriyoruz
+                        labelStyle={smallLabelStyle}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onBlur={(e) => updateField('name', e.target.value)}
@@ -45,7 +63,7 @@ const GeneralInfo = ({
                     />
                 </div>
 
-                {/* Logo Alanı (Tasarımı özel olduğu için aynı bırakıldı) */}
+                {/* Logo Alanı */}
                 <div style={{flex: '1 1 300px'}}>
                     <label style={smallLabelStyle}>LOGO</label>
                     <div
@@ -126,7 +144,6 @@ const GeneralInfo = ({
                                 Dosya Seç
                             </UploadImageButton>
 
-                            {/* Bu input gizli ve dosya seçmek için kullanıldığından orijinal haliyle kalmalı */}
                             <input
                                 type="file"
                                 accept="image/*"

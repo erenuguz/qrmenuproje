@@ -1,6 +1,9 @@
 import React from 'react';
-import {ProductCard, EmptyState, Badge} from '@/';
+import ProductCard from '@/components/productTab/ProductCard';
+import EmptyState from '@/components/common/EmptyState';
+import Badge from '@/components/common/Badge';
 import {TagIcon} from '@/components/common/icon/Icons';
+import {cardStyle} from '@/styles/shared';
 
 const ProductList = ({
     menu,
@@ -19,10 +22,8 @@ const ProductList = ({
             {searchQuery.trim() !== '' ? (
                 <div
                     style={{
-                        backgroundColor: 'var(--surface)',
-                        border: '1px solid var(--border)',
-                        borderRadius: 'var(--radius)',
-                        boxShadow: 'var(--shadow)',
+                        ...cardStyle,
+                        padding: 0,
                         overflow: 'hidden',
                     }}
                 >
@@ -92,10 +93,8 @@ const ProductList = ({
                         <div
                             key={category.id}
                             style={{
-                                backgroundColor: 'var(--surface)',
-                                border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius)',
-                                boxShadow: 'var(--shadow)',
+                                ...cardStyle,
+                                padding: 0,
                                 marginBottom: '24px',
                                 overflow: 'hidden',
                             }}

@@ -2,6 +2,7 @@ import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import {StatCard, PageHeader} from '@/';
 import {FolderIcon, PackageIcon} from '@/components/common/icon/Icons';
+import {iconContainerStyle} from '@/styles/shared';
 
 const CategoryHeader = ({categories, menu}) => {
     const totalCategories = categories.length;
@@ -36,19 +37,35 @@ const CategoryHeader = ({categories, menu}) => {
                 }}
             >
                 <StatCard
-                    bgColor="var(--badge)"
-                    iconColor="var(--info)"
                     value={totalCategories}
                     label="Toplam Kategori"
-                    icon={<FolderIcon size={20} />}
+                    icon={
+                        <div
+                            style={{
+                                ...iconContainerStyle,
+                                backgroundColor: 'var(--badge)',
+                                color: 'var(--info)',
+                            }}
+                        >
+                            <FolderIcon size={20} />
+                        </div>
+                    }
                 />
 
                 <StatCard
-                    bgColor="var(--successBg)"
-                    iconColor="var(--success)"
                     value={totalProducts}
                     label="Toplam Ürün"
-                    icon={<PackageIcon size={20} />}
+                    icon={
+                        <div
+                            style={{
+                                ...iconContainerStyle,
+                                backgroundColor: 'var(--successBg)',
+                                color: 'var(--success)',
+                            }}
+                        >
+                            <PackageIcon size={20} />
+                        </div>
+                    }
                 />
             </div>
         </div>

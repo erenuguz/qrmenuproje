@@ -1,7 +1,8 @@
 import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
-import {Badge} from '@/';
+import Badge from '@/components/common/Badge';
 import {HomeIcon} from '@/components/common/icon/Icons';
+import {cardStyle} from '@/styles/shared';
 
 const RestaurantSelector = ({
     restaurants,
@@ -14,17 +15,16 @@ const RestaurantSelector = ({
     return (
         <div
             style={{
+                ...cardStyle,
                 display: 'flex',
                 flexWrap: isMobile ? 'wrap' : 'nowrap',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: isMobile ? '12px' : undefined,
                 padding: '18px 24px',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radiusLarge)',
-                backgroundColor: 'var(--surface)',
-                boxShadow: 'var(--shadow)',
                 marginBottom: '20px',
+                width: '100%',
+                boxSizing: 'border-box',
             }}
         >
             {/* Sol: İkon + Label + Select */}

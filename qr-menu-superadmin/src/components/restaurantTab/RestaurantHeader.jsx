@@ -5,6 +5,7 @@ import {
     TrendingUpIcon,
     UsersIcon,
 } from '@/components/common/icon/Icons';
+import {iconContainerStyle} from '@/styles/shared';
 
 const RestaurantHeader = ({restaurants}) => {
     return (
@@ -25,29 +26,53 @@ const RestaurantHeader = ({restaurants}) => {
             >
                 <StatCard
                     size="lg"
-                    bgColor="var(--info)"
-                    iconColor="var(--textWhite)"
                     value={restaurants?.length || 0}
                     label="Toplam Restoran"
-                    icon={<HomeIcon size={24} />}
+                    icon={
+                        <div
+                            style={{
+                                ...iconContainerStyle,
+                                backgroundColor: 'var(--infoBg)',
+                                color: 'var(--info)',
+                            }}
+                        >
+                            <HomeIcon size={24} />
+                        </div>
+                    }
                 />
 
                 <StatCard
                     size="lg"
-                    bgColor="var(--successBg)"
-                    iconColor="var(--success)"
                     value={restaurants?.length || 0}
                     label="Aktif Menü"
-                    icon={<TrendingUpIcon size={24} />}
+                    icon={
+                        <div
+                            style={{
+                                ...iconContainerStyle,
+                                backgroundColor: 'var(--successBg)',
+                                color: 'var(--success)',
+                            }}
+                        >
+                            <TrendingUpIcon size={24} />
+                        </div>
+                    }
                 />
 
                 <StatCard
                     size="lg"
-                    bgColor="var(--badge)"
-                    iconColor="var(--badgeText)"
                     value={restaurants?.length || 0}
                     label="Toplam Kullanıcı"
-                    icon={<UsersIcon size={24} />}
+                    icon={
+                        <div
+                            style={{
+                                ...iconContainerStyle,
+                                backgroundColor: 'var(--badge)',
+                                color: 'var(--badgeText)',
+                            }}
+                        >
+                            <UsersIcon size={24} />
+                        </div>
+                    }
                 />
             </div>
         </div>

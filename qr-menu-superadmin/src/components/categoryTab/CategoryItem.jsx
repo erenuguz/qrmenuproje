@@ -31,7 +31,14 @@ export const CategoryItem = ({
     };
 
     return (
-        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                boxSizing: 'border-box',
+            }}
+        >
             {/* 1. Header (İsteğe bağlı veya ilk satırda gösterim için) */}
             {showHeader && <CategoryListHeader count={totalCategoryCount} />}
 
@@ -40,7 +47,8 @@ export const CategoryItem = ({
                 style={{
                     display: 'flex',
                     flexDirection: isMobile ? 'column' : 'row',
-                    alignItems: isMobile ? undefined : 'center',
+                    justifyContent: 'space-between',
+                    alignItems: isMobile ? 'stretch' : 'center',
                     padding: isMobile ? '16px 20px' : '16px 24px',
                     borderBottom: isLast
                         ? 'none'
@@ -48,6 +56,8 @@ export const CategoryItem = ({
                     gap: isMobile ? '14px' : '20px',
                     backgroundColor: isEditing ? 'var(--hover)' : 'transparent',
                     transition: 'background-color 0.2s ease',
+                    boxSizing: 'border-box',
+                    width: '100%',
                 }}
             >
                 <div
@@ -56,6 +66,7 @@ export const CategoryItem = ({
                         alignItems: 'center',
                         gap: '16px',
                         flex: 1,
+                        minWidth: 0,
                         width: isMobile ? '100%' : undefined,
                     }}
                 >
@@ -69,31 +80,42 @@ export const CategoryItem = ({
                     />
 
                     {/* Orta: Düzenleme Formu YADA Kategori Bilgisi (BURASI DEĞİŞTİ) */}
-                    {isEditing ? (
-                        <CategoryForm
-                            initialName={category.name}
-                            onSave={handleSaveName}
-                            onCancel={() => setIsEditing(false)}
-                        />
-                    ) : (
-                        <CategoryItemInfo
-                            name={category.name}
-                            image={category.image}
-                            productCount={productCount}
-                        />
-                    )}
+                    <div style={{flex: 1, minWidth: 0}}>
+                        {isEditing ? (
+                            <CategoryForm
+                                initialName={category.name}
+                                onSave={handleSaveName}
+                                onCancel={() => setIsEditing(false)}
+                            />
+                        ) : (
+                            <CategoryItemInfo
+                                name={category.name}
+                                image={category.image}
+                                productCount={productCount}
+                            />
+                        )}
+                    </div>
                 </div>
 
                 {/* Sağ: Aksiyon Butonları */}
                 {!isEditing && (
-                    <CategoryItemActions
-                        categoryId={category.id}
-                        categoryName={category.name}
-                        onEditClick={() => setIsEditing(true)}
-                        onDeleteClick={deleteCategory}
-                        onImageUpdate={updateImage}
-                        isMobile={isMobile}
-                    />
+                    <div
+                        style={{
+                            flexShrink: 0,
+                            display: 'flex',
+                            justifyContent: isMobile ? 'flex-end' : 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <CategoryItemActions
+                            categoryId={category.id}
+                            categoryName={category.name}
+                            onEditClick={() => setIsEditing(true)}
+                            onDeleteClick={deleteCategory}
+                            onImageUpdate={updateImage}
+                            isMobile={isMobile}
+                        />
+                    </div>
                 )}
             </div>
         </div>

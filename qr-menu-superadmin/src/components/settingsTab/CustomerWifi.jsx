@@ -17,12 +17,30 @@ const CustomerWifi = ({
     updateField,
 }) => {
     return (
-        <div style={cardStyle}>
+        <div
+            style={{
+                ...cardStyle,
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '24px',
+                marginBottom: '20px',
+            }}
+        >
             {/* Kart Başlığı */}
             <SectionHeader
                 title="Müşteri Wi-Fi"
                 subtitle="İsteğe bağlı — QR menüde gösterilir"
-                icon={<WifiIcon size={20} />}
+                icon={
+                    <div
+                        style={{
+                            ...iconContainerStyle,
+                            backgroundColor: 'var(--infoBg)',
+                            color: 'var(--info)',
+                        }}
+                    >
+                        <WifiIcon size={20} />
+                    </div>
+                }
                 iconBg="var(--infoBg)"
                 iconColor="var(--info)"
             />

@@ -1,5 +1,7 @@
 import React from 'react';
-import {cardStyle, inputStyle, useResponsive} from '@/';
+import {useResponsive} from '@/hooks/useResponsive';
+import {cardStyle} from '@/styles/shared';
+import Input from '@/components/common/Input';
 import {AddButton} from '@/components/common/button/Buttons';
 import {TagIcon} from '@/components/common/icon/Icons';
 
@@ -8,7 +10,15 @@ const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
     const isActive = newCategoryName.trim();
 
     return (
-        <div style={cardStyle}>
+        <div
+            style={{
+                ...cardStyle,
+                padding: isMobile ? '16px 20px' : '20px 24px',
+                marginBottom: '24px',
+                width: '100%',
+                boxSizing: 'border-box',
+            }}
+        >
             <h3
                 style={{
                     margin: '0 0 16px 0',
@@ -25,40 +35,32 @@ const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
                     display: 'flex',
                     flexDirection: isMobile ? 'column' : 'row',
                     gap: '12px',
+                    alignItems: 'center',
                 }}
             >
-                {/* Input */}
-                <div
+                <Input
+                    icon={<TagIcon size={18} />}
+                    placeholder={
+                        isMobile
+                            ? 'Kategori adı girin'
+                            : 'Kategori adı girin (örn. Çorbalar)'
+                    }
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && addCategory()}
+                    isMobile={isMobile}
+                    containerStyle={{
+                        flex: isMobile ? undefined : 1,
+                    }}
+                />
+
+                <AddButton
+                    onClick={addCategory}
+                    disabled={!isActive}
                     style={{
-                        position: 'relative',
-                        ...(isMobile ? {width: '100%'} : {flex: 1}),
+                        width: isMobile ? '100%' : 'auto',
                     }}
                 >
-                    <TagIcon
-                        size={18}
-                        color="var(--textMuted)"
-                        style={{
-                            position: 'absolute',
-                            left: '14px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                        }}
-                    />
-                    <input
-                        type="text"
-                        placeholder={
-                            isMobile
-                                ? 'Kategori adı girin'
-                                : 'Kategori adı girin (örn. Çorbalar)'
-                        }
-                        value={newCategoryName}
-                        onChange={(e) => setNewCategoryName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && addCategory()}
-                        style={{...inputStyle, padding: '12px 16px 12px 42px'}}
-                    />
-                </div>
-
-                <AddButton onClick={addCategory} disabled={!isActive}>
                     Ekle
                 </AddButton>
             </div>
