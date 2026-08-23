@@ -1,5 +1,6 @@
 import React from 'react';
-import {inputStyle, CancelButton, CreateButton} from '@/';
+import Input from '@/components/common/Input';
+import {CancelButton, CreateButton} from '@/components/common/button/Buttons';
 
 const RestaurantAddModal = ({
     isModalOpen,
@@ -60,31 +61,28 @@ const RestaurantAddModal = ({
                         gap: '15px',
                     }}
                 >
-                    <input
+                    <Input
                         type="text"
                         placeholder="Sistem ID (örn: mutlu-kebap)"
                         required
                         value={newId}
                         onChange={(e) => setNewId(e.target.value)}
-                        style={{...inputStyle, padding: '12px'}}
                     />
 
-                    <input
+                    <Input
                         type="text"
                         placeholder="Restoran Adı"
                         required
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        style={{...inputStyle, padding: '12px'}}
                     />
 
-                    <input
+                    <Input
                         type="email"
                         placeholder="Yönetici E-Posta"
                         required
                         value={newEmail}
                         onChange={(e) => setNewEmail(e.target.value)}
-                        style={{...inputStyle, padding: '12px'}}
                     />
 
                     <div

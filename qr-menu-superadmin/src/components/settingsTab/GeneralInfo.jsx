@@ -1,15 +1,11 @@
 import React, {useRef} from 'react';
 
+import {UploadImageButton, SectionHeader, Input} from '@/';
 import {
-    cardStyle,
-    inputStyle,
+    sectionCardStyle,
     smallLabelStyle,
     iconContainerStyle,
-    UploadImageButton,
-    SectionHeader,
-    Input,
-} from '@/';
-
+} from '@/styles/shared';
 import {HomeIcon} from '@/components/common/icon/Icons';
 
 const GeneralInfo = ({
@@ -25,28 +21,16 @@ const GeneralInfo = ({
     return (
         <div
             style={{
-                ...cardStyle,
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: '24px',
-                marginBottom: '20px',
+                ...sectionCardStyle,
             }}
         >
             {/* Kart Başlığı */}
             <SectionHeader
                 title="Genel Bilgiler"
                 subtitle="Restoran adı ve logo ayarları"
-                icon={
-                    <div
-                        style={{
-                            ...iconContainerStyle,
-                            backgroundColor: 'var(--infoBg)',
-                            color: 'var(--info)',
-                        }}
-                    >
-                        <HomeIcon size={20} />
-                    </div>
-                }
+                icon={<HomeIcon size={20} />}
+                iconBg="var(--infoBg)"
+                iconColor="var(--info)"
             />
 
             {/* Form Alanı */}

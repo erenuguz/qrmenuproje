@@ -1,12 +1,10 @@
 import React from 'react';
+import {SectionHeader, Input} from '@/';
 import {
-    cardStyle,
-    inputStyle,
+    sectionCardStyle,
     smallLabelStyle,
     iconContainerStyle,
-    SectionHeader,
-    Input,
-} from '@/';
+} from '@/styles/shared';
 import {WifiIcon} from '@/components/common/icon/Icons';
 
 const CustomerWifi = ({
@@ -19,28 +17,14 @@ const CustomerWifi = ({
     return (
         <div
             style={{
-                ...cardStyle,
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: '24px',
-                marginBottom: '20px',
+                ...sectionCardStyle,
             }}
         >
             {/* Kart Başlığı */}
             <SectionHeader
                 title="Müşteri Wi-Fi"
                 subtitle="İsteğe bağlı — QR menüde gösterilir"
-                icon={
-                    <div
-                        style={{
-                            ...iconContainerStyle,
-                            backgroundColor: 'var(--infoBg)',
-                            color: 'var(--info)',
-                        }}
-                    >
-                        <WifiIcon size={20} />
-                    </div>
-                }
+                icon={<WifiIcon size={20} />}
                 iconBg="var(--infoBg)"
                 iconColor="var(--info)"
             />

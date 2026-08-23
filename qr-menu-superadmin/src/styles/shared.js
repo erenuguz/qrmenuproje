@@ -12,7 +12,7 @@ export const inputStyle = {
     padding: '12px 16px',
     borderRadius: 'var(--radiusSmall)',
     border: '1px solid var(--inputBorder)',
-    backgroundColor: 'var(--inputBackground)',
+    backgroundColor: 'var(--inputBg)',
     color: 'var(--text)',
     fontSize: 'var(--font-input)',
     outline: 'none',
@@ -41,4 +41,25 @@ export const iconContainerStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+};
+
+// Ayar kartlarındaki başlık (GeneralInfo, CustomerWifi, SocialMedia)
+export const sectionCardStyle = {
+    ...cardStyle,
+    width: '100%',
+    boxSizing: 'border-box',
+    padding: '24px',
+};
+
+export const formFieldStyle = {
+    flex: '1 1 200px',
+    minWidth: 0,
+};
+
+export const labelStyle = {
+    display: 'block',
+    marginBottom: '8px',
+    fontWeight: 'var(--font-semibold)',
+    color: 'var(--text)',
+    fontSize: 'var(--font-caption)',
 };

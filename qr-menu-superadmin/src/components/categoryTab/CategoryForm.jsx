@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {SaveButton, CancelButton} from '@/components/common/button/Buttons';
+import Input from '@/components/common/Input';
 
 export const CategoryForm = ({initialName = '', onSave, onCancel}) => {
     const [name, setName] = useState(initialName);
@@ -22,22 +23,14 @@ export const CategoryForm = ({initialName = '', onSave, onCancel}) => {
 
     return (
         <div style={{display: 'flex', gap: '10px', flex: 1, flexWrap: 'wrap'}}>
-            <input
-                type="text"
+            <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
-                style={{
+                containerStyle={{
                     flex: 1,
                     minWidth: 0,
-                    padding: '8px 12px',
-                    borderRadius: 'var(--radiusSmall)',
-                    border: '1px solid var(--primary)',
-                    backgroundColor: 'var(--inputBackground)',
-                    color: 'var(--text)',
-                    outline: 'none',
-                    fontSize: 'var(--font-body)',
                 }}
             />
 

@@ -23,17 +23,6 @@ const ProductFilters = ({
         >
             {/* Arama */}
             <div style={{flex: 1, position: 'relative', minWidth: 0}}>
-                <SearchIcon
-                    size={isMobile ? 18 : 22}
-                    color="var(--textMuted)"
-                    style={{
-                        position: 'absolute',
-                        left: isMobile ? '12px' : '20px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        pointerEvents: 'none',
-                    }}
-                />
                 <Input
                     icon={<SearchIcon size={20} />}
                     placeholder="Ürün ara..."

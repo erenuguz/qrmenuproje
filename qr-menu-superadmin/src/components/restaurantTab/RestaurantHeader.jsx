@@ -1,15 +1,21 @@
 import React from 'react';
 import {StatCard, PageHeader} from '@/';
-import {
-    HomeIcon,
-    TrendingUpIcon,
-    UsersIcon,
-} from '@/components/common/icon/Icons';
-import {iconContainerStyle} from '@/styles/shared';
+import {useResponsive} from '@/hooks/useResponsive';
 
 const RestaurantHeader = ({restaurants}) => {
+    const {isMobile} = useResponsive();
+
     return (
-        <div style={{marginBottom: '30px'}}>
+        <div
+            style={{
+                display: isMobile ? 'flex' : 'block',
+                justifyContent: isMobile ? 'space-between' : undefined,
+                alignItems: isMobile ? 'center' : undefined,
+                flexWrap: isMobile ? 'wrap' : undefined,
+                gap: isMobile ? '20px' : undefined,
+                marginBottom: '30px',
+            }}
+        >
             {/* BAŞLIK */}
             <PageHeader
                 title="Restoran Yönetimi"
@@ -20,60 +26,35 @@ const RestaurantHeader = ({restaurants}) => {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: '20px',
+                    gridTemplateColumns: 'repeat(3, 1fr)', // Ekranı zorla 3 eşit parçaya böler
+                    gap: isMobile ? '6px' : '20px', // Mobilde sığması için boşluğu iyice kıstık
+                    width: '100%',
+                    boxSizing: 'border-box', // Taşırmaları engeller
                 }}
             >
-                <StatCard
-                    size="lg"
-                    value={restaurants?.length || 0}
-                    label="Toplam Restoran"
-                    icon={
-                        <div
-                            style={{
-                                ...iconContainerStyle,
-                                backgroundColor: 'var(--infoBg)',
-                                color: 'var(--info)',
-                            }}
-                        >
-                            <HomeIcon size={24} />
-                        </div>
-                    }
-                />
+                {/* 1. Kart */}
+                <div style={{minWidth: 0, height: '100%'}}>
+                    <StatCard
+                        value={restaurants?.length || 0}
+                        label="Toplam Restoran"
+                    />
+                </div>
 
-                <StatCard
-                    size="lg"
-                    value={restaurants?.length || 0}
-                    label="Aktif Menü"
-                    icon={
-                        <div
-                            style={{
-                                ...iconContainerStyle,
-                                backgroundColor: 'var(--successBg)',
-                                color: 'var(--success)',
-                            }}
-                        >
-                            <TrendingUpIcon size={24} />
-                        </div>
-                    }
-                />
+                {/* 2. Kart */}
+                <div style={{minWidth: 0, height: '100%'}}>
+                    <StatCard
+                        value={restaurants?.length || 0}
+                        label="Aktif Menü"
+                    />
+                </div>
 
-                <StatCard
-                    size="lg"
-                    value={restaurants?.length || 0}
-                    label="Toplam Kullanıcı"
-                    icon={
-                        <div
-                            style={{
-                                ...iconContainerStyle,
-                                backgroundColor: 'var(--badge)',
-                                color: 'var(--badgeText)',
-                            }}
-                        >
-                            <UsersIcon size={24} />
-                        </div>
-                    }
-                />
+                {/* 3. Kart */}
+                <div style={{minWidth: 0, height: '100%'}}>
+                    <StatCard
+                        value={restaurants?.length || 0}
+                        label="Toplam Kullanıcı"
+                    />
+                </div>
             </div>
         </div>
     );

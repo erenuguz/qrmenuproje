@@ -40,24 +40,31 @@ const StatCard = ({bgColor, iconColor, icon, value, label, size = 'sm'}) => {
                 alignItems: 'center',
                 gap: '16px',
                 boxShadow: 'var(--shadow)',
+                height: '100%',
+                boxSizing: 'border-box',
             }}
         >
-            <div
-                style={{
-                    width: s.iconSize,
-                    height: s.iconSize,
-                    minWidth: s.iconSize,
-                    borderRadius: s.iconRadius,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: bgColor,
-                    color: iconColor,
-                }}
-            >
-                {icon}
-            </div>
-            <div>
+            {/* İkon SADECE gönderilmişse render edilir */}
+            {icon && (
+                <div
+                    style={{
+                        width: s.iconSize,
+                        height: s.iconSize,
+                        minWidth: s.iconSize,
+                        borderRadius: s.iconRadius,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: bgColor,
+                        color: iconColor,
+                    }}
+                >
+                    {icon}
+                </div>
+            )}
+
+            {/* Yazı alanı - İkon yoksa tek başına tüm alanı kaplar */}
+            <div style={{flex: 1, minWidth: 0}}>
                 <h3
                     style={{
                         fontSize: s.valueFontSize,

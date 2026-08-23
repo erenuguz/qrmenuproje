@@ -1,12 +1,10 @@
 import React from 'react';
+import {SectionHeader, Input} from '@/';
 import {
-    cardStyle,
-    inputStyle,
+    sectionCardStyle,
     smallLabelStyle,
     iconContainerStyle,
-    SectionHeader,
-    Input,
-} from '@/';
+} from '@/styles/shared';
 import {InstagramIcon, WhatsappIcon} from '@/components/common/icon/Icons';
 
 const SocialMedia = ({
@@ -19,11 +17,7 @@ const SocialMedia = ({
     return (
         <div
             style={{
-                ...cardStyle,
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: '24px',
-                marginBottom: '20px',
+                ...sectionCardStyle,
             }}
         >
             <SectionHeader

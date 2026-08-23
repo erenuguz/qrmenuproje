@@ -22,7 +22,13 @@ const SettingsTab = ({restaurantId, restaurantData}) => {
             />
 
             {/* Ayar Kartları */}
-            <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '20px',
+                }}
+            >
                 <GeneralInfo
                     name={state.name}
                     setName={setters.setName}

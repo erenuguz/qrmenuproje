@@ -139,20 +139,7 @@ export const HomeIcon = ({size = 16, strokeWidth = 2, ...props}) => (
         <polyline points="9 22 9 12 15 12 15 22" />
     </BaseIcon>
 );
-export const TrendingUpIcon = ({size = 24, strokeWidth = 2, ...props}) => (
-    <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
-        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-        <polyline points="16 7 22 7 22 13" />
-    </BaseIcon>
-);
-export const UsersIcon = ({size = 24, strokeWidth = 2, ...props}) => (
-    <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </BaseIcon>
-);
+
 export const MailIcon = ({size = 14, strokeWidth = 2, ...props}) => (
     <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />

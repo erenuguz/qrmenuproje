@@ -39,33 +39,17 @@ const CategoryHeader = ({categories, menu}) => {
                 <StatCard
                     value={totalCategories}
                     label="Toplam Kategori"
-                    icon={
-                        <div
-                            style={{
-                                ...iconContainerStyle,
-                                backgroundColor: 'var(--badge)',
-                                color: 'var(--info)',
-                            }}
-                        >
-                            <FolderIcon size={20} />
-                        </div>
-                    }
+                    icon={<FolderIcon size={20} />}
+                    bgColor="var(--badge)"
+                    iconColor="var(--info)"
                 />
 
                 <StatCard
                     value={totalProducts}
                     label="Toplam Ürün"
-                    icon={
-                        <div
-                            style={{
-                                ...iconContainerStyle,
-                                backgroundColor: 'var(--successBg)',
-                                color: 'var(--success)',
-                            }}
-                        >
-                            <PackageIcon size={20} />
-                        </div>
-                    }
+                    icon={<PackageIcon size={20} />}
+                    bgColor="var(--successBg)"
+                    iconColor="var(--success)"
                 />
             </div>
         </div>
