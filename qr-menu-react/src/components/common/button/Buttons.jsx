@@ -1,6 +1,10 @@
 import React, {useState} from 'react';
 import BaseButton from './BaseButton';
-import {ChevronLeftIcon, CheckIcon, CopyIcon} from '@/components/common/icon/Icons';
+import {
+    ChevronLeftIcon,
+    CheckIcon,
+    CopyIcon,
+} from '@/components/common/icon/Icons';
 
 export const BackButton = ({
     onClick,
@@ -33,8 +37,9 @@ export const BackButton = ({
                 setIsHovered(false);
                 setIsPressed(false);
             }}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
+            onPointerDown={() => setIsPressed(true)}
+            onPointerUp={() => setIsPressed(false)}
+            onPointerCancel={() => setIsPressed(false)}
             style={{
                 width: size,
                 height: size,
@@ -90,13 +95,18 @@ export const CopyButton = ({
 }) => {
     const [isCopied, setIsCopied] = useState(false);
 
-    const handleCopy = (e) => {
-        if (e) e.stopPropagation(); // Tıklamanın dışarı taşmasını engeller
-        if (!textToCopy) return;
+    const handleCopy = async (event) => {
+        event?.stopPropagation();
 
-        navigator.clipboard?.writeText(textToCopy);
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 1500);
+        if (!textToCopy || !navigator.clipboard) return;
+
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 1500);
+        } catch {
+            setIsCopied(false);
+        }
     };
 
     return (

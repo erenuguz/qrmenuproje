@@ -46,7 +46,8 @@ const BaseButton = ({
                         : 'not-allowed'
                     : 'pointer',
                 opacity: isActionDisabled ? 0.6 : 1,
-                transition: 'all 0.2s ease',
+                transition:
+                    'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease',
                 ...style,
             }}
             {...props}

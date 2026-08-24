@@ -3,7 +3,7 @@ export const cardStyle = {
     boxSizing: 'border-box',
     backgroundColor: 'var(--surface)',
     border: '1px solid var(--border)',
-    borderRadius: 'var(--radiusLarge)',
+    borderRadius: 'var(--radius)',
     boxShadow: 'var(--shadow)',
 };
 export const iconContainerStyle = {

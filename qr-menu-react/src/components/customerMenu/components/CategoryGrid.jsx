@@ -42,7 +42,7 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                                 }}
                             />
                         ) : (
-                            <div
+                            <span
                                 style={{
                                     width: '72px',
                                     height: '72px',
@@ -56,11 +56,10 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                                 }}
                             >
                                 🍽️
-                            </div>
+                            </span>
                         )}
-                        <h2
+                        <span
                             style={{
-                                margin: 0,
                                 fontSize: 'var(--font-caption)',
                                 fontWeight: 'var(--font-semibold)',
                                 color: 'var(--text)',
@@ -68,7 +67,7 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                             }}
                         >
                             {category.name}
-                        </h2>
+                        </span>
                     </Card>
                 );
             })}

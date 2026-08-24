@@ -1,22 +1,14 @@
 import React from 'react';
 import {WifiIcon} from '@/components/common/icon/Icons';
 import {iconContainerStyle} from '@/styles/shared';
-import {CopyButton} from '@/components/common/button/Buttons'; // Yolu projene göre ayarla
+import {CopyButton} from '@/components/common/button/Buttons';
+import Card from '@/components/common/Card';
 
 const WifiCard = ({networkName, password}) => {
     if (!networkName && !password) return null;
 
     return (
-        <div
-            style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radiusLarge)',
-                padding: '16px 18px',
-                marginBottom: '12px',
-                boxShadow: 'var(--shadow)',
-            }}
-        >
+        <Card padding="16px 18px" style={{marginBottom: '12px'}}>
             <div
                 style={{
                     display: 'flex',
@@ -64,7 +56,7 @@ const WifiCard = ({networkName, password}) => {
 
                 {password && <CopyButton textToCopy={password} />}
             </div>
-        </div>
+        </Card>
     );
 };
 

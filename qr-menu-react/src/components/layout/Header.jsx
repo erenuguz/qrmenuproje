@@ -9,7 +9,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 backgroundColor:
-                    'color-mix(in srgb, var(--surface) 85%, transparent)',
+                    'color-mix(in srgb, var(--header) 85%, transparent)',
                 backdropFilter: 'blur(14px)',
                 WebkitBackdropFilter: 'blur(14px)',
                 padding: '14px 18px',

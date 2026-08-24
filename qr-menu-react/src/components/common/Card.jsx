@@ -5,7 +5,6 @@ const Card = ({
     children,
     onClick,
     padding = '16px',
-    borderRadius = 'var(--radius)',
     style = {},
     hoverStyle = {},
     ...props
@@ -27,7 +26,6 @@ const Card = ({
             style={{
                 ...cardStyle,
                 padding,
-                borderRadius,
                 fontFamily: 'inherit',
                 color: 'inherit',
                 textAlign: 'inherit',

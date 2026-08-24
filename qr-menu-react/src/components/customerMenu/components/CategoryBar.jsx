@@ -24,7 +24,7 @@ const CategoryBar = ({
                 WebkitBackdropFilter: 'blur(14px)',
                 borderBottom: '1px solid var(--border)',
                 position: 'sticky',
-                top: 0,
+                top: '65px',
                 zIndex: 990,
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
