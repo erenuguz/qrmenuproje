@@ -1,109 +1,98 @@
-import React, {useId, useState} from 'react';
-import {inputStyle} from '@/styles/shared';
-import {ChevronDownIcon} from '@/components/common/icon/Icons';
+import React from 'react';
+import {useResponsive} from '@/hooks/useResponsive';
+import Badge from '@/components/common/Badge';
+import {HomeIcon} from '@/components/common/icon/Icons';
+import {cardStyle} from '@/styles/shared';
+import {Select} from '@/components/common/Select';
 
-const Select = ({
-    label,
-    labelStyle = {},
-    value,
-    onChange,
-    onFocus,
-    onBlur,
-    isMobile = false,
-    style = {},
-    containerStyle = {},
-    children,
-    id,
-    ...props
+const RestaurantSelector = ({
+    restaurants,
+    selectedRestaurantId,
+    setSelectedRestaurantId,
+    totalProducts,
 }) => {
-    const generatedId = useId();
-    const selectId = id || generatedId;
-
-    const [isFocused, setIsFocused] = useState(false);
+    const {isMobile} = useResponsive();
 
     return (
         <div
             style={{
+                ...cardStyle,
                 display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
+                flexWrap: isMobile ? 'wrap' : 'nowrap',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: isMobile ? '12px' : undefined,
+                padding: '18px 24px',
+                marginBottom: '20px',
                 width: '100%',
-                ...containerStyle,
+                boxSizing: 'border-box',
             }}
         >
-            {label && (
-                <label
-                    htmlFor={selectId}
-                    style={{
-                        fontSize: 'var(--font-small)',
-                        fontWeight: 'var(--font-semibold)',
-                        color: 'var(--textSecondary)',
-                        letterSpacing: '0.5px',
-                        ...labelStyle,
-                    }}
-                >
-                    {label}
-                </label>
-            )}
-
+            {/* Sol: İkon + Label + Select */}
             <div
                 style={{
-                    position: 'relative',
-                    width: '100%',
                     display: 'flex',
+                    flexWrap: isMobile ? 'wrap' : 'nowrap',
                     alignItems: 'center',
+                    gap: isMobile ? '12px' : '16px',
+                    flex: isMobile ? '1 1 260px' : undefined,
                 }}
             >
-                <select
-                    id={selectId}
-                    value={value}
-                    onChange={onChange}
-                    onFocus={(event) => {
-                        setIsFocused(true);
-                        onFocus?.(event);
-                    }}
-                    onBlur={(event) => {
-                        setIsFocused(false);
-                        onBlur?.(event);
-                    }}
-                    style={{
-                        ...inputStyle,
-                        height: isMobile ? '42px' : '45px',
-                        padding: isMobile ? '0 38px 0 16px' : '0 48px 0 24px',
-                        borderRadius: isMobile
-                            ? 'var(--radiusSmall)'
-                            : 'var(--radiusLarge)',
-                        border: `1px solid ${
-                            isFocused ? 'var(--primary)' : 'var(--inputBorder)'
-                        }`,
-                        fontSize: isMobile
-                            ? 'var(--font-caption)'
-                            : 'var(--font-body)',
-                        fontFamily: 'var(--font-family)',
-                        cursor: 'pointer',
-                        appearance: 'none',
-                        WebkitAppearance: 'none',
-                        ...style,
-                    }}
-                    {...props}
-                >
-                    {children}
-                </select>
-
-                <ChevronDownIcon
-                    size={isMobile ? 16 : 18}
+                <HomeIcon
+                    size={16}
                     color="var(--textMuted)"
-                    style={{
-                        position: 'absolute',
-                        right: isMobile ? '14px' : '18px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        pointerEvents: 'none',
-                    }}
+                    style={{flexShrink: 0}}
                 />
+
+                <span
+                    style={{
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: 'var(--textSecondary)',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    İşlem Yapılacak Restoran:
+                </span>
+
+                {/* Sadece Select bileşeni kullanıldı */}
+                <Select
+                    value={selectedRestaurantId}
+                    onChange={(e) => setSelectedRestaurantId(e.target.value)}
+                    isMobile={isMobile}
+                    containerStyle={
+                        isMobile
+                            ? {
+                                  flex: '1 1 200px',
+                                  minWidth: '150px',
+                                  maxWidth: '100%',
+                              }
+                            : {minWidth: '220px'}
+                    }
+                    style={{
+                        fontWeight: '600',
+                        backgroundColor: 'var(--inputBackground)',
+                    }}
+                >
+                    {restaurants.map((res) => (
+                        <option key={res.id} value={res.id}>
+                            {res.name} (ID: {res.id})
+                        </option>
+                    ))}
+                </Select>
+            </div>
+
+            {/* Sağ: Ürün sayısı badge */}
+            <div
+                style={{
+                    marginLeft: isMobile ? undefined : 'auto',
+                    flexShrink: isMobile ? 0 : undefined,
+                }}
+            >
+                <Badge>{totalProducts} toplam ürün</Badge>
             </div>
         </div>
     );
 };
 
-export default Select;
+export default RestaurantSelector;

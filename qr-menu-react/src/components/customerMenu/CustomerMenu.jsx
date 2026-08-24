@@ -37,7 +37,10 @@ const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
         >
             <div style={{maxWidth: '600px', margin: '0 auto'}}>
                 {menu.length === 0 ? (
-                    <EmptyState message="Menüde henüz ürün yok." />
+                    <EmptyState
+                        title="Henüz ürün yok"
+                        message="Menünüzde gösterilecek bir ürün bulunmuyor."
+                    />
                 ) : activeCategory === null ? (
                     <CategoryGrid
                         categories={categories}

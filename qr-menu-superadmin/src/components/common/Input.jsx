@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { inputStyle } from '@/styles/shared';
+import React, {useState} from 'react';
+import {inputStyle} from '@/styles/shared';
 
 export const Input = ({
     label,
@@ -41,8 +41,8 @@ export const Input = ({
             {label && (
                 <label
                     style={{
-                        fontSize: '12px',
-                        fontWeight: '600',
+                        fontSize: 'var(--font-small)',
+                        fontWeight: 'var(--font-semibold)',
                         color: 'var(--textSecondary)',
                         letterSpacing: '0.5px',
                         ...labelStyle,

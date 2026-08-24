@@ -6,19 +6,18 @@ import {
     browserSessionPersistence,
 } from 'firebase/auth';
 import {auth} from '@/firebaseConfig';
-import {inputStyle} from '@/';
 import {
     LockIcon,
     AlertCircleIcon,
     CheckCircleIcon,
-    EyeIcon,
-    EyeOffIcon,
 } from '@/components/common/icon/Icons';
 import {
     SubmitButton,
     ForgotPasswordButton,
     PasswordToggleButton,
 } from '@/components/common/button/Buttons';
+import {Input} from '@/components/common/Input';
+import {cardStyle} from '@/styles/shared';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -61,16 +60,6 @@ const Login = () => {
         }
     };
 
-    const labelStyle = {
-        display: 'block',
-        marginBottom: '8px',
-        fontSize: 'var(--font-caption)',
-        fontWeight: 'var(--font-semibold)',
-        color: 'var(--textSecondary)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-    };
-
     return (
         <div
             style={{
@@ -85,15 +74,12 @@ const Login = () => {
         >
             <div
                 style={{
-                    backgroundColor: 'var(--surface)',
-                    width: '100%',
+                    ...cardStyle,
                     maxWidth: '420px',
                     padding: '40px',
-                    borderRadius: 'var(--radius)',
-                    boxShadow: 'var(--shadow)',
-                    border: '1px solid var(--border)',
                 }}
             >
+                {/* İkon ve Başlıklar */}
                 <div style={{textAlign: 'center', marginBottom: '30px'}}>
                     <div
                         style={{
@@ -132,6 +118,7 @@ const Login = () => {
                     </p>
                 </div>
 
+                {/* Hata ve Bilgi Mesajları */}
                 {error && (
                     <div
                         style={{
@@ -172,6 +159,7 @@ const Login = () => {
                     </div>
                 )}
 
+                {/* Form Alanı */}
                 <form
                     onSubmit={handleSignIn}
                     style={{
@@ -180,28 +168,17 @@ const Login = () => {
                         gap: '20px',
                     }}
                 >
-                    <div>
-                        <label style={labelStyle}>E-posta</label>
-                        <input
-                            type="email"
-                            required
-                            placeholder="admin@ornek.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            style={{
-                                ...inputStyle,
-                                transition: 'border-color 0.2s',
-                            }}
-                            onFocus={(e) =>
-                                (e.target.style.borderColor = 'var(--primary)')
-                            }
-                            onBlur={(e) =>
-                                (e.target.style.borderColor =
-                                    'var(--inputBorder)')
-                            }
-                        />
-                    </div>
+                    {/* E-Posta Input'u */}
+                    <Input
+                        label="E-posta"
+                        type="email"
+                        required
+                        placeholder="admin@ornek.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
 
+                    {/* Şifre Alanı */}
                     <div>
                         <div
                             style={{
@@ -211,7 +188,16 @@ const Login = () => {
                                 marginBottom: '8px',
                             }}
                         >
-                            <label style={{...labelStyle, marginBottom: 0}}>
+                            <label
+                                style={{
+                                    fontSize: 'var(--font-caption)',
+                                    fontWeight: 'var(--font-semibold)',
+                                    color: 'var(--textSecondary)',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em',
+                                    margin: 0,
+                                }}
+                            >
                                 Şifre
                             </label>
                             <ForgotPasswordButton
@@ -220,46 +206,39 @@ const Login = () => {
                             />
                         </div>
 
-                        <div
-                            style={{
-                                position: 'relative',
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <input
+                        <div style={{position: 'relative'}}>
+                            <Input
                                 type={showPassword ? 'text' : 'password'}
                                 required
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 style={{
-                                    ...inputStyle,
                                     paddingRight:
-                                        password.length > 0 ? '40px' : '16px',
-                                    transition:
-                                        'border-color 0.2s, padding-right 0.2s',
+                                        password.length > 0
+                                            ? '40px'
+                                            : undefined,
                                 }}
-                                onFocus={(e) =>
-                                    (e.target.style.borderColor =
-                                        'var(--primary)')
-                                }
-                                onBlur={(e) =>
-                                    (e.target.style.borderColor =
-                                        'var(--inputBorder)')
-                                }
                             />
 
+                            {/* Şifre Göster/Gizle Butonu */}
                             {password.length > 0 && (
                                 <PasswordToggleButton
                                     showPassword={showPassword}
                                     onPressStart={() => setShowPassword(true)}
                                     onPressEnd={() => setShowPassword(false)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '4px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                    }}
                                 />
                             )}
                         </div>
                     </div>
 
+                    {/* Submit Butonu */}
                     <SubmitButton
                         loading={loading}
                         loadingText="İşlem Yapılıyor..."

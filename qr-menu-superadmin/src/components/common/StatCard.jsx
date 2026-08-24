@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {cardStyle} from '@/styles/shared';
 /**
  * İkon + değer + etiket gösteren istatistik kartı.
  * Kaynak: CategoryHeader.jsx'teki local StatCard (size="sm", varsayılan)
@@ -32,16 +32,12 @@ const StatCard = ({bgColor, iconColor, icon, value, label, size = 'sm'}) => {
     return (
         <div
             style={{
-                backgroundColor: 'var(--surface)',
-                borderRadius: 'var(--radius)',
-                border: '1px solid var(--border)',
+                ...cardStyle,
                 padding: s.cardPadding,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
-                boxShadow: 'var(--shadow)',
                 height: '100%',
-                boxSizing: 'border-box',
             }}
         >
             {/* İkon SADECE gönderilmişse render edilir */}

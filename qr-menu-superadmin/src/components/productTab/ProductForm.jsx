@@ -1,9 +1,15 @@
-import React from 'react';
-import {uploadImageAndGetUrl, useToast, SaveButton, CancelButton} from '@/';
+import React, {useId, useRef} from 'react';
+import {
+    uploadImageAndGetUrl,
+    useToast,
+    SaveButton,
+    CancelButton,
+    UploadImageButton,
+} from '@/';
 import Input from '@/components/common/Input';
-import {inputStyle, formFieldStyle, labelStyle} from '@/styles/shared';
+import {cardStyle, formFieldStyle, labelStyle} from '@/styles/shared';
 import Select from '@/components/common/Select';
-import Textarea from '@/components/common/TextArea';
+import TextArea from '@/components/common/TextArea';
 
 const rowStyle = {
     display: 'flex',
@@ -21,33 +27,39 @@ export default function ProductForm({
     saveForm,
 }) {
     const toast = useToast();
+    const fileInputRef = useRef(null);
+    const imageInputId = useId();
 
     const handleChange = (field) => (e) => {
         setActiveForm({...activeForm, [field]: e.target.value});
     };
 
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
+    const handleImageUpload = async (event) => {
+        const input = event.target;
+        const file = input.files?.[0];
+
         if (!file) return;
 
         const url = await uploadImageAndGetUrl(file, setIsImageLoading);
+
         if (url) {
-            setActiveForm({...activeForm, image: url});
+            setActiveForm((currentForm) => ({
+                ...currentForm,
+                image: url,
+            }));
         } else {
             toast.error('Resim yüklenirken hata oluştu.');
         }
+
+        // Aynı dosyanın tekrar seçilebilmesini sağlar.
+        input.value = '';
     };
 
     return (
         <div
             style={{
-                backgroundColor: 'var(--surface)',
+                ...cardStyle,
                 padding: 'clamp(15px, 5vw, 30px)',
-                borderRadius: 'var(--radiusLarge)',
-                border: '1px solid var(--border)',
-                boxShadow: 'var(--shadow)',
-                width: '100%',
-                boxSizing: 'border-box',
             }}
         >
             {/* Başlık */}
@@ -127,58 +139,56 @@ export default function ProductForm({
                     />
                 </div>
                 <div style={formFieldStyle}>
-                    <label style={labelStyle}>Resim Seç</label>
-                    <div style={{display: 'flex', gap: '8px'}}>
+                    <label htmlFor={imageInputId} style={labelStyle}>
+                        Resim Seç
+                    </label>
+
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '8px',
+                        }}
+                    >
                         <Input
                             value={activeForm.image}
                             onChange={handleChange('image')}
                             placeholder="Link yapıştırın..."
-                            containerStyle={{flex: 1, minWidth: 0, gap: 0}}
+                            containerStyle={{
+                                flex: 1,
+                                minWidth: 0,
+                                gap: 0,
+                            }}
                         />
-                        <div
+
+                        <UploadImageButton
+                            onClick={() => fileInputRef.current?.click()}
+                            isLoading={isImageLoading}
+                            loadingText="Yükleniyor..."
+                            padding="0 16px"
+                            borderRadius="var(--radiusLarge)"
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                position: 'relative',
-                                overflow: 'hidden',
-                                backgroundColor: 'var(--badge)',
-                                border: '1px solid var(--inputBorder)',
-                                borderRadius: 'var(--radiusSmall)',
-                                padding: '0 16px',
-                                cursor: 'pointer',
+                                height: '45px',
                                 flexShrink: 0,
                             }}
                         >
-                            <span
-                                style={{
-                                    fontSize: '14px',
-                                    fontWeight: '600',
-                                    color: 'var(--badgeText)',
-                                }}
-                            >
-                                Gözat
-                            </span>
-                            {/* Dosya yükleme */}
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: 0,
-                                    opacity: 0,
-                                    cursor: 'pointer',
-                                    height: '100%',
-                                }}
-                            />
-                        </div>
+                            Gözat
+                        </UploadImageButton>
+
+                        <input
+                            ref={fileInputRef}
+                            id={imageInputId}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            style={{display: 'none'}}
+                        />
                     </div>
                     {/* Resim Önizleme */}
                     {activeForm.image && (
                         <img
                             src={activeForm.image}
-                            alt="ürün"
+                            alt="Ürün önizlemesi"
                             style={{
                                 width: '64px',
                                 height: '64px',

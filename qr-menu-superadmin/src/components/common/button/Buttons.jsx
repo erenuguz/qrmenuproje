@@ -244,7 +244,7 @@ export const NavTabButton = ({
                 justifyContent: 'flex-start',
                 textAlign: 'left',
                 gap: gap,
-                transition: 'all 0.2s ease',
+                transition: 'background-color 0.2s ease, color 0.2s ease',
             }}
             icon={
                 icon ? (
@@ -291,7 +291,7 @@ export const HamburgerButton = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.2s ease',
+                transition: 'background-color 0.2s ease, color 0.2s ease',
             }}
             {...props}
         />
@@ -323,7 +323,7 @@ export const SignOutButton = ({
             onMouseLeave={() => setIsHovered(false)}
             style={{
                 gap: '8px',
-                transition: 'all 0.2s ease',
+                transition: 'background-color 0.2s ease, color 0.2s ease',
             }}
             {...props}
         >
@@ -343,28 +343,24 @@ export const SubmitButton = ({
         <BaseButton
             type="submit"
             variant="primary"
-            disabled={loading || disabled}
+            disabled={disabled}
+            isLoading={loading}
+            loadingText={loadingText}
+            padding="14px"
+            fontSize="var(--font-body)"
+            fontWeight="var(--font-semibold)"
             style={{
                 width: '100%',
-                padding: '14px',
-                fontSize: 'var(--font-body)',
-                fontWeight: 'var(--font-semibold)',
-                borderRadius: 'var(--radiusSmall)',
-                backgroundColor: 'var(--primary)',
-                color: 'var(--textWhite)',
                 marginTop: '10px',
-                opacity: loading ? 0.8 : 1,
-                cursor: loading ? 'wait' : 'pointer',
                 ...style,
             }}
             {...props}
         >
-            {loading ? loadingText : label}
+            {label}
         </BaseButton>
     );
 };
 
-// Şifremi Unuttum metin butonu
 export const ForgotPasswordButton = ({
     onClick,
     disabled = false,
@@ -378,14 +374,11 @@ export const ForgotPasswordButton = ({
             variant="ghost"
             onClick={onClick}
             disabled={disabled}
+            textColor="var(--textMuted)"
+            padding="0"
+            fontSize="var(--font-small)"
+            fontWeight="var(--font-medium)"
             style={{
-                padding: 0,
-                fontSize: 'var(--font-small)',
-                fontWeight: 'var(--font-medium)',
-                color: 'var(--textMuted)',
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: disabled ? 'not-allowed' : 'pointer',
                 ...style,
             }}
             {...props}
@@ -395,7 +388,6 @@ export const ForgotPasswordButton = ({
     );
 };
 
-// Şifre Göster/Gizle (Basılı tutmalı) butonu
 export const PasswordToggleButton = ({
     showPassword = false,
     onPressStart,
@@ -407,6 +399,7 @@ export const PasswordToggleButton = ({
         <BaseButton
             type="button"
             variant="ghost"
+            textColor={showPassword ? 'var(--primary)' : 'var(--textMuted)'}
             onMouseDown={onPressStart}
             onMouseUp={onPressEnd}
             onMouseLeave={onPressEnd}
@@ -420,9 +413,6 @@ export const PasswordToggleButton = ({
                 position: 'absolute',
                 right: '12px',
                 padding: '4px',
-                background: 'none',
-                border: 'none',
-                color: showPassword ? 'var(--primary)' : 'var(--textMuted)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -443,6 +433,7 @@ export const PasswordToggleButton = ({
         </BaseButton>
     );
 };
+
 export const FloatingButton = ({
     onClick,
     icon,

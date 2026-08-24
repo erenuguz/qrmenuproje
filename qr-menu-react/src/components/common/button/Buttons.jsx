@@ -45,7 +45,8 @@ export const BackButton = ({
                 height: size,
                 minWidth: size,
                 transform: isPressed ? 'scale(0.92)' : 'scale(1)',
-                transition: 'all 0.15s ease',
+                transition:
+                    'background-color 0.15s ease, color 0.15s ease, transform 0.15s ease',
                 ...style,
             }}
             {...props}

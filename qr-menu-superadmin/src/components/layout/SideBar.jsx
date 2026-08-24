@@ -54,7 +54,8 @@ const SideBar = ({
                 overflowY: 'auto',
                 overflowX: 'hidden',
                 whiteSpace: 'nowrap',
-                transition: 'all .3s ease',
+                transition:
+                    'width 0.3s ease, min-width 0.3s ease, padding 0.3s ease, opacity 0.2s ease',
                 boxSizing: 'border-box',
                 height: 'calc(100vh - 70px)',
                 position: 'fixed',

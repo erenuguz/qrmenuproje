@@ -1,8 +1,9 @@
 export const cardStyle = {
+    width: '100%',
+    boxSizing: 'border-box',
     backgroundColor: 'var(--surface)',
-
-    borderRadius: 'var(--radius)',
     border: '1px solid var(--border)',
+    borderRadius: 'var(--radius)',
     boxShadow: 'var(--shadow)',
 };
 

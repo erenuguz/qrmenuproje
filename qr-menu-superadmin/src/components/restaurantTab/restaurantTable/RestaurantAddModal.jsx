@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from '@/components/common/Input';
 import {CancelButton, CreateButton} from '@/components/common/button/Buttons';
+import {cardStyle} from '@/styles/shared';
 
 const RestaurantAddModal = ({
     isModalOpen,
@@ -34,12 +35,10 @@ const RestaurantAddModal = ({
         >
             <div
                 style={{
-                    backgroundColor: 'var(--surface)',
+                    ...cardStyle,
                     padding: '30px',
-                    borderRadius: 'var(--radiusLarge)',
-                    width: '100%',
                     maxWidth: '400px',
-                    boxShadow: 'var(--shadow)',
+                    borderRadius: 'var(--radiusLarge)',
                 }}
             >
                 <h3

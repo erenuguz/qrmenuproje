@@ -5,6 +5,7 @@ import {
     CategoryItem,
     useCategoryActions,
     useCategories,
+    cardStyle,
 } from '@/';
 
 const CategoryTab = ({restaurantId, menu}) => {
@@ -44,12 +45,9 @@ const CategoryTab = ({restaurantId, menu}) => {
             {/* Kategori Listesi Ana Çerçevesi */}
             <div
                 style={{
-                    backgroundColor: 'var(--surface)',
-                    borderRadius: 'var(--radius)',
-                    border: '1px solid var(--border)',
+                    ...cardStyle,
                     overflow: 'hidden',
-                    boxShadow: 'var(--shadow)',
-                    marginTop: '24px', // Araya boşluk eklemek tasarımı rahatlatır
+                    marginTop: '24px',
                 }}
             >
                 {categories.length > 0 ? (
@@ -77,16 +75,10 @@ const CategoryTab = ({restaurantId, menu}) => {
                     })
                 ) : (
                     // Hiç kategori yoksa gösterilecek boş durum tasarımı
-                    <div
-                        style={{
-                            padding: '32px 24px',
-                            textAlign: 'center',
-                            color: 'var(--textMuted)',
-                            fontSize: 'var(--font-body)',
-                        }}
-                    >
-                        Henüz kategori eklenmemiş.
-                    </div>
+                    <EmptyState
+                        title="Henüz kategori yok"
+                        message="Menünüzü düzenlemek için ilk kategorinizi ekleyin."
+                    />
                 )}
             </div>
         </div>

@@ -7,6 +7,7 @@ import {
     ScrollToTopButton,
     LoadingSpinner,
     useAuthUser,
+    cardStyle,
 } from '@/';
 import {AlertCircleIcon} from '@/components/common/icon/Icons';
 import {SignOutButton} from '@/components/common/button/Buttons';
@@ -51,14 +52,10 @@ function App() {
         >
             <div
                 style={{
+                    ...cardStyle,
                     textAlign: 'center',
-                    backgroundColor: 'var(--surface)',
                     padding: '40px',
-                    borderRadius: 'var(--radius)',
-                    boxShadow: 'var(--shadow)',
-                    border: '1px solid var(--border)',
                     maxWidth: '420px',
-                    width: '100%',
                 }}
             >
                 <div
