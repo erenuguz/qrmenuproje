@@ -1,18 +1,10 @@
-import React, {useState} from 'react';
-import {WifiIcon, CopyIcon, CheckIcon} from '@/components/common/icon/Icons';
+import React from 'react';
+import {WifiIcon} from '@/components/common/icon/Icons';
 import {iconContainerStyle} from '@/styles/shared';
+import {CopyButton} from '@/components/common/button/Buttons'; // Yolu projene göre ayarla
 
 const WifiCard = ({networkName, password}) => {
-    const [isCopied, setIsCopied] = useState(false);
-
     if (!networkName && !password) return null;
-
-    const copyPassword = () => {
-        if (!password) return;
-        navigator.clipboard?.writeText(password);
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 1500);
-    };
 
     return (
         <div
@@ -70,39 +62,7 @@ const WifiCard = ({networkName, password}) => {
                     )}
                 </div>
 
-                {password && (
-                    <button
-                        onClick={copyPassword}
-                        style={{
-                            flexShrink: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            border: '1px solid',
-                            borderColor: isCopied
-                                ? 'var(--success)'
-                                : 'var(--border)',
-                            backgroundColor: isCopied
-                                ? 'var(--successBg)'
-                                : 'var(--background)',
-                            color: isCopied ? 'var(--success)' : 'var(--text)',
-                            borderRadius: 'var(--radiusSmall)',
-                            padding: '8px 12px',
-                            fontSize: 'var(--font-caption)',
-                            fontWeight: 'var(--font-semibold)',
-                            fontFamily: 'var(--font-family)',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease',
-                        }}
-                    >
-                        {isCopied ? (
-                            <CheckIcon size={13} color="var(--success)" />
-                        ) : (
-                            <CopyIcon size={13} color="currentColor" />
-                        )}
-                        {isCopied ? 'Kopyalandı' : password}
-                    </button>
-                )}
+                {password && <CopyButton textToCopy={password} />}
             </div>
         </div>
     );

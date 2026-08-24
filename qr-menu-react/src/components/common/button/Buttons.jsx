@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import BaseButton from './BaseButton';
-import {ChevronLeftIcon} from '@/components/common/icon/Icons';
+import {ChevronLeftIcon, CheckIcon, CopyIcon} from '@/components/common/icon/Icons';
 
 export const BackButton = ({
     onClick,
@@ -47,5 +47,121 @@ export const BackButton = ({
         >
             <ChevronLeftIcon size={iconSize} strokeWidth={2.3} />
         </BaseButton>
+    );
+};
+
+export const PillButton = ({
+    children,
+    isActive = false,
+    onClick,
+    id,
+    style = {},
+    ...props
+}) => {
+    return (
+        <BaseButton
+            id={id}
+            onClick={onClick}
+            bgColor={isActive ? 'var(--primary)' : 'var(--surface)'}
+            textColor={isActive ? 'var(--textWhite)' : 'var(--text)'}
+            borderColor={isActive ? 'var(--primary)' : 'var(--border)'}
+            padding="8px 14px"
+            borderRadius="25px"
+            fontWeight="var(--font-semibold)"
+            fontSize="var(--font-caption)"
+            style={{
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                ...style,
+            }}
+            {...props}
+        >
+            {children}
+        </BaseButton>
+    );
+};
+
+export const CopyButton = ({
+    textToCopy,
+    label,
+    successLabel = 'Kopyalandı',
+    style = {},
+    ...props
+}) => {
+    const [isCopied, setIsCopied] = useState(false);
+
+    const handleCopy = (e) => {
+        if (e) e.stopPropagation(); // Tıklamanın dışarı taşmasını engeller
+        if (!textToCopy) return;
+
+        navigator.clipboard?.writeText(textToCopy);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 1500);
+    };
+
+    return (
+        <BaseButton
+            onClick={handleCopy}
+            bgColor={isCopied ? 'var(--successBg)' : 'var(--background)'}
+            textColor={isCopied ? 'var(--success)' : 'var(--text)'}
+            borderColor={isCopied ? 'var(--success)' : 'var(--border)'}
+            padding="8px 12px"
+            borderRadius="var(--radiusSmall)"
+            fontSize="var(--font-caption)"
+            fontWeight="var(--font-semibold)"
+            icon={
+                isCopied ? (
+                    <CheckIcon size={13} color="var(--success)" />
+                ) : (
+                    <CopyIcon size={13} color="currentColor" />
+                )
+            }
+            style={{
+                flexShrink: 0,
+                ...style,
+            }}
+            {...props}
+        >
+            {isCopied ? successLabel : label || textToCopy}
+        </BaseButton>
+    );
+};
+export const FloatingButton = ({
+    onClick,
+    icon,
+    position = 'fixed',
+    bottom = '25px',
+    right = '25px',
+    size = '50px',
+    bgColor = 'var(--primary)',
+    textColor = 'var(--textWhite)',
+    shadow = '0 4px 12px color-mix(in srgb, var(--primary) 40%, transparent)',
+    ariaLabel = 'Yukarı Çık',
+    style = {},
+    ...props
+}) => {
+    return (
+        <BaseButton
+            onClick={onClick}
+            aria-label={ariaLabel}
+            bgColor={bgColor}
+            textColor={textColor}
+            borderColor="transparent"
+            padding="0"
+            borderRadius="50%"
+            icon={icon}
+            style={{
+                position,
+                bottom,
+                right,
+                zIndex: 1000,
+                width: size,
+                height: size,
+                minWidth: size,
+                boxShadow: shadow,
+                ...style,
+            }}
+            {...props}
+        />
     );
 };

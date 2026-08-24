@@ -243,7 +243,7 @@ export function ThemeProvider({children}) {
                     backgroundColor: 'var(--background)',
                     color: 'var(--text)',
                     minHeight: '100vh',
-                    fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                    fontFamily: 'var(--font-family)',
                 }}
             >
                 {children}

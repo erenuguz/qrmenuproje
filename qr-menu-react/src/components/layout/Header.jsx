@@ -14,7 +14,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
                 WebkitBackdropFilter: 'blur(14px)',
                 padding: '14px 18px',
                 borderBottom: '1px solid var(--border)',
-                position: 'relative',
+                position: 'sticky',
                 top: 0,
                 zIndex: 1000,
                 fontFamily: 'var(--font-family)',

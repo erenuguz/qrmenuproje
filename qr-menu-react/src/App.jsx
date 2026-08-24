@@ -30,7 +30,13 @@ const App = () => {
     return (
         <div>
             {!isFound ? (
-                <EmptyState message="Aradığınız restorana ait bir bilgi bulunamadı. Bağlantıyı kontrol edip tekrar deneyiniz." />
+                <EmptyState
+                    icon="🍽️"
+                    iconBg="var(--dangerBg)"
+                    title="Restoran Bulunamadı"
+                    message="Aradığınız restorana ait bir bilgi bulunamadı. Bağlantıyı kontrol edip tekrar deneyiniz."
+                    minHeight="60vh"
+                />
             ) : (
                 <>
                     <Header

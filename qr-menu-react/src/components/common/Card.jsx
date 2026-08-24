@@ -5,7 +5,7 @@ const Card = ({
     children,
     onClick,
     padding = '16px',
-    borderRadius = 'var(--radiusLarge)',
+    borderRadius = 'var(--radius)',
     style = {},
     hoverStyle = {},
     ...props
@@ -20,28 +20,20 @@ const Card = ({
             {...props}
             type={isInteractive ? 'button' : undefined}
             onClick={onClick}
-            onMouseEnter={() => setIsActive(true)}
-            onMouseLeave={() => setIsActive(false)}
-            onFocus={() => setIsActive(true)}
-            onBlur={() => setIsActive(false)}
+            onMouseEnter={() => isInteractive && setIsActive(true)}
+            onMouseLeave={() => isInteractive && setIsActive(false)}
+            onFocus={() => isInteractive && setIsActive(true)}
+            onBlur={() => isInteractive && setIsActive(false)}
             style={{
                 ...cardStyle,
-
-                width: '100%',
                 padding,
                 borderRadius,
-                boxSizing: 'border-box',
-
                 fontFamily: 'inherit',
                 color: 'inherit',
                 textAlign: 'inherit',
-
                 cursor: isInteractive ? 'pointer' : 'default',
-
                 transition: 'border-color 0.15s ease, transform 0.15s ease',
-
                 ...style,
-
                 ...(isInteractive && isActive
                     ? {
                           borderColor: 'var(--primary)',

@@ -1,4 +1,5 @@
 import React from 'react';
+import {PillButton} from '@/components/common/button/Buttons';
 
 const CategoryBar = ({
     categories,
@@ -31,40 +32,19 @@ const CategoryBar = ({
             }}
         >
             <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+
             {categories.map((category) => {
                 const isActive = activeCategory === category.id;
+
                 return (
-                    <button
+                    <PillButton
                         key={`topbar-${category.id}`}
                         id={`btn-${category.id}`}
+                        isActive={isActive}
                         onClick={() => scrollToCategory(category.id)}
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '8px 14px',
-                            borderRadius: '25px',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            backgroundColor: isActive
-                                ? 'var(--primary)'
-                                : 'var(--surface)',
-                            color: isActive
-                                ? 'var(--textWhite)'
-                                : 'var(--text)',
-                            border: '1px solid',
-                            borderColor: isActive
-                                ? 'var(--primary)'
-                                : 'var(--border)',
-                            fontWeight: 'var(--font-semibold)',
-                            fontSize: 'var(--font-caption)',
-                            fontFamily: 'var(--font-family)',
-                        }}
                     >
                         {category.name}
-                    </button>
+                    </PillButton>
                 );
             })}
         </div>

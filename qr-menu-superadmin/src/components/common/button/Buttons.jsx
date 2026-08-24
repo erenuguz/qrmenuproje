@@ -443,3 +443,42 @@ export const PasswordToggleButton = ({
         </BaseButton>
     );
 };
+export const FloatingButton = ({
+    onClick,
+    icon,
+    position = 'fixed',
+    bottom = '25px',
+    right = '25px',
+    size = '50px',
+    bgColor = 'var(--primary)',
+    textColor = 'var(--textWhite)',
+    shadow = '0 4px 12px color-mix(in srgb, var(--primary) 40%, transparent)',
+    ariaLabel = 'Yukarı Çık',
+    style = {},
+    ...props
+}) => {
+    return (
+        <BaseButton
+            onClick={onClick}
+            aria-label={ariaLabel}
+            bgColor={bgColor}
+            textColor={textColor}
+            borderColor="transparent"
+            padding="0"
+            borderRadius="50%"
+            icon={icon}
+            style={{
+                position,
+                bottom,
+                right,
+                zIndex: 1000,
+                width: size,
+                height: size,
+                minWidth: size,
+                boxShadow: shadow,
+                ...style,
+            }}
+            {...props}
+        />
+    );
+};
