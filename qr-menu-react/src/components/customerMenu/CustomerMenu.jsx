@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     LoadingSpinner,
+    EmptyState,
     useMenu,
     useCategories,
     useCategoryScrollSpy,
@@ -35,7 +36,9 @@ const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
             }}
         >
             <div style={{maxWidth: '600px', margin: '0 auto'}}>
-                {activeCategory === null ? (
+                {menu.length === 0 ? (
+                    <EmptyState message="Menüde henüz ürün yok." />
+                ) : activeCategory === null ? (
                     <CategoryGrid
                         categories={categories}
                         menu={menu}
@@ -51,20 +54,6 @@ const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
                         isDragging={isDragging}
                         dragHandlers={dragHandlers}
                     />
-                )}
-
-                {/* Eğer menüde hiç ürün yoksa */}
-                {menu.length === 0 && (
-                    <p
-                        style={{
-                            textAlign: 'center',
-                            color: 'var(--textSecondary)',
-                            marginTop: '40px',
-                            fontSize: 'var(--font-caption)',
-                        }}
-                    >
-                        Menüde henüz ürün yok.
-                    </p>
                 )}
             </div>
         </div>

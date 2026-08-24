@@ -1,4 +1,5 @@
 import React from 'react';
+import {BackButton} from '@/components/common/button/Buttons';
 
 const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
     return (
@@ -21,54 +22,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
         >
             <div style={{width: '38px', display: 'flex', alignItems: 'center'}}>
                 {activeCategory !== null && (
-                    <button
-                        onClick={onBack}
-                        aria-label="Geri dön"
-                        style={{
-                            background: 'var(--background)',
-                            border: 'none',
-                            borderRadius: '50%',
-                            width: '36px',
-                            height: '36px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'var(--text)',
-                            transition:
-                                'background-color 0.15s ease, color 0.15s ease, transform 0.1s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                'color-mix(in srgb, var(--primary) 15%, transparent)';
-                            e.currentTarget.style.color = 'var(--primary)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                'var(--background)';
-                            e.currentTarget.style.color = 'var(--text)';
-                        }}
-                        onMouseDown={(e) =>
-                            (e.currentTarget.style.transform = 'scale(0.92)')
-                        }
-                        onMouseUp={(e) =>
-                            (e.currentTarget.style.transform = 'scale(1)')
-                        }
-                    >
-                        <svg
-                            width="19"
-                            height="19"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                            <polyline points="12 19 5 12 12 5"></polyline>
-                        </svg>
-                    </button>
+                    <BackButton onClick={onBack} size="36px" iconSize={18} />
                 )}
             </div>
 

@@ -12,7 +12,7 @@ export const inputStyle = {
     padding: '12px 16px',
     borderRadius: 'var(--radiusSmall)',
     border: '1px solid var(--inputBorder)',
-    backgroundColor: 'var(--inputBg)',
+    backgroundColor: 'var(--inputBackground)',
     color: 'var(--text)',
     fontSize: 'var(--font-input)',
     outline: 'none',

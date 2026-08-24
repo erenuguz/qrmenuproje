@@ -50,6 +50,13 @@ export const DEFAULT_THEME = {
         warning: '#F59E0B', // Uyarılar
 
         info: '#3B82F6', // Bilgi
+        infoBg: '#EFF6FF', // Bilgi arka planı
+        overlay: 'rgba(0,0,0,0.4)', // Modal overlay
+
+        insta: '#DB2777', // Instagram
+        instaBg: '#FDF2F8', // Instagram arka planı
+        whatsapp: '#25D366', // WhatsApp
+        whatsappBg: '#DCFCE7', // WhatsApp arka planı
 
         // ==========================
         // Badge
@@ -122,81 +129,88 @@ export const DEFAULT_THEME = {
 
 const ThemeContext = createContext(null);
 
-function applyThemeCss(theme) {
+function applyCss(theme) {
     const el = document.documentElement;
 
-    const colors = theme.colors || DEFAULT_THEME.colors;
-    const typography = theme.typography || DEFAULT_THEME.typography;
+    const c = theme.colors || DEFAULT_THEME.colors;
+    const t = theme.typography || DEFAULT_THEME.typography;
 
     // ==========================
     // Colors
     // ==========================
 
-    el.style.setProperty('--background', colors.background);
-    el.style.setProperty('--surface', colors.surface);
-    el.style.setProperty('--sidebar', colors.sidebar);
-    el.style.setProperty('--header', colors.header);
+    el.style.setProperty('--background', c.background);
+    el.style.setProperty('--surface', c.surface);
+    el.style.setProperty('--sidebar', c.sidebar);
+    el.style.setProperty('--header', c.header);
 
-    el.style.setProperty('--border', colors.border);
-    el.style.setProperty('--borderLight', colors.borderLight);
+    el.style.setProperty('--border', c.border);
+    el.style.setProperty('--borderLight', c.borderLight);
 
-    el.style.setProperty('--text', colors.text);
-    el.style.setProperty('--textSecondary', colors.textSecondary);
-    el.style.setProperty('--textMuted', colors.textMuted);
-    el.style.setProperty('--textWhite', colors.textWhite);
+    el.style.setProperty('--text', c.text);
+    el.style.setProperty('--textSecondary', c.textSecondary);
+    el.style.setProperty('--textMuted', c.textMuted);
+    el.style.setProperty('--textWhite', c.textWhite);
 
-    el.style.setProperty('--primary', colors.primary);
-    el.style.setProperty('--primaryHover', colors.primaryHover);
-    el.style.setProperty('--primaryLight', colors.primaryLight);
+    el.style.setProperty('--primary', c.primary);
+    el.style.setProperty('--primaryHover', c.primaryHover);
+    el.style.setProperty('--primaryLight', c.primaryLight);
 
-    el.style.setProperty('--success', colors.success);
-    el.style.setProperty('--successBg', colors.successBg);
+    el.style.setProperty('--success', c.success);
+    el.style.setProperty('--successBg', c.successBg);
 
-    el.style.setProperty('--danger', colors.danger);
-    el.style.setProperty('--dangerBg', colors.dangerBg);
+    el.style.setProperty('--danger', c.danger);
+    el.style.setProperty('--dangerBg', c.dangerBg);
 
-    el.style.setProperty('--warning', colors.warning);
+    el.style.setProperty('--warning', c.warning);
 
-    el.style.setProperty('--info', colors.info);
+    el.style.setProperty('--info', c.info);
+    el.style.setProperty('--infoBg', c.infoBg);
+    el.style.setProperty('--overlay', c.overlay);
 
-    el.style.setProperty('--badge', colors.badge);
-    el.style.setProperty('--badgeText', colors.badgeText);
+    el.style.setProperty('--insta', c.insta);
+    el.style.setProperty('--instaBg', c.instaBg);
+    el.style.setProperty('--whatsapp', c.whatsapp);
+    el.style.setProperty('--whatsappBg', c.whatsappBg);
 
-    el.style.setProperty('--inputBackground', colors.inputBackground);
-    el.style.setProperty('--inputBorder', colors.inputBorder);
-    el.style.setProperty('--inputPlaceholder', colors.inputPlaceholder);
+    el.style.setProperty('--badge', c.badge);
+    el.style.setProperty('--badgeText', c.badgeText);
 
-    el.style.setProperty('--hover', colors.hover);
-    el.style.setProperty('--active', colors.active);
+    el.style.setProperty('--inputBackground', c.inputBackground);
+    el.style.setProperty('--inputBorder', c.inputBorder);
+    el.style.setProperty('--inputPlaceholder', c.inputPlaceholder);
 
-    el.style.setProperty('--shadow', colors.shadow);
+    el.style.setProperty('--hover', c.hover);
+    el.style.setProperty('--active', c.active);
 
-    el.style.setProperty('--radiusSmall', colors.radiusSmall);
-    el.style.setProperty('--radius', colors.radius);
-    el.style.setProperty('--radiusLarge', colors.radiusLarge);
+    el.style.setProperty('--shadow', c.shadow);
+
+    el.style.setProperty('--radiusSmall', c.radiusSmall);
+    el.style.setProperty('--radius', c.radius);
+    el.style.setProperty('--radiusLarge', c.radiusLarge);
 
     // ==========================
     // Typography
     // ==========================
 
-    el.style.setProperty('--font-family', typography.fontFamily);
+    el.style.setProperty('--font-family', t.fontFamily);
 
-    el.style.setProperty('--font-h1', typography.h1);
-    el.style.setProperty('--font-h2', typography.h2);
-    el.style.setProperty('--font-h3', typography.h3);
+    el.style.setProperty('--font-h1', t.h1);
+    el.style.setProperty('--font-h2', t.h2);
+    el.style.setProperty('--font-h3', t.h3);
 
-    el.style.setProperty('--font-title', typography.title);
+    el.style.setProperty('--font-title', t.title);
 
-    el.style.setProperty('--font-body', typography.body);
-    el.style.setProperty('--font-input', typography.input);
+    el.style.setProperty('--font-body', t.body);
+    el.style.setProperty('--font-input', t.input);
 
-    el.style.setProperty('--font-caption', typography.caption);
-    el.style.setProperty('--font-small', typography.small);
+    el.style.setProperty('--font-caption', t.caption);
+    el.style.setProperty('--font-small', t.small);
 
-    el.style.setProperty('--font-regular', typography.regular);
-    el.style.setProperty('--font-medium', typography.medium);
-    el.style.setProperty('--font-semibold', typography.semibold);
-    el.style.setProperty('--font-bold', typography.bold);
+    el.style.setProperty('--font-regular', t.regular);
+    el.style.setProperty('--font-medium', t.medium);
+    el.style.setProperty('--font-semibold', t.semibold);
+    el.style.setProperty('--font-bold', t.bold);
 
     // ==========================
     // Theme Mode
@@ -214,7 +228,7 @@ export function ThemeProvider({children}) {
     const [activeTheme] = useState(DEFAULT_THEME);
 
     useEffect(() => {
-        applyThemeCss(DEFAULT_THEME);
+        applyCss(DEFAULT_THEME);
     }, []);
 
     return (

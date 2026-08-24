@@ -1,16 +1,13 @@
 import React from 'react';
+import Card from '@/components/common/Card';
 
 const MenuItemCard = ({item}) => {
     return (
-        <div
+        <Card
+            padding="14px"
             style={{
                 display: 'flex',
                 gap: '14px',
-                padding: '14px',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radiusLarge)',
-                boxShadow: 'var(--shadow)',
             }}
         >
             <img
@@ -79,7 +76,7 @@ const MenuItemCard = ({item}) => {
                     {item.price} ₺
                 </span>
             </div>
-        </div>
+        </Card>
     );
 };
 

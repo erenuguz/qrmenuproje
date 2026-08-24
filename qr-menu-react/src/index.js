@@ -1,9 +1,10 @@
 // Common
 export {default as LoadingSpinner} from '@/components/common/LoadingSpinner';
 export {default as ScrollToTopButton} from '@/components/common/ScrollToTopButton';
+export {default as EmptyState} from '@/components/common/EmptyState';
 
 // Layout
-export {default as Footer} from '@/components/layout/Footer';
+export {default as Footer} from '@/components/layout/footer/Footer';
 export {default as Header} from '@/components/layout/Header';
 
 // Components (Ana Dizin)

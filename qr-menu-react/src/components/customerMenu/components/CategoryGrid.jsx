@@ -1,4 +1,5 @@
 import React from 'react';
+import Card from '@/components/common/Card';
 
 const CategoryGrid = ({categories, menu, scrollToCategory}) => {
     return (
@@ -11,39 +12,21 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
             }}
         >
             {categories.map((category) => {
-                // Sadece içinde ürün olan kategorileri gösteriyoruz
                 const categoryItems = menu.filter(
                     (item) => item.categoryId === category.id
                 );
                 if (categoryItems.length === 0) return null;
 
                 return (
-                    <div
+                    <Card
                         key={`grid-${category.id}`}
                         onClick={() => scrollToCategory(category.id)}
+                        padding="18px"
                         style={{
-                            backgroundColor: 'var(--surface)',
-                            border: '1px solid var(--border)',
-                            borderRadius: 'var(--radiusLarge)',
-                            padding: '18px',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             gap: '10px',
-                            boxShadow: 'var(--shadow)',
-                            cursor: 'pointer',
-                            transition:
-                                'border-color 0.15s ease, transform 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor =
-                                'var(--primary)';
-                            e.currentTarget.style.transform =
-                                'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = 'var(--border)';
-                            e.currentTarget.style.transform = 'translateY(0)';
                         }}
                     >
                         {category.image ? (
@@ -86,7 +69,7 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                         >
                             {category.name}
                         </h2>
-                    </div>
+                    </Card>
                 );
             })}
         </div>

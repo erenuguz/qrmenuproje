@@ -1,5 +1,6 @@
 import React from 'react';
 import {useScroll} from '@/';
+import {ChevronUpIcon} from '@/components/common/icon/Icons';
 
 const ScrollToTopButton = () => {
     const {show, scrollToTop} = useScroll(300);
@@ -29,18 +30,7 @@ const ScrollToTopButton = () => {
                 transition: 'all 0.3s ease',
             }}
         >
-            <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            >
-                <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
+            <ChevronUpIcon size={24} strokeWidth={2.5} />
         </button>
     );
 };
