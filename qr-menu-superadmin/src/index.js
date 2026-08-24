@@ -18,6 +18,7 @@ export {default as PageHeader} from '@/components/common/PageHeader';
 export {default as StatCard} from '@/components/common/StatCard';
 export {default as LoadingSpinner} from '@/components/common/LoadingSpinner';
 export {default as ScrollToTopButton} from '@/components/common/ScrollToTopButton';
+export {default as Select} from '@/components/common/Select';
 
 // Butonlar
 export {default as BaseButton} from '@/components/common/button/BaseButton';

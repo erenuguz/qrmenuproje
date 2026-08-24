@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EmptyState = ({
+export const EmptyState = ({
     icon,
     title,
     message,

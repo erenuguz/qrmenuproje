@@ -7,6 +7,7 @@ import {
     useCategories,
     cardStyle,
 } from '@/';
+import {EmptyState} from '@/components/common/EmptyState';
 
 const CategoryTab = ({restaurantId, menu}) => {
     const [newCategoryName, setNewCategoryName] = useState('');

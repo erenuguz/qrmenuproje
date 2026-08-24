@@ -47,8 +47,6 @@ export const iconContainerStyle = {
 // Ayar kartlarındaki başlık (GeneralInfo, CustomerWifi, SocialMedia)
 export const sectionCardStyle = {
     ...cardStyle,
-    width: '100%',
-    boxSizing: 'border-box',
     padding: '24px',
 };
 

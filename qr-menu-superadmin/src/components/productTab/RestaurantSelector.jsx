@@ -3,6 +3,7 @@ import {useResponsive} from '@/hooks/useResponsive';
 import Badge from '@/components/common/Badge';
 import {HomeIcon} from '@/components/common/icon/Icons';
 import {cardStyle} from '@/styles/shared';
+import {Select} from '@/components/common/Select';
 
 const RestaurantSelector = ({
     restaurants,
@@ -23,8 +24,6 @@ const RestaurantSelector = ({
                 gap: isMobile ? '12px' : undefined,
                 padding: '18px 24px',
                 marginBottom: '20px',
-                width: '100%',
-                boxSizing: 'border-box',
             }}
         >
             {/* Sol: İkon + Label + Select */}
@@ -54,27 +53,23 @@ const RestaurantSelector = ({
                     İşlem Yapılacak Restoran:
                 </span>
 
-                <select
+                {/* Sadece Select bileşeni kullanıldı */}
+                <Select
                     value={selectedRestaurantId}
                     onChange={(e) => setSelectedRestaurantId(e.target.value)}
-                    style={{
-                        padding: '10px 14px',
-                        border: '1px solid var(--inputBorder)',
-                        borderRadius: 'var(--radiusSmall)',
-                        backgroundColor: 'var(--inputBackground)',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: 'var(--text)',
-                        cursor: 'pointer',
-                        outline: 'none',
-                        ...(isMobile
+                    isMobile={isMobile}
+                    containerStyle={
+                        isMobile
                             ? {
                                   flex: '1 1 200px',
                                   minWidth: '150px',
                                   maxWidth: '100%',
-                                  boxSizing: 'border-box',
                               }
-                            : {minWidth: '220px'}),
+                            : {minWidth: '220px'}
+                    }
+                    style={{
+                        fontWeight: '600',
+                        backgroundColor: 'var(--inputBackground)',
                     }}
                 >
                     {restaurants.map((res) => (
@@ -82,7 +77,7 @@ const RestaurantSelector = ({
                             {res.name} (ID: {res.id})
                         </option>
                     ))}
-                </select>
+                </Select>
             </div>
 
             {/* Sağ: Ürün sayısı badge */}

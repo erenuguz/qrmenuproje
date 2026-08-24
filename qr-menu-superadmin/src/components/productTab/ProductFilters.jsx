@@ -3,6 +3,7 @@ import {useResponsive} from '@/hooks/useResponsive';
 import {SearchIcon} from '@/components/common/icon/Icons';
 import {Input, Select} from '@/';
 
+
 const ProductFilters = ({
     searchQuery,
     setSearchQuery,

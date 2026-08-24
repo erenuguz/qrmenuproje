@@ -204,7 +204,7 @@ export default function ProductForm({
 
             {/* Açıklama */}
             <div style={{marginBottom: '30px'}}>
-                <Textarea
+                <TextArea
                     label="Açıklama"
                     labelStyle={labelStyle}
                     placeholder="Ürün açıklamasını girin"

@@ -15,8 +15,6 @@ const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
                 ...cardStyle,
                 padding: isMobile ? '16px 20px' : '20px 24px',
                 marginBottom: '24px',
-                width: '100%',
-                boxSizing: 'border-box',
             }}
         >
             <h3
