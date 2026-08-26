@@ -25,7 +25,7 @@ const ProductTab = ({
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
 
     const {categories} = useCategories(restaurantId);
-    const {deleteProduct, saveForm, bulkDeleteProducts} =
+    const {deleteProduct, saveForm, bulkDeleteProducts, isProcessing} =
         useProductActions(restaurantId);
 
     const categoryFilter = useCallback(
@@ -85,6 +85,7 @@ const ProductTab = ({
                     isImageLoading={isImageLoading}
                     setIsImageLoading={setIsImageLoading}
                     saveForm={handleSaveForm}
+                    isProcessing={isProcessing}
                 />
             ) : (
                 <div>
@@ -96,6 +97,7 @@ const ProductTab = ({
                         setActiveForm={setActiveForm}
                         categories={categories}
                         bulkDeleteProducts={handleBulkDelete}
+                        isProcessing={isProcessing}
                     />
 
                     {restaurants && (

@@ -25,6 +25,7 @@ export default function ProductForm({
     isImageLoading,
     setIsImageLoading,
     saveForm,
+    isProcessing,
 }) {
     const toast = useToast();
     const fileInputRef = useRef(null);
@@ -223,8 +224,19 @@ export default function ProductForm({
                     flexWrap: 'wrap',
                 }}
             >
-                <CancelButton onClick={() => setActiveForm(null)} />
-                <SaveButton onClick={saveForm} isLoading={isImageLoading} />
+                <CancelButton
+                    onClick={() => setActiveForm(null)}
+                    disabled={isProcessing}
+                />
+                <SaveButton
+                    onClick={saveForm}
+                    isLoading={isImageLoading || isProcessing}
+                    loadingText={
+                        isImageLoading
+                            ? 'Görsel Yükleniyor...'
+                            : 'Kaydediliyor...'
+                    }
+                />
             </div>
         </div>
     );

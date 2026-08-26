@@ -9,7 +9,7 @@ export const useAuthUser = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsub = onAuthStateChanged(auth, async (authUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
             setUser(authUser);
 
             if (!authUser) {
@@ -39,7 +39,7 @@ export const useAuthUser = () => {
             setLoading(false);
         });
 
-        return () => unsub();
+        return () => unsubscribe();
     }, []);
 
     return {user, restaurantId, loading};

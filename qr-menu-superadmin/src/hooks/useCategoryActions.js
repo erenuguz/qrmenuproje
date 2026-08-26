@@ -2,9 +2,9 @@ import {
     collection,
     doc,
     updateDoc,
-    addDoc,
-    deleteDoc,
     writeBatch,
+    runTransaction,
+    increment,
     serverTimestamp,
 } from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
@@ -14,16 +14,20 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
     const toast = useToast();
 
     const addCategory = async (newName) => {
-        const name = newName.trim();
+        const name = String(newName || '').trim();
+
         if (!name) return false;
 
-        if (
-            categories.some(
-                (category) =>
-                    category.name.trim().toLocaleLowerCase('tr-TR') ===
-                    name.toLocaleLowerCase('tr-TR')
-            )
-        ) {
+        const normalizedName = name.toLocaleLowerCase('tr-TR');
+
+        const alreadyExists = categories.some(
+            (category) =>
+                String(category.name || '')
+                    .trim()
+                    .toLocaleLowerCase('tr-TR') === normalizedName
+        );
+
+        if (alreadyExists) {
             toast.error('Bu kategori zaten mevcut!');
             return false;
         }
@@ -38,21 +42,35 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
                 : 0;
 
         try {
-            await addDoc(
-                collection(db, 'restaurants', restaurantId, 'categories'),
-                {
-                    name: name,
-                    image: '',
-                    order: newOrder,
-                    isActive: true,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp(),
-                }
+            const restaurantReference = doc(db, 'restaurants', restaurantId);
+
+            const categoryReference = doc(
+                collection(db, 'restaurants', restaurantId, 'categories')
             );
+
+            const batch = writeBatch(db);
+
+            batch.set(categoryReference, {
+                name,
+                image: '',
+                order: newOrder,
+                isActive: true,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            });
+
+            batch.update(restaurantReference, {
+                categoryCount: increment(1),
+                updatedAt: serverTimestamp(),
+            });
+
+            await batch.commit();
+
             return true;
         } catch (error) {
             console.error('Kategori eklenirken hata:', error);
             toast.error('Kategori eklenemedi.');
+
             return false;
         }
     };
@@ -96,26 +114,68 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
         const productsInCategory = menu.filter(
             (product) => product.categoryId === id
         );
+
         if (productsInCategory.length > 0) {
             toast.error(
                 `"${name}" kategorisinde ${productsInCategory.length} adet ürün var. Önce ürünleri silin!`
             );
+
             return;
         }
 
-        if (
-            window.confirm(
-                `"${name}" kategorisini tamamen silmek istediğine emin misin?`
-            )
-        ) {
-            try {
-                await deleteDoc(
-                    doc(db, 'restaurants', restaurantId, 'categories', id)
+        const confirmed = window.confirm(
+            `"${name}" kategorisini tamamen silmek istediğine emin misin?`
+        );
+
+        if (!confirmed) return;
+
+        const categoryReference = doc(
+            db,
+            'restaurants',
+            restaurantId,
+            'categories',
+            id
+        );
+
+        const restaurantReference = doc(db, 'restaurants', restaurantId);
+
+        try {
+            const wasDeleted = await runTransaction(db, async (transaction) => {
+                const [categorySnapshot, restaurantSnapshot] =
+                    await Promise.all([
+                        transaction.get(categoryReference),
+                        transaction.get(restaurantReference),
+                    ]);
+
+                // Kategori daha önce silinmişse count tekrar azaltılmaz.
+                if (!categorySnapshot.exists()) {
+                    return false;
+                }
+
+                if (!restaurantSnapshot.exists()) {
+                    throw new Error('Restoran bulunamadı.');
+                }
+
+                const currentCategoryCount = Number(
+                    restaurantSnapshot.data().categoryCount || 0
                 );
-            } catch (error) {
-                console.error('Kategori silinirken hata:', error);
-                toast.error('Kategori silinemedi.');
+
+                transaction.delete(categoryReference);
+
+                transaction.update(restaurantReference, {
+                    categoryCount: Math.max(0, currentCategoryCount - 1),
+                    updatedAt: serverTimestamp(),
+                });
+
+                return true;
+            });
+
+            if (!wasDeleted) {
+                toast.info('Kategori zaten silinmiş.');
             }
+        } catch (error) {
+            console.error('Kategori silinirken hata:', error);
+            toast.error('Kategori silinemedi.');
         }
     };
 

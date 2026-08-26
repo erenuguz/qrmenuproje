@@ -10,6 +10,7 @@ const ProductHeader = ({
     setActiveForm,
     categories,
     bulkDeleteProducts,
+    isProcessing,
 }) => {
     const {isMobile} = useResponsive();
 
@@ -68,6 +69,7 @@ const ProductHeader = ({
                         <DeleteButton
                             onClick={() => setIsBulkDeleteMode(true)}
                             borderRadius="var(--radiusPill)"
+                            disabled={isProcessing}
                         >
                             Toplu Sil
                         </DeleteButton>
@@ -83,6 +85,12 @@ const ProductHeader = ({
                             <DeleteButton
                                 onClick={bulkDeleteProducts}
                                 borderRadius="var(--radiusPill)"
+                                disabled={
+                                    selectedProducts.length === 0 ||
+                                    isProcessing
+                                }
+                                isLoading={isProcessing}
+                                loadingText="Siliniyor..."
                             >
                                 Seçilenleri Sil ({selectedProducts.length})
                             </DeleteButton>

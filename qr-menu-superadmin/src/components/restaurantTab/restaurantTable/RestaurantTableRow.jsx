@@ -1,6 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import {collection, getCountFromServer} from 'firebase/firestore';
-import {db} from '@/firebaseConfig';
+import React from 'react';
 import {DeleteButton} from '@/';
 import {MailIcon, TrashIcon} from '@/components/common/icon/Icons';
 import {useResponsive} from '@/hooks/useResponsive';
@@ -38,30 +36,8 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
     const {isMobile} = useResponsive();
     const isInactive = res.isInactive === true;
 
-    const [counts, setCounts] = useState({products: '...', categories: '...'});
-
-    useEffect(() => {
-        if (!res.id) return;
-        const fetchCounts = async () => {
-            try {
-                const [productSnap, categorySnap] = await Promise.all([
-                    getCountFromServer(
-                        collection(db, 'restaurants', res.id, 'menu')
-                    ),
-                    getCountFromServer(
-                        collection(db, 'restaurants', res.id, 'categories')
-                    ),
-                ]);
-                setCounts({
-                    products: productSnap.data().count,
-                    categories: categorySnap.data().count,
-                });
-            } catch (err) {
-                setCounts({products: '?', categories: '?'});
-            }
-        };
-        fetchCounts();
-    }, [res.id]);
+    const productCount = Number(res.productCount) || 0;
+    const categoryCount = Number(res.categoryCount) || 0;
 
     const badgeBg = isInactive ? 'var(--dangerBg)' : 'var(--successBg)';
     const badgeColor = isInactive ? 'var(--danger)' : 'var(--success)';
@@ -155,8 +131,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                                     color: 'var(--textMuted)',
                                 }}
                             >
-                                {counts.products} ürün · {counts.categories}{' '}
-                                kategori
+                                {productCount} ürün · {categoryCount} kategori
                             </div>
                             <DeleteButton
                                 onClick={() => handleDelete(res.id, res.name)}

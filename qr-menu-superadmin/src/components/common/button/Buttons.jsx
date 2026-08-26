@@ -214,22 +214,29 @@ export const HamburgerButton = ({
     />
 );
 
-export const HamburgerButton = ({
-    isOpen = false,
-    padding = '8px',
+export const SignOutButton = ({
+    children = 'Çıkış',
+    padding = '8px 15px',
     borderRadius = 'var(--radiusSmall)',
-    icon = <MenuIcon size={24} />,
+    fontSize = 'var(--font-caption)',
+    fontWeight = 'var(--font-semibold)',
+    icon = <LogoutIcon size={16} />,
     ...props
 }) => (
     <BaseButton
         variant="ghost"
-        aria-label={isOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+        icon={icon}
         padding={padding}
         borderRadius={borderRadius}
-        icon={icon}
-        hoverTextColor="var(--primary)"
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        textColor="var(--textSecondary)"
+        hoverBgColor="var(--dangerBg)"
+        hoverTextColor="var(--danger)"
         {...props}
-    />
+    >
+        {children}
+    </BaseButton>
 );
 
 export const SubmitButton = ({

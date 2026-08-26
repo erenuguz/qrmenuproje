@@ -41,7 +41,7 @@ export const useRestaurants = () => {
             }
         );
 
-        return () => unsub();
+        return () => unsubscribe();
     }, []);
 
     return {

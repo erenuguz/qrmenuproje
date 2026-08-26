@@ -9,167 +9,317 @@ import {
 } from 'firebase/firestore';
 import {
     createUserWithEmailAndPassword,
+    deleteUser,
     sendPasswordResetEmail,
 } from 'firebase/auth';
 import {auth, db, secondaryAuth} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
 
+const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
+const FIRESTORE_BATCH_LIMIT = 400;
+
+const createTemporaryPassword = () => {
+    const randomPart = crypto.randomUUID().replaceAll('-', '').slice(0, 16);
+
+    return `${randomPart}Aa1!`;
+};
+
+const deleteDocumentsInChunks = async (documents) => {
+    for (
+        let index = 0;
+        index < documents.length;
+        index += FIRESTORE_BATCH_LIMIT
+    ) {
+        const documentChunk = documents.slice(
+            index,
+            index + FIRESTORE_BATCH_LIMIT
+        );
+
+        const batch = writeBatch(db);
+
+        documentChunk.forEach((documentSnapshot) => {
+            batch.delete(documentSnapshot.ref);
+        });
+
+        await batch.commit();
+    }
+};
+
 export const useRestaurantActions = () => {
-    const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
     const [isProcessing, setIsProcessing] = useState(false);
     const toast = useToast();
 
     const addRestaurant = async (newId, newName, newEmail, onSuccess) => {
-        if (!newId || !newName || !newEmail)
-            return toast.error('Tüm alanları doldurun!');
+        const cleanId = String(newId || '')
+            .trim()
+            .toLowerCase();
+        const cleanName = String(newName || '').trim();
+        const cleanEmail = String(newEmail || '')
+            .trim()
+            .toLowerCase();
 
-        const cleanId = newId.trim().toLowerCase();
-        const cleanEmail = newEmail.trim().toLowerCase();
-
-        if (
-            !window.confirm(
-                `"${newName}" oluşturulup ${cleanEmail} adresine davet gönderilecek. Onaylıyor musunuz?`
-            )
-        )
+        if (!cleanId || !cleanName || !cleanEmail) {
+            toast.error('Tüm alanları doldurun!');
             return;
+        }
+
+        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanId)) {
+            toast.error(
+                'Sistem ID yalnızca küçük harf, rakam ve tire içerebilir.'
+            );
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+            toast.error('Geçerli bir e-posta adresi girin.');
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `"${cleanName}" oluşturulup ${cleanEmail} adresine davet gönderilecek. Onaylıyor musunuz?`
+        );
+
+        if (!confirmed) return;
 
         let createdUser = null;
 
         try {
             setIsProcessing(true);
 
-            // 1. Taslak var mı kontrol et
-            const templateRef = doc(db, 'restaurants', TEMPLATE_ID);
-            const templateSnap = await getDoc(templateRef);
+            const templateReference = doc(db, 'restaurants', TEMPLATE_ID);
 
-            if (!templateSnap.exists())
-                throw new Error("'taslak_isletme' isimli taslak bulunamadı!");
+            const newRestaurantReference = doc(db, 'restaurants', cleanId);
 
-            // 2. ÖNCE Auth kullanıcısını oluştur
-            const tempPassword = Math.random().toString(36).slice(-10) + 'A1!';
+            const [
+                templateSnapshot,
+                existingRestaurantSnapshot,
+                templateCategoriesSnapshot,
+                templateMenuSnapshot,
+            ] = await Promise.all([
+                getDoc(templateReference),
+
+                getDoc(newRestaurantReference),
+
+                getDocs(
+                    collection(db, 'restaurants', TEMPLATE_ID, 'categories')
+                ),
+
+                getDocs(collection(db, 'restaurants', TEMPLATE_ID, 'menu')),
+            ]);
+
+            if (!templateSnapshot.exists()) {
+                throw new Error('Taslak restoran bulunamadı.');
+            }
+
+            if (existingRestaurantSnapshot.exists()) {
+                throw new Error(
+                    `"${cleanId}" sistem ID'si zaten kullanılıyor.`
+                );
+            }
+
+            const totalWriteCount =
+                1 + templateCategoriesSnapshot.size + templateMenuSnapshot.size;
+
+            if (totalWriteCount > 500) {
+                throw new Error(
+                    'Taslak restoran 500 işlem sınırını aşıyor. Restoran oluşturma işlemi backend üzerinden yapılmalı.'
+                );
+            }
+
+            const temporaryPassword = createTemporaryPassword();
+
             const userCredential = await createUserWithEmailAndPassword(
                 secondaryAuth,
                 cleanEmail,
-                tempPassword
+                temporaryPassword
             );
+
             createdUser = userCredential.user;
 
-            // 3. Firestore Batch işlemlerini ve Rollback mekanizmasını kur
+            const {
+                status: _legacyStatus,
+                admin_email: _templateAdminEmail,
+                userId: _templateUserId,
+                productCount: _templateProductCount,
+                categoryCount: _templateCategoryCount,
+                createdAt: _templateCreatedAt,
+                updatedAt: _templateUpdatedAt,
+                ...templateData
+            } = templateSnapshot.data();
+
+            const batch = writeBatch(db);
+            const categoryIdMap = {};
+
+            templateCategoriesSnapshot.forEach((categoryDocument) => {
+                const newCategoryReference = doc(
+                    collection(db, 'restaurants', cleanId, 'categories')
+                );
+
+                categoryIdMap[categoryDocument.id] = newCategoryReference.id;
+            });
+
+            batch.set(newRestaurantReference, {
+                ...templateData,
+                name: cleanName,
+                admin_email: cleanEmail,
+                userId: createdUser.uid,
+                isInactive: false,
+
+                productCount: templateMenuSnapshot.size,
+                categoryCount: templateCategoriesSnapshot.size,
+
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            });
+
+            templateCategoriesSnapshot.forEach((categoryDocument) => {
+                const oldCategory = categoryDocument.data();
+
+                const newCategoryId = categoryIdMap[categoryDocument.id];
+
+                const newCategoryReference = doc(
+                    db,
+                    'restaurants',
+                    cleanId,
+                    'categories',
+                    newCategoryId
+                );
+
+                batch.set(newCategoryReference, {
+                    ...oldCategory,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                });
+            });
+
+            templateMenuSnapshot.forEach((menuItemDocument) => {
+                const oldItem = menuItemDocument.data();
+
+                const {
+                    kategoriId: oldTurkishCategoryId,
+                    categoryId: oldEnglishCategoryId,
+                    createdAt: _oldCreatedAt,
+                    updatedAt: _oldUpdatedAt,
+                    ...menuItemData
+                } = oldItem;
+
+                const oldCategoryId =
+                    oldEnglishCategoryId || oldTurkishCategoryId || '';
+
+                const newCategoryId = categoryIdMap[oldCategoryId] || '';
+
+                const newMenuItemReference = doc(
+                    collection(db, 'restaurants', cleanId, 'menu')
+                );
+
+                batch.set(newMenuItemReference, {
+                    ...menuItemData,
+                    categoryId: newCategoryId,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                });
+            });
+
             try {
-                const newRestaurantRef = doc(db, 'restaurants', cleanId);
-                const batch = writeBatch(db);
-
-                // Restoranı atomik olarak userId ile birlikte oluştur
-                batch.set(newRestaurantRef, {
-                    ...templateSnap.data(),
-                    name: newName,
-                    admin_email: cleanEmail,
-                    userId: createdUser.uid,
-                    isInactive: false,
-                });
-
-                // Kategorileri kopyala
-                const categoryIdMap = {};
-                const templateCategoriesSnap = await getDocs(
-                    collection(db, 'restaurants', TEMPLATE_ID, 'categories')
-                );
-                templateCategoriesSnap.forEach((categoryDoc) => {
-                    const oldCategory = categoryDoc.data();
-                    const newCategoryRef = doc(
-                        collection(db, 'restaurants', cleanId, 'categories')
-                    );
-                    categoryIdMap[categoryDoc.id] = newCategoryRef.id;
-                    batch.set(newCategoryRef, {
-                        ...oldCategory,
-                        createdAt: serverTimestamp(),
-                        updatedAt: serverTimestamp(),
-                    });
-                });
-
-                // Menüyü kopyala
-                const templateMenuSnap = await getDocs(
-                    collection(db, 'restaurants', TEMPLATE_ID, 'menu')
-                );
-                templateMenuSnap.forEach((menuItemDoc) => {
-                    const oldItem = menuItemDoc.data();
-                    const newItemRef = doc(
-                        collection(db, 'restaurants', cleanId, 'menu')
-                    );
-
-                    // Eski Türkçe alan adı yerine İngilizce categoryId kullanılıyor
-                    const oldCategoryId =
-                        oldItem.categoryId || oldItem.kategoriId || '';
-                    const newLinkedCategoryId =
-                        categoryIdMap[oldCategoryId] || '';
-
-                    batch.set(newItemRef, {
-                        ...oldItem,
-                        categoryId: newLinkedCategoryId,
-                        createdAt: serverTimestamp(),
-                        updatedAt: serverTimestamp(),
-                    });
-                });
-
-                // Batch'i commit et (Restoran + Kategoriler + Menü tek seferde yazılır)
                 await batch.commit();
+            } catch (firestoreError) {
+                if (createdUser) {
+                    try {
+                        await deleteUser(createdUser);
+                    } catch (rollbackError) {
+                        console.error(
+                            'Auth rollback sırasında hata:',
+                            rollbackError
+                        );
+                    }
+                }
 
-                // 4. Şifre sıfırlama e-postasını gönder
+                throw firestoreError;
+            }
+
+            try {
                 await sendPasswordResetEmail(auth, cleanEmail);
 
                 toast.success(
-                    'Restoran başarıyla oluşturuldu ve e-posta gönderildi!'
+                    'Restoran oluşturuldu ve davet e-postası gönderildi!'
                 );
-                if (onSuccess) onSuccess();
-            } catch (fsOrEmailError) {
-                // Firestore veya E-posta adımında hata olursa Auth kullanıcısını sil (Rollback)
-                if (createdUser) {
-                    await createdUser
-                        .delete()
-                        .catch((delErr) =>
-                            console.error(
-                                'Auth rollback sırasında hata:',
-                                delErr
-                            )
-                        );
-                }
-                throw fsOrEmailError;
+            } catch (emailError) {
+                console.error('Davet e-postası gönderilemedi:', emailError);
+
+                toast.info(
+                    'Restoran oluşturuldu fakat davet e-postası gönderilemedi. Şifre sıfırlama e-postasını daha sonra tekrar gönderebilirsiniz.'
+                );
             }
+
+            onSuccess?.();
         } catch (error) {
-            console.error('İşlem hatası:', error);
-            toast.error('Hata oluştu: ' + error.message);
+            console.error('Restoran oluşturma hatası:', error);
+
+            toast.error(
+                error?.message
+                    ? `Hata: ${error.message}`
+                    : 'Restoran oluşturulamadı.'
+            );
         } finally {
             setIsProcessing(false);
         }
     };
 
     const deleteRestaurant = async (id, name) => {
-        if (
-            !window.confirm(
-                `DİKKAT: "${name}" tamamen silinecek! Onaylıyor musunuz?`
-            )
-        )
+        const cleanId = String(id || '').trim();
+
+        if (!cleanId) {
+            toast.error('Silinecek restoran ID’si bulunamadı.');
             return;
+        }
+
+        if (cleanId === TEMPLATE_ID) {
+            toast.error('Taslak restoran silinemez.');
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `DİKKAT: "${name}" tamamen silinecek! Onaylıyor musunuz?`
+        );
+
+        if (!confirmed) return;
 
         try {
-            const batch = writeBatch(db);
-            const catSnap = await getDocs(
-                collection(db, 'restaurants', id, 'categories')
-            );
-            catSnap.forEach((cDoc) => batch.delete(cDoc.ref));
+            setIsProcessing(true);
 
-            const menuSnap = await getDocs(
-                collection(db, 'restaurants', id, 'menu')
-            );
-            menuSnap.forEach((mDoc) => batch.delete(mDoc.ref));
+            const [categorySnapshot, menuSnapshot] = await Promise.all([
+                getDocs(collection(db, 'restaurants', cleanId, 'categories')),
 
-            batch.delete(doc(db, 'restaurants', id));
-            await batch.commit();
+                getDocs(collection(db, 'restaurants', cleanId, 'menu')),
+            ]);
+
+            await deleteDocumentsInChunks(categorySnapshot.docs);
+            await deleteDocumentsInChunks(menuSnapshot.docs);
+
+            // Alt koleksiyonlar silindikten sonra restoran belgesi silinir.
+            const restaurantBatch = writeBatch(db);
+
+            restaurantBatch.delete(doc(db, 'restaurants', cleanId));
+
+            await restaurantBatch.commit();
+
             toast.success(`"${name}" başarıyla silindi.`);
         } catch (error) {
-            console.error('Silme hatası:', error);
-            toast.error('Silinirken hata oluştu.');
+            console.error('Restoran silme hatası:', error);
+
+            toast.error(
+                error?.message
+                    ? `Silme hatası: ${error.message}`
+                    : 'Restoran silinemedi.'
+            );
+        } finally {
+            setIsProcessing(false);
         }
     };
 
-    return {addRestaurant, deleteRestaurant, isProcessing};
+    return {
+        addRestaurant,
+        deleteRestaurant,
+        isProcessing,
+    };
 };
