@@ -174,7 +174,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                         color: 'var(--textMuted)',
                     }}
                 >
-                    {counts.products} ürün · {counts.categories} kategori
+                    {productCount} ürün · {categoryCount} kategori
                 </div>
             </td>
             <td style={cellStyle}>

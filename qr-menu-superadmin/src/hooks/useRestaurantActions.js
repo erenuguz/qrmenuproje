@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {
     collection,
     doc,
+    updateDoc,
     getDoc,
     getDocs,
     writeBatch,
@@ -287,30 +288,25 @@ export const useRestaurantActions = () => {
         try {
             setIsProcessing(true);
 
-            const [categorySnapshot, menuSnapshot] = await Promise.all([
-                getDocs(collection(db, 'restaurants', cleanId, 'categories')),
+            const restaurantRef = doc(db, 'restaurants', cleanId);
 
-                getDocs(collection(db, 'restaurants', cleanId, 'menu')),
-            ]);
+            // Soft-delete işlemi: Belgeyi silmek yerine işaretliyoruz.
+            // Arka plandaki bir trigger (Cloud Function) bu durumu yakalayıp
+            // asıl temizliği yapacak.
+            await updateDoc(restaurantRef, {
+                deletionStatus: 'pending',
+                isInactive: true, // Frontend'de (App.jsx) hemen erişime kapatılır
+                deletedAt: serverTimestamp(),
+            });
 
-            await deleteDocumentsInChunks(categorySnapshot.docs);
-            await deleteDocumentsInChunks(menuSnapshot.docs);
-
-            // Alt koleksiyonlar silindikten sonra restoran belgesi silinir.
-            const restaurantBatch = writeBatch(db);
-
-            restaurantBatch.delete(doc(db, 'restaurants', cleanId));
-
-            await restaurantBatch.commit();
-
-            toast.success(`"${name}" başarıyla silindi.`);
+            toast.success(`"${name}" silinme kuyruğuna eklendi.`);
         } catch (error) {
-            console.error('Restoran silme hatası:', error);
+            console.error('Restoran işaretleme hatası:', error);
 
             toast.error(
                 error?.message
                     ? `Silme hatası: ${error.message}`
-                    : 'Restoran silinemedi.'
+                    : 'Restoran silinmek üzere işaretlenemedi.'
             );
         } finally {
             setIsProcessing(false);
