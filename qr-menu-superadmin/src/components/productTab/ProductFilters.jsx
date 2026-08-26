@@ -3,7 +3,6 @@ import {useResponsive} from '@/hooks/useResponsive';
 import {SearchIcon} from '@/components/common/icon/Icons';
 import {Input, Select} from '@/';
 
-
 const ProductFilters = ({
     searchQuery,
     setSearchQuery,
@@ -50,7 +49,7 @@ const ProductFilters = ({
                         boxShadow: 'var(--shadow)',
                     }}
                 >
-                    <option value="Hepsi">Tümü</option>
+                    <option value="all">Tümü</option>
 
                     {categories.map((category) => (
                         <option key={category.id} value={category.id}>

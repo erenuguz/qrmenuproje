@@ -65,7 +65,7 @@ export const useRestaurantActions = () => {
                     name: newName,
                     admin_email: cleanEmail,
                     userId: createdUser.uid,
-                    isInactive: 'aktif',
+                    isInactive: false,
                 });
 
                 // Kategorileri kopyala

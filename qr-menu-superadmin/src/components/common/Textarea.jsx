@@ -1,7 +1,7 @@
 import React, {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 
-const Textarea = ({
+const TextArea = ({
     label,
     labelStyle = {},
     value,
@@ -80,4 +80,4 @@ const Textarea = ({
     );
 };
 
-export default Textarea;
+export default TextArea;

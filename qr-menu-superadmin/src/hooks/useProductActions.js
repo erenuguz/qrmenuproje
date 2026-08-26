@@ -73,7 +73,7 @@ export const useProductActions = (restaurantId) => {
     };
 
     // Toplu Ürün Sil
-    const deleteMultipleProducts = async (selectedProducts, onSuccess) => {
+    const bulkDeleteProducts = async (selectedProducts, onSuccess) => {
         if (!selectedProducts || selectedProducts.length === 0) return;
         const onay = window.confirm(
             `Seçtiğiniz ${selectedProducts.length} adet ürünü silmek istediğinize emin misiniz?`
@@ -98,5 +98,10 @@ export const useProductActions = (restaurantId) => {
         }
     };
 
-    return {deleteProduct, saveForm, deleteMultipleProducts, isProcessing};
+    return {
+        deleteProduct,
+        saveForm,
+        bulkDeleteProducts,
+        isProcessing,
+    };
 };

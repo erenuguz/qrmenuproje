@@ -29,7 +29,7 @@ const textStyles = {
 
 const RestaurantTableRow = ({res, isLast, handleDelete}) => {
     const {isMobile} = useResponsive(); // Ekledik!
-    const isInactive = res.status === 'pasif';
+    const isInactive = res.isInactive === true;
 
     const [counts, setCounts] = useState({products: '...', categories: '...'});
 

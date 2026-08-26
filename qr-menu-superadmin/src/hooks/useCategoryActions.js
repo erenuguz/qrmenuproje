@@ -28,7 +28,11 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
 
         const newOrder =
             categories.length > 0
-                ? Math.max(...categories.map((category) => category.order)) + 1
+                ? Math.max(
+                      ...categories.map(
+                          (category) => Number(category.order) || 0
+                      )
+                  ) + 1
                 : 0;
 
         try {
