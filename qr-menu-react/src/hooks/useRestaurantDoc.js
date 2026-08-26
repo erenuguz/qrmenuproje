@@ -1,31 +1,41 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {doc, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
 export const useRestaurantDoc = (restaurantId) => {
     const [restaurantData, setRestaurantData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        setError(null);
+        setRestaurantData(null);
+
         if (!restaurantId) {
             setLoading(false);
             return;
         }
 
-        const unsubRestaurant = onSnapshot(
+        setLoading(true);
+
+        const unsubscribe = onSnapshot(
             doc(db, 'restaurants', restaurantId),
-            (docSnap) => {
-                if (docSnap.exists()) {
-                    setRestaurantData(docSnap.data());
-                } else {
-                    setRestaurantData(null);
-                }
+            (documentSnapshot) => {
+                setRestaurantData(
+                    documentSnapshot.exists() ? documentSnapshot.data() : null
+                );
+                setLoading(false);
+            },
+            (snapshotError) => {
+                console.error('Restoran verisi alınamadı:', snapshotError);
+                setRestaurantData(null);
+                setError(snapshotError);
                 setLoading(false);
             }
         );
 
-        return () => unsubRestaurant();
+        return unsubscribe;
     }, [restaurantId]);
 
-    return {restaurantData, loading};
+    return {restaurantData, loading, error};
 };

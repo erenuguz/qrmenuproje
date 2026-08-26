@@ -36,7 +36,7 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                                 style={{
                                     width: '72px',
                                     height: '72px',
-                                    borderRadius: '50%',
+                                    borderRadius: 'var(--radiusCircle)',
                                     objectFit: 'cover',
                                     border: '1px solid var(--border)',
                                 }}
@@ -46,8 +46,8 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
                                 style={{
                                     width: '72px',
                                     height: '72px',
-                                    borderRadius: '50%',
-                                    fontSize: '26px',
+                                    borderRadius: 'var(--radiusCircle)',
+                                    fontSize: 'var(--iconMedium)',
                                     backgroundColor:
                                         'color-mix(in srgb, var(--primary) 12%, transparent)',
                                     display: 'flex',

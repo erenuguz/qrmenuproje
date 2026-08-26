@@ -65,7 +65,7 @@ const SocialMedia = ({
                             <span
                                 style={{
                                     color: 'var(--insta)',
-                                    fontSize: '14px',
+                                    fontSize: 'var(--font-caption)',
                                     fontWeight: 'var(--font-semibold)',
                                 }}
                             >

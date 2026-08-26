@@ -11,6 +11,7 @@ const CategoryBar = ({
 }) => {
     return (
         <div
+            className="hide-scrollbar"
             ref={navRef}
             {...dragHandlers}
             style={{
@@ -31,8 +32,6 @@ const CategoryBar = ({
                 cursor: isDragging ? 'grabbing' : 'grab',
             }}
         >
-            <style>{`div::-webkit-scrollbar { display: none; }`}</style>
-
             {categories.map((category) => {
                 const isActive = activeCategory === category.id;
 

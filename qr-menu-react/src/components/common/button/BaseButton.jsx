@@ -30,6 +30,15 @@ const BUTTON_VARIANTS = {
         hoverTextColor: 'var(--text)',
     },
 
+    success: {
+        bgColor: 'var(--successBg)',
+        textColor: 'var(--success)',
+        borderColor: 'var(--success)',
+        hoverBgColor: 'var(--success)',
+        hoverTextColor: 'var(--textWhite)',
+        hoverBorderColor: 'var(--success)',
+    },
+
     danger: {
         bgColor: 'var(--dangerBg)',
         textColor: 'var(--danger)',

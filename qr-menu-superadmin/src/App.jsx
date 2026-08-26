@@ -64,7 +64,7 @@ function App() {
                         height: '56px',
                         backgroundColor: 'var(--dangerBg)',
                         color: 'var(--danger)',
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radiusCircle)',
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',

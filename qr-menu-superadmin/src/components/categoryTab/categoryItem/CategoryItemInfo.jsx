@@ -37,7 +37,7 @@ export const CategoryItemInfo = ({name, image, productCount = 0}) => {
                         }}
                     />
                 ) : (
-                    <span style={{fontSize: '20px'}}>🍲</span>
+                    <span style={{fontSize: 'var(--iconSmall)'}}>🍲</span>
                 )}
             </div>
 

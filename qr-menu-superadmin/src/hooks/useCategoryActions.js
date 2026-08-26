@@ -19,7 +19,9 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
 
         if (
             categories.some(
-                (category) => category.name.toLowerCase() === name.toLowerCase()
+                (category) =>
+                    category.name.trim().toLocaleLowerCase('tr-TR') ===
+                    name.toLocaleLowerCase('tr-TR')
             )
         ) {
             toast.error('Bu kategori zaten mevcut!');
@@ -56,15 +58,22 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
     };
 
     const updateCategoryName = async (id, oldName, newName) => {
-        if (!newName || oldName === newName) return;
+        const trimmedName = String(newName ?? '').trim();
+        const trimmedOldName = String(oldName ?? '').trim();
 
-        if (
-            categories.some(
-                (category) =>
-                    category.id !== id &&
-                    category.name.toLowerCase() === newName.toLowerCase()
-            )
-        ) {
+        if (!trimmedName || trimmedOldName === trimmedName) return;
+
+        const normalizedName = trimmedName.toLocaleLowerCase('tr-TR');
+
+        const alreadyExists = categories.some(
+            (category) =>
+                category.id !== id &&
+                String(category.name ?? '')
+                    .trim()
+                    .toLocaleLowerCase('tr-TR') === normalizedName
+        );
+
+        if (alreadyExists) {
             toast.error('Bu isimde başka kategori var!');
             return;
         }
@@ -73,7 +82,7 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
             await updateDoc(
                 doc(db, 'restaurants', restaurantId, 'categories', id),
                 {
-                    name: newName,
+                    name: trimmedName,
                     updatedAt: serverTimestamp(),
                 }
             );

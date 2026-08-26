@@ -67,7 +67,7 @@ const ProductHeader = ({
                     {!isBulkDeleteMode ? (
                         <DeleteButton
                             onClick={() => setIsBulkDeleteMode(true)}
-                            borderRadius="24px"
+                            borderRadius="var(--radiusPill)"
                         >
                             Toplu Sil
                         </DeleteButton>
@@ -78,11 +78,11 @@ const ProductHeader = ({
                                     setIsBulkDeleteMode(false);
                                     setSelectedProducts([]);
                                 }}
-                                borderRadius="24px"
+                                borderRadius="var(--radiusPill)"
                             />
                             <DeleteButton
                                 onClick={bulkDeleteProducts}
-                                borderRadius="24px"
+                                borderRadius="var(--radiusPill)"
                             >
                                 Seçilenleri Sil ({selectedProducts.length})
                             </DeleteButton>

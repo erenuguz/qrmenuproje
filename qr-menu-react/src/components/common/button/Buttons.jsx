@@ -14,39 +14,28 @@ export const BackButton = ({
     style = {},
     ...props
 }) => {
-    const [isHovered, setIsHovered] = React.useState(false);
-    const [isPressed, setIsPressed] = React.useState(false);
-
-    const activeBg = isHovered
-        ? 'color-mix(in srgb, var(--primary) 15%, transparent)'
-        : 'var(--background)';
-
-    const activeColor = isHovered ? 'var(--primary)' : 'var(--text)';
+    const [isPressed, setIsPressed] = useState(false);
 
     return (
         <BaseButton
+            variant="ghost"
             onClick={onClick}
             aria-label={ariaLabel}
-            bgColor={activeBg}
-            textColor={activeColor}
-            borderColor="transparent"
+            bgColor="var(--background)"
+            textColor="var(--text)"
+            hoverBgColor="color-mix(in srgb, var(--primary) 15%, transparent)"
+            hoverTextColor="var(--primary)"
             padding="0"
-            borderRadius="50%"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => {
-                setIsHovered(false);
-                setIsPressed(false);
-            }}
+            borderRadius="var(--radiusCircle)"
             onPointerDown={() => setIsPressed(true)}
             onPointerUp={() => setIsPressed(false)}
             onPointerCancel={() => setIsPressed(false)}
+            onPointerLeave={() => setIsPressed(false)}
             style={{
                 width: size,
                 height: size,
                 minWidth: size,
                 transform: isPressed ? 'scale(0.92)' : 'scale(1)',
-                transition:
-                    'background-color 0.15s ease, color 0.15s ease, transform 0.15s ease',
                 ...style,
             }}
             {...props}
@@ -63,29 +52,26 @@ export const PillButton = ({
     id,
     style = {},
     ...props
-}) => {
-    return (
-        <BaseButton
-            id={id}
-            onClick={onClick}
-            bgColor={isActive ? 'var(--primary)' : 'var(--surface)'}
-            textColor={isActive ? 'var(--textWhite)' : 'var(--text)'}
-            borderColor={isActive ? 'var(--primary)' : 'var(--border)'}
-            padding="8px 14px"
-            borderRadius="25px"
-            fontWeight="var(--font-semibold)"
-            fontSize="var(--font-caption)"
-            style={{
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-                ...style,
-            }}
-            {...props}
-        >
-            {children}
-        </BaseButton>
-    );
-};
+}) => (
+    <BaseButton
+        id={id}
+        variant={isActive ? 'primary' : 'secondary'}
+        aria-pressed={isActive}
+        onClick={onClick}
+        padding="8px 14px"
+        borderRadius="var(--radiusPill)"
+        fontWeight="var(--font-semibold)"
+        fontSize="var(--font-caption)"
+        style={{
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            ...style,
+        }}
+        {...props}
+    >
+        {children}
+    </BaseButton>
+);
 
 export const CopyButton = ({
     textToCopy,
@@ -112,6 +98,7 @@ export const CopyButton = ({
 
     return (
         <BaseButton
+            variant={isCopied ? 'success' : 'secondary'}
             onClick={handleCopy}
             bgColor={isCopied ? 'var(--successBg)' : 'var(--background)'}
             textColor={isCopied ? 'var(--success)' : 'var(--text)'}
@@ -153,13 +140,14 @@ export const FloatingButton = ({
 }) => {
     return (
         <BaseButton
+            variant="primary"
             onClick={onClick}
             aria-label={ariaLabel}
             bgColor={bgColor}
             textColor={textColor}
             borderColor="transparent"
             padding="0"
-            borderRadius="50%"
+            borderRadius="var(--radiusCircle)"
             icon={icon}
             style={{
                 position,

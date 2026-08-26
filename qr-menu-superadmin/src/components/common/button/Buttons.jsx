@@ -10,61 +10,32 @@ import {
     EyeOffIcon,
 } from '@/components/common/icon/Icons';
 
-// 1. Kaydet Butonu
 export const SaveButton = ({children = 'Kaydet', ...props}) => (
-    <BaseButton
-        bgColor="var(--primary)"
-        textColor="var(--textWhite)"
-        {...props}
-    >
+    <BaseButton variant="primary" {...props}>
         {children}
     </BaseButton>
 );
 
-// 2. İptal Butonu
 export const CancelButton = ({children = 'İptal', ...props}) => (
-    <BaseButton
-        bgColor="transparent"
-        textColor="var(--textSecondary)"
-        borderColor="var(--border)"
-        {...props}
-    >
+    <BaseButton variant="secondary" {...props}>
         {children}
     </BaseButton>
 );
 
-// 3. Ekle Butonu
 export const AddButton = ({children = 'Ekle', icon = '+', ...props}) => (
-    <BaseButton
-        icon={icon}
-        bgColor="var(--primary)"
-        textColor="var(--textWhite)"
-        {...props}
-    >
+    <BaseButton variant="primary" icon={icon} {...props}>
         {children}
     </BaseButton>
 );
 
-// 4. Düzenle Butonu
 export const EditButton = ({children = 'Düzenle', ...props}) => (
-    <BaseButton
-        bgColor="var(--background)"
-        textColor="var(--textSecondary)"
-        borderColor="var(--border)"
-        {...props}
-    >
+    <BaseButton variant="secondary" {...props}>
         {children}
     </BaseButton>
 );
 
-// 5. Sil Butonu
 export const DeleteButton = ({children = '', ...props}) => (
-    <BaseButton
-        bgColor="var(--dangerBg)"
-        textColor="var(--danger)"
-        borderColor="var(--danger)"
-        {...props}
-    >
+    <BaseButton variant="danger" {...props}>
         {children}
     </BaseButton>
 );
@@ -74,21 +45,19 @@ export const UploadImageButton = ({
     icon = <UploadIcon size={14} />,
     isLoading = false,
     loadingText = 'Yükleniyor...',
-    borderColor = 'var(--border)',
     ...props
 }) => (
     <BaseButton
+        variant="secondary"
         icon={icon}
         isLoading={isLoading}
         loadingText={loadingText}
-        borderColor={borderColor}
         {...props}
     >
         {children}
     </BaseButton>
 );
 
-// 1. Yukarı Taşı Butonu
 export const MoveUpButton = ({
     onClick,
     disabled = false,
@@ -98,23 +67,20 @@ export const MoveUpButton = ({
     ...props
 }) => (
     <BaseButton
+        variant="ghost"
         onClick={onClick}
         disabled={disabled}
         icon={icon}
-        bgColor="transparent"
-        textColor="var(--textMuted)"
-        borderColor="transparent"
         padding={padding}
+        textColor="var(--textMuted)"
         style={{
             opacity: disabled ? 0.3 : 1,
-            cursor: disabled ? 'default' : 'pointer',
             ...style,
         }}
         {...props}
     />
 );
 
-// 2. Aşağı Taşı Butonu
 export const MoveDownButton = ({
     onClick,
     disabled = false,
@@ -124,35 +90,38 @@ export const MoveDownButton = ({
     ...props
 }) => (
     <BaseButton
+        variant="ghost"
         onClick={onClick}
         disabled={disabled}
         icon={icon}
-        bgColor="transparent"
-        textColor="var(--textMuted)"
-        borderColor="transparent"
         padding={padding}
+        textColor="var(--textMuted)"
         style={{
             opacity: disabled ? 0.3 : 1,
-            cursor: disabled ? 'default' : 'pointer',
             ...style,
         }}
         {...props}
     />
 );
 
-// Yeni Ürün Ekle Butonu
 export const NewProductButton = ({
     children = 'Yeni Ürün',
-    icon = <span style={{fontSize: '16px', lineHeight: '14px'}}>+</span>,
+    icon = (
+        <span
+            style={{
+                fontSize: 'var(--font-body)',
+                lineHeight: 1,
+            }}
+        >
+            +
+        </span>
+    ),
     padding = '10px 20px',
-    borderRadius = '24px',
-
+    borderRadius = 'var(--radiusPill)',
     ...props
 }) => (
     <BaseButton
-        bgColor="var(--primary)"
-        textColor="var(--textWhite)"
-        borderColor="transparent"
+        variant="primary"
         icon={icon}
         padding={padding}
         borderRadius={borderRadius}
@@ -162,7 +131,6 @@ export const NewProductButton = ({
     </BaseButton>
 );
 
-// Oluştur / Submit Butonu
 export const CreateButton = ({
     children = 'Oluştur',
     type = 'submit',
@@ -172,10 +140,8 @@ export const CreateButton = ({
     ...props
 }) => (
     <BaseButton
+        variant="primary"
         type={type}
-        bgColor="var(--primary)"
-        textColor="var(--textWhite)"
-        borderColor="transparent"
         isLoading={isLoading}
         loadingText={loadingText}
         padding={padding}
@@ -184,20 +150,23 @@ export const CreateButton = ({
         {children}
     </BaseButton>
 );
+
 export const NewRestaurantButton = ({
     children = 'Yeni Restoran',
-    icon = <span style={{fontSize: '14px', lineHeight: '1'}}>+</span>,
+    icon = (
+        <span
+            style={{
+                fontSize: 'var(--font-caption)',
+                lineHeight: 1,
+            }}
+        >
+            +
+        </span>
+    ),
     padding = '10px 16px',
     ...props
 }) => (
-    <BaseButton
-        bgColor="var(--primary)"
-        textColor="var(--textWhite)"
-        borderColor="transparent"
-        icon={icon}
-        padding={padding}
-        {...props}
-    >
+    <BaseButton variant="primary" icon={icon} padding={padding} {...props}>
         {children}
     </BaseButton>
 );
@@ -209,63 +178,23 @@ export const NavTabButton = ({
     padding = '10px 12px',
     gap = '12px',
     ...props
-}) => {
-    const [isHovered, setIsHovered] = React.useState(false);
-
-    const activeBg = isSelected
-        ? 'var(--primary)'
-        : isHovered
-          ? 'var(--hover)'
-          : 'transparent';
-    const activeColor = isSelected
-        ? 'var(--textWhite)'
-        : isHovered
-          ? 'var(--text)'
-          : 'var(--textSecondary)';
-    const activeIconColor = isSelected
-        ? 'var(--textWhite)'
-        : isHovered
-          ? 'var(--textSecondary)'
-          : 'var(--textMuted)';
-
-    return (
-        <BaseButton
-            bgColor={activeBg}
-            textColor={activeColor}
-            borderColor="transparent"
-            padding={padding}
-            fontWeight={
-                isSelected ? 'var(--font-semibold)' : 'var(--font-medium)'
-            }
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                width: '100%',
-                justifyContent: 'flex-start',
-                textAlign: 'left',
-                gap: gap,
-                transition: 'background-color 0.2s ease, color 0.2s ease',
-            }}
-            icon={
-                icon ? (
-                    <span
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: activeIconColor,
-                            transition: 'color 0.2s ease',
-                        }}
-                    >
-                        {icon}
-                    </span>
-                ) : null
-            }
-            {...props}
-        >
-            {children}
-        </BaseButton>
-    );
-};
+}) => (
+    <BaseButton
+        variant={isSelected ? 'primary' : 'ghost'}
+        padding={padding}
+        fontWeight={isSelected ? 'var(--font-semibold)' : 'var(--font-medium)'}
+        icon={icon}
+        style={{
+            width: '100%',
+            justifyContent: 'flex-start',
+            textAlign: 'left',
+            gap,
+        }}
+        {...props}
+    >
+        {children}
+    </BaseButton>
+);
 
 export const HamburgerButton = ({
     isOpen = false,
@@ -273,64 +202,36 @@ export const HamburgerButton = ({
     borderRadius = 'var(--radiusSmall)',
     icon = <MenuIcon size={24} />,
     ...props
-}) => {
-    const [isHovered, setIsHovered] = React.useState(false);
+}) => (
+    <BaseButton
+        variant="ghost"
+        aria-label={isOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+        padding={padding}
+        borderRadius={borderRadius}
+        icon={icon}
+        hoverTextColor="var(--primary)"
+        {...props}
+    />
+);
 
-    return (
-        <BaseButton
-            aria-label={isOpen ? 'Menüyü Kapat' : 'Menüyü Aç'}
-            bgColor={isHovered ? 'var(--hover)' : 'transparent'}
-            textColor={isHovered ? 'var(--primary)' : 'var(--text)'}
-            borderColor="transparent"
-            padding={padding}
-            borderRadius={borderRadius}
-            icon={icon}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background-color 0.2s ease, color 0.2s ease',
-            }}
-            {...props}
-        />
-    );
-};
-
-export const SignOutButton = ({
-    children = 'Çıkış',
-    padding = '8px 15px',
+export const HamburgerButton = ({
+    isOpen = false,
+    padding = '8px',
     borderRadius = 'var(--radiusSmall)',
-    fontSize = 'var(--font-caption)',
-    fontWeight = 'var(--font-semibold)',
-    icon = <LogoutIcon size={16} />,
+    icon = <MenuIcon size={24} />,
     ...props
-}) => {
-    const [isHovered, setIsHovered] = React.useState(false);
+}) => (
+    <BaseButton
+        variant="ghost"
+        aria-label={isOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+        padding={padding}
+        borderRadius={borderRadius}
+        icon={icon}
+        hoverTextColor="var(--primary)"
+        {...props}
+    />
+);
 
-    return (
-        <BaseButton
-            bgColor={isHovered ? 'var(--dangerBg)' : 'transparent'}
-            textColor={isHovered ? 'var(--danger)' : 'var(--textSecondary)'}
-            borderColor="transparent"
-            padding={padding}
-            borderRadius={borderRadius}
-            fontSize={fontSize}
-            fontWeight={fontWeight}
-            icon={icon}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                gap: '8px',
-                transition: 'background-color 0.2s ease, color 0.2s ease',
-            }}
-            {...props}
-        >
-            {children}
-        </BaseButton>
-    );
-};
 export const SubmitButton = ({
     loading = false,
     loadingText = 'İşlem Yapılıyor...',
@@ -394,45 +295,34 @@ export const PasswordToggleButton = ({
     onPressEnd,
     style = {},
     ...props
-}) => {
-    return (
-        <BaseButton
-            type="button"
-            variant="ghost"
-            textColor={showPassword ? 'var(--primary)' : 'var(--textMuted)'}
-            onMouseDown={onPressStart}
-            onMouseUp={onPressEnd}
-            onMouseLeave={onPressEnd}
-            onTouchStart={(e) => {
-                e.preventDefault();
-                if (onPressStart) onPressStart();
-            }}
-            onTouchEnd={onPressEnd}
-            title="Şifreyi görmek için basılı tutun"
-            style={{
-                position: 'absolute',
-                right: '12px',
-                padding: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                outline: 'none',
-                WebkitTapHighlightColor: 'transparent',
-                ...style,
-            }}
-            {...props}
-        >
-            {showPassword ? (
-                <EyeIcon size={20} strokeWidth={2.5} />
-            ) : (
-                <EyeOffIcon size={20} strokeWidth={2} />
-            )}
-        </BaseButton>
-    );
-};
+}) => (
+    <BaseButton
+        type="button"
+        variant="ghost"
+        textColor={showPassword ? 'var(--primary)' : 'var(--textMuted)'}
+        onPointerDown={onPressStart}
+        onPointerUp={onPressEnd}
+        onPointerCancel={onPressEnd}
+        onPointerLeave={onPressEnd}
+        title="Şifreyi görmek için basılı tutun"
+        style={{
+            position: 'absolute',
+            right: '12px',
+            padding: '4px',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTapHighlightColor: 'transparent',
+            ...style,
+        }}
+        {...props}
+    >
+        {showPassword ? (
+            <EyeIcon size={20} strokeWidth={2.5} />
+        ) : (
+            <EyeOffIcon size={20} strokeWidth={2} />
+        )}
+    </BaseButton>
+);
 
 export const FloatingButton = ({
     onClick,
@@ -450,13 +340,14 @@ export const FloatingButton = ({
 }) => {
     return (
         <BaseButton
+            variant="primary"
             onClick={onClick}
             aria-label={ariaLabel}
             bgColor={bgColor}
             textColor={textColor}
             borderColor="transparent"
             padding="0"
-            borderRadius="50%"
+            borderRadius="var(--radiusCircle)"
             icon={icon}
             style={{
                 position,

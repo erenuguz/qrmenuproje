@@ -8,20 +8,38 @@ export const useRestaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedRestaurantId, setSelectedRestaurantId] = useState('');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const unsub = onSnapshot(collection(db, 'restaurants'), (snapshot) => {
-            const list = snapshot.docs
-                .map((doc) => ({id: doc.id, ...doc.data()}))
-                .filter((res) => res.id !== TEMPLATE_ID);
+        const unsubscribe = onSnapshot(
+            collection(db, 'restaurants'),
+            (snapshot) => {
+                const list = snapshot.docs
+                    .map((document) => ({
+                        id: document.id,
+                        ...document.data(),
+                    }))
+                    .filter((restaurant) => restaurant.id !== TEMPLATE_ID);
 
-            setRestaurants(list);
+                setRestaurants(list);
 
-            // ✅ Fonksiyonel update: closure değil, anlık state'i okur
-            setSelectedRestaurantId((current) => current || list[0]?.id || '');
+                setSelectedRestaurantId((currentId) => {
+                    const stillExists = list.some(
+                        (restaurant) => restaurant.id === currentId
+                    );
 
-            setLoading(false);
-        });
+                    return stillExists ? currentId : list[0]?.id || '';
+                });
+
+                setLoading(false);
+            },
+            (snapshotError) => {
+                console.error('Restoranlar alınamadı:', snapshotError);
+                setRestaurants([]);
+                setError(snapshotError);
+                setLoading(false);
+            }
+        );
 
         return () => unsub();
     }, []);
@@ -31,5 +49,6 @@ export const useRestaurants = () => {
         loading,
         selectedRestaurantId,
         setSelectedRestaurantId,
+        error,
     };
 };

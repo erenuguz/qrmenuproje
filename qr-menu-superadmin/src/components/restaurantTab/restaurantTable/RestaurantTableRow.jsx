@@ -3,32 +3,39 @@ import {collection, getCountFromServer} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {DeleteButton} from '@/';
 import {MailIcon, TrashIcon} from '@/components/common/icon/Icons';
-import {useResponsive} from '@/hooks/useResponsive'; // Ekledik!
+import {useResponsive} from '@/hooks/useResponsive';
 
 const textStyles = {
-    idHash: {color: 'var(--textMuted)', fontSize: '14px', fontWeight: 700},
+    idHash: {
+        color: 'var(--textMuted)',
+        fontSize: 'var(--font-caption)',
+        fontWeight: 'var(--font-bold)',
+    },
+
     id: {
         color: 'var(--textSecondary)',
-        fontSize: '13px',
+        fontSize: 'var(--font-compact)',
         fontFamily: 'monospace',
     },
+
     name: {
-        fontWeight: 600,
+        fontWeight: 'var(--font-semibold)',
         color: 'var(--text)',
-        fontSize: '15px',
+        fontSize: 'var(--font-bodySmall)',
         marginBottom: '4px',
     },
+
     email: {
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
         color: 'var(--textSecondary)',
-        fontSize: '13px',
+        fontSize: 'var(--font-compact)',
     },
 };
 
 const RestaurantTableRow = ({res, isLast, handleDelete}) => {
-    const {isMobile} = useResponsive(); // Ekledik!
+    const {isMobile} = useResponsive();
     const isInactive = res.isInactive === true;
 
     const [counts, setCounts] = useState({products: '...', categories: '...'});
@@ -70,15 +77,15 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                 borderRadius: 'var(--radiusSmall)',
                 backgroundColor: badgeBg,
                 color: badgeColor,
-                fontSize: '12px',
-                fontWeight: 600,
+                fontSize: 'var(--font-small)',
+                fontWeight: 'var(--font-semibold)',
             }}
         >
             <span
                 style={{
                     width: '6px',
                     height: '6px',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--radiusCircle)',
                     backgroundColor: 'currentColor',
                 }}
             />
@@ -96,7 +103,6 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                         : '1px solid var(--borderLight)',
                 }}
             >
-                {/* Tüm içeriği tek bir hücrede (colSpan="5") topluyoruz */}
                 <td colSpan="5" style={{padding: '16px'}}>
                     {/* Üst Kısım: İsim ve Durum Rozeti */}
                     <div
@@ -145,7 +151,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                         >
                             <div
                                 style={{
-                                    fontSize: '12px',
+                                    fontSize: 'var(--font-small)',
                                     color: 'var(--textMuted)',
                                 }}
                             >
@@ -187,7 +193,12 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
             </td>
             <td style={cellStyle}>
                 <div style={textStyles.name}>{res.name}</div>
-                <div style={{fontSize: '12px', color: 'var(--textMuted)'}}>
+                <div
+                    style={{
+                        fontSize: 'var(--font-small)',
+                        color: 'var(--textMuted)',
+                    }}
+                >
                     {counts.products} ürün · {counts.categories} kategori
                 </div>
             </td>

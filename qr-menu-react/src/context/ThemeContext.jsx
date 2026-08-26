@@ -89,7 +89,8 @@ export const DEFAULT_THEME = {
         // ==========================
         // Radius
         // ==========================
-
+        radiusPill: '999px',
+        radiusCircle: '50%',
         radiusSmall: '8px',
         radius: '12px',
         radiusLarge: '16px',
@@ -103,7 +104,9 @@ export const DEFAULT_THEME = {
         h1: '32px',
         h2: '28px',
         h3: '24px',
-
+        micro: '11px',
+        compact: '13px',
+        bodySmall: '15px',
         // Kart Başlığı
         title: '22px',
 
@@ -125,6 +128,12 @@ export const DEFAULT_THEME = {
         semibold: 600,
         bold: 700,
     },
+
+    sizes: {
+        iconSmall: '20px',
+        iconMedium: '24px',
+        iconLarge: '28px',
+    },
 };
 
 const ThemeContext = createContext(null);
@@ -134,6 +143,7 @@ function applyCss(theme) {
 
     const c = theme.colors || DEFAULT_THEME.colors;
     const t = theme.typography || DEFAULT_THEME.typography;
+    const s = theme.sizes || DEFAULT_THEME.sizes;
 
     // ==========================
     // Colors
@@ -143,7 +153,16 @@ function applyCss(theme) {
     el.style.setProperty('--surface', c.surface);
     el.style.setProperty('--sidebar', c.sidebar);
     el.style.setProperty('--header', c.header);
+    el.style.setProperty('--radiusPill', c.radiusPill);
+    el.style.setProperty('--radiusCircle', c.radiusCircle);
 
+    el.style.setProperty('--font-micro', t.micro);
+    el.style.setProperty('--font-compact', t.compact);
+    el.style.setProperty('--font-bodySmall', t.bodySmall);
+
+    el.style.setProperty('--icon-small', s.iconSmall);
+    el.style.setProperty('--icon-medium', s.iconMedium);
+    el.style.setProperty('--icon-large', s.iconLarge);
     el.style.setProperty('--border', c.border);
     el.style.setProperty('--borderLight', c.borderLight);
 

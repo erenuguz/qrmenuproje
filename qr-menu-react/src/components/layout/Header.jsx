@@ -50,7 +50,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
                             style={{
                                 width: '34px',
                                 height: '34px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radiusCircle)',
                                 objectFit: 'cover',
                                 border: '1px solid var(--border)',
                                 flexShrink: 0,
@@ -61,7 +61,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
                             style={{
                                 width: '34px',
                                 height: '34px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radiusCircle)',
                                 backgroundColor:
                                     'color-mix(in srgb, var(--primary) 15%, transparent)',
                                 display: 'flex',

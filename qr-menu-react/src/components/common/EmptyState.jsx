@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EmptyState = ({
+export const EmptyState = ({
     icon,
     title,
     message,
@@ -29,12 +29,12 @@ const EmptyState = ({
                     style={{
                         width: '64px',
                         height: '64px',
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radiusCircle)',
                         backgroundColor: iconBg,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '28px',
+                        fontSize: 'var(--iconLarge)',
                         marginBottom: '4px',
                     }}
                 >

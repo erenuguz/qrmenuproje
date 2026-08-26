@@ -6,15 +6,15 @@ const textStyles = {
     name: {
         margin: '0 0 4px 0',
         color: 'var(--text)',
-        fontSize: '14px',
-        fontWeight: 'bold',
+        fontSize: 'var(--font-caption)',
+        fontWeight: 'var(--font-bold)',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
 
     desc: {
-        fontSize: '12px',
+        fontSize: 'var(--font-small)',
         color: 'var(--textSecondary)',
         display: 'block',
         whiteSpace: 'nowrap',
@@ -23,9 +23,9 @@ const textStyles = {
     },
 
     price: {
-        fontSize: '15px',
+        fontSize: 'var(--font-bodySmall)',
         color: 'var(--text)',
-        fontWeight: 'bold',
+        fontWeight: 'var(--font-bold)',
         flexShrink: 0,
     },
 };
@@ -85,7 +85,7 @@ export default function ProductCard({
                         width: '44px',
                         height: '44px',
                         backgroundColor: 'var(--surface)',
-                        borderRadius: '8px',
+                        borderRadius: 'var(--radiusSmall)',
                         objectFit: 'cover',
                         flexShrink: 0,
                     }}

@@ -24,7 +24,7 @@ export const inputStyle = {
 // (GeneralInfo, CustomerWifi, SocialMedia)
 export const smallLabelStyle = {
     display: 'block',
-    fontSize: '11px',
+    fontSize: 'var(--font-micro)',
     color: 'var(--textSecondary)',
     fontWeight: 'var(--font-bold)',
     textTransform: 'uppercase',

@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 
 export const Input = ({
+    id,
     label,
     labelStyle = {},
     icon = null,
@@ -12,13 +13,16 @@ export const Input = ({
     onFocus,
     onBlur,
     type = 'text',
+    className = '',
     style = {},
     containerStyle = {},
     ...props
 }) => {
+    const generatedId = useId();
+    const inputId = id || generatedId;
+
     const [isFocused, setIsFocused] = useState(false);
 
-    // İkon durumuna ve ekrana göre sol padding hesabı
     const paddingLeft = icon
         ? isMobile
             ? '38px'
@@ -37,9 +41,9 @@ export const Input = ({
                 ...containerStyle,
             }}
         >
-            {/* Label Alanı */}
             {label && (
                 <label
+                    htmlFor={inputId}
                     style={{
                         fontSize: 'var(--font-small)',
                         fontWeight: 'var(--font-semibold)',
@@ -52,7 +56,6 @@ export const Input = ({
                 </label>
             )}
 
-            {/* İç Kapsayıcı (İkon + Input) */}
             <div
                 style={{
                     position: 'relative',
@@ -61,9 +64,9 @@ export const Input = ({
                     alignItems: 'center',
                 }}
             >
-                {/* Sol İkon */}
                 {icon && (
                     <div
+                        aria-hidden="true"
                         style={{
                             position: 'absolute',
                             left: isMobile ? '12px' : '20px',
@@ -83,19 +86,20 @@ export const Input = ({
                     </div>
                 )}
 
-                {/* Ana Input Alanı */}
                 <input
+                    id={inputId}
+                    className={`ui-control ${className}`.trim()}
                     type={type}
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    onFocus={(e) => {
+                    onFocus={(event) => {
                         setIsFocused(true);
-                        if (onFocus) onFocus(e);
+                        onFocus?.(event);
                     }}
-                    onBlur={(e) => {
+                    onBlur={(event) => {
                         setIsFocused(false);
-                        if (onBlur) onBlur(e);
+                        onBlur?.(event);
                     }}
                     style={{
                         ...inputStyle,
@@ -103,11 +107,13 @@ export const Input = ({
                         paddingTop: 0,
                         paddingBottom: 0,
                         paddingRight: isMobile ? '16px' : '24px',
-                        paddingLeft: paddingLeft,
+                        paddingLeft,
                         borderRadius: isMobile
                             ? 'var(--radiusSmall)'
                             : 'var(--radiusLarge)',
-                        border: `1px solid ${isFocused ? 'var(--primary)' : 'var(--inputBorder)'}`,
+                        border: `1px solid ${
+                            isFocused ? 'var(--primary)' : 'var(--inputBorder)'
+                        }`,
                         fontSize: isMobile
                             ? 'var(--font-caption)'
                             : 'var(--font-body)',

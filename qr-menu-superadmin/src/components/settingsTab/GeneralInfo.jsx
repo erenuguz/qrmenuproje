@@ -62,7 +62,7 @@ const GeneralInfo = ({
                             style={{
                                 width: '48px',
                                 height: '48px',
-                                borderRadius: '50%',
+                                borderRadius: 'var(--radiusCircle)',
                                 backgroundColor: 'var(--badge)',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -75,7 +75,7 @@ const GeneralInfo = ({
                             {isLogoLoading ? (
                                 <span
                                     style={{
-                                        fontSize: '12px',
+                                        fontSize: 'var(--font-small)',
                                         color: 'var(--textMuted)',
                                     }}
                                 >
@@ -94,7 +94,7 @@ const GeneralInfo = ({
                             ) : (
                                 <span
                                     style={{
-                                        fontSize: '14px',
+                                        fontSize: 'var(--font-caption)',
                                         fontWeight: 'var(--font-bold)',
                                         color: 'var(--textMuted)',
                                     }}
@@ -138,7 +138,7 @@ const GeneralInfo = ({
 
                             <span
                                 style={{
-                                    fontSize: '11px',
+                                    fontSize: 'var(--font-micro)',
                                     color: 'var(--textMuted)',
                                 }}
                             >

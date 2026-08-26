@@ -44,8 +44,8 @@ const RestaurantSelector = ({
 
                 <span
                     style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
+                        fontSize: 'var(--font-body)',
+                        fontWeight: 'var(--font-semibold)',
                         color: 'var(--textSecondary)',
                         whiteSpace: 'nowrap',
                     }}
@@ -68,7 +68,7 @@ const RestaurantSelector = ({
                             : {minWidth: '220px'}
                     }
                     style={{
-                        fontWeight: '600',
+                        fontWeight: 'var(--font-semibold)',
                         backgroundColor: 'var(--inputBackground)',
                     }}
                 >

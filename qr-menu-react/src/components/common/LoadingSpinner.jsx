@@ -20,19 +20,19 @@ const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
                     style={{
                         position: 'absolute',
                         inset: 0,
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radiusCircle)',
                         border: '3px solid var(--border)',
                     }}
                 />
                 {/* Dönen halka */}
                 <div
+                    className="loading-spinner-ring"
                     style={{
                         position: 'absolute',
                         inset: 0,
-                        borderRadius: '50%',
+                        borderRadius: 'var(--radiusCircle)',
                         border: '3px solid transparent',
                         borderTopColor: 'var(--primary)',
-                        animation: 'spin 0.8s linear infinite',
                     }}
                 />
             </div>
@@ -49,14 +49,6 @@ const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
             >
                 {message}
             </p>
-
-            {/* Animasyon keyframe */}
-            <style>{`
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to   { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 };

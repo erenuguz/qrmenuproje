@@ -40,8 +40,8 @@ const ProductList = ({
                             style={{
                                 margin: 0,
                                 color: 'var(--text)',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
+                                fontSize: 'var(--font-caption)',
+                                fontWeight: 'var(--font-bold)',
                             }}
                         >
                             Arama Sonuçları
@@ -118,8 +118,8 @@ const ProductList = ({
                                     style={{
                                         color: 'var(--text)',
                                         margin: 0,
-                                        fontSize: '14px',
-                                        fontWeight: 'bold',
+                                        fontSize: 'var(--font-caption)',
+                                        fontWeight: 'var(--font-bold)',
                                     }}
                                 >
                                     {category.name}
