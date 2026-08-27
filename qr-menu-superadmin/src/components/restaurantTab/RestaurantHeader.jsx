@@ -1,5 +1,6 @@
 import React from 'react';
-import {StatCard, PageHeader} from '@/';
+import StatCard from '@/components/common/StatCard';
+import PageHeader from '@/components/common/PageHeader';
 import {useResponsive} from '@/hooks/useResponsive';
 
 const RestaurantHeader = ({restaurants}) => {

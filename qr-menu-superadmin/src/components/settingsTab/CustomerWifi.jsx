@@ -1,5 +1,6 @@
 import React from 'react';
-import {SectionHeader, Input} from '@/';
+import Input from '@/components/common/Input';
+import SectionHeader from '@/components/settingsTab/SectionHeader';
 import {
     sectionCardStyle,
     smallLabelStyle,

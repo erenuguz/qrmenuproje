@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useState} from 'react';
-import {ToastContainer} from '@/';
+import {ToastContainer} from '@/components/common/Toast';
 
 export const ToastContext = createContext(null);
 let idCounter = 0;

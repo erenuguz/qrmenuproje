@@ -1,6 +1,11 @@
 import React from 'react';
-import {PageHeader, useResponsive} from '@/';
-import {CancelButton, DeleteButton, NewProductButton} from '@/';
+import PageHeader from '@/components/common/PageHeader';
+import {useResponsive} from '@/hooks/useResponsive';
+import {
+    CancelButton,
+    DeleteButton,
+    NewProductButton,
+} from '@/components/common/button/Buttons';
 
 const ProductHeader = ({
     isBulkDeleteMode,

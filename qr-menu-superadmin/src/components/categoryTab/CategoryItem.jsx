@@ -1,12 +1,10 @@
 import React, {useState} from 'react';
-import {
-    useResponsive,
-    CategoryListHeader,
-    CategoryItemOrder,
-    CategoryItemInfo,
-    CategoryItemActions,
-    CategoryForm,
-} from '@/';
+import {useResponsive} from '@/hooks/useResponsive';
+import CategoryListHeader from '@/components/categoryTab/categoryItem/CategoryListHeader';
+import CategoryItemOrder from '@/components/categoryTab/categoryItem/CategoryItemOrder';
+import CategoryItemInfo from '@/components/categoryTab/categoryItem/CategoryItemInfo';
+import CategoryItemActions from '@/components/categoryTab/categoryItem/CategoryItemActions';
+import CategoryForm from '@/components/categoryTab/CategoryForm';
 
 export const CategoryItem = ({
     category,

@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
-
-import {UploadImageButton, SectionHeader, Input} from '@/';
+import Input from '@/components/common/Input';
+import SectionHeader from '@/components/settingsTab/SectionHeader';
+import {UploadImageButton} from '@/components/common/button/Buttons';
 import {
     sectionCardStyle,
     smallLabelStyle,

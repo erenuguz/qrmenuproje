@@ -1,14 +1,12 @@
 import React, {useState, useMemo, useCallback} from 'react';
-import {
-    ProductHeader,
-    RestaurantSelector,
-    ProductFilters,
-    ProductList,
-    ProductForm,
-    useProductActions,
-    useCategories,
-    useSearch,
-} from '@/';
+import ProductHeader from '@/components/productTab/ProductHeader';
+import RestaurantSelector from '@/components/productTab/RestaurantSelector';
+import ProductFilters from '@/components/productTab/ProductFilters';
+import ProductList from '@/components/productTab/ProductList';
+import ProductForm from '@/components/productTab/ProductForm';
+import {useProductActions} from '@/hooks/useProductActions';
+import {useCategories} from '@/hooks/useCategories';
+import {useSearch} from '@/hooks/useSearch';
 
 const ProductTab = ({
     restaurantId,

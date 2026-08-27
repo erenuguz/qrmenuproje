@@ -1,5 +1,5 @@
 import React from 'react';
-import {useScroll} from '@/';
+import {useScroll} from '@/hooks/useScroll';
 import {ChevronUpIcon} from '@/components/common/icon/Icons';
 import {FloatingButton} from '@/components/common/button/Buttons';
 

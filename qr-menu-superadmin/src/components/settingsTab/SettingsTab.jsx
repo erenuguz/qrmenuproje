@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-    GeneralInfo,
-    CustomerWifi,
-    SocialMedia,
-    PageHeader,
-    useRestaurantSettings,
-} from '@/';
+import GeneralInfo from '@/components/settingsTab/GeneralInfo';
+import CustomerWifi from '@/components/settingsTab/CustomerWifi';
+import SocialMedia from '@/components/settingsTab/SocialMedia';
+import PageHeader from '@/components/common/PageHeader';
+import {useRestaurantSettings} from '@/hooks/useRestaurantSettings';
 
 const SettingsTab = ({restaurantId, restaurantData}) => {
     const {state, setters, handlers} = useRestaurantSettings(

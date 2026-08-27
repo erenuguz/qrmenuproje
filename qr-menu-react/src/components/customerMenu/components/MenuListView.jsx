@@ -1,5 +1,6 @@
 import React from 'react';
-import {MenuItemCard, CategoryBar} from '@/';
+import MenuItemCard from '@/components/customerMenu/components/MenuItemCard';
+import CategoryBar from '@/components/customerMenu/components/CategoryBar';
 
 const MenuListView = ({
     categories,

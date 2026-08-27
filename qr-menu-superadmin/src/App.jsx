@@ -1,14 +1,12 @@
 import React from 'react';
 import {auth} from '@/firebaseConfig';
-import {
-    Login,
-    AdminPanel,
-    SuperAdminPanel,
-    ScrollToTopButton,
-    LoadingSpinner,
-    useAuthUser,
-    cardStyle,
-} from '@/';
+import Login from '@/pages/Login';
+import AdminPanel from '@/pages/AdminPanel';
+import SuperAdminPanel from '@/pages/SuperAdminPanel';
+import ScrollToTopButton from '@/components/common/ScrollToTopButton';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import {useAuthUser} from '@/hooks/useAuthUser';
+import {cardStyle} from '@/styles/shared';
 import {AlertCircleIcon} from '@/components/common/icon/Icons';
 import {SignOutButton} from '@/components/common/button/Buttons';
 

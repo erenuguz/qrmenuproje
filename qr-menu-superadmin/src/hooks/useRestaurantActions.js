@@ -139,7 +139,7 @@ export const useRestaurantActions = () => {
 
             const {
                 status: _legacyStatus,
-                admin_email: _templateAdminEmail,
+                adminEmail: _templateAdminEmail,
                 userId: _templateUserId,
                 productCount: _templateProductCount,
                 categoryCount: _templateCategoryCount,
@@ -162,7 +162,7 @@ export const useRestaurantActions = () => {
             batch.set(newRestaurantReference, {
                 ...templateData,
                 name: cleanName,
-                admin_email: cleanEmail,
+                adminEmail: cleanEmail,
                 userId: createdUser.uid,
                 isInactive: false,
 

@@ -1,14 +1,12 @@
 import React from 'react';
-import {
-    LoadingSpinner,
-    EmptyState,
-    useMenu,
-    useCategories,
-    useCategoryScrollSpy,
-    useDraggable,
-    CategoryGrid,
-    MenuListView,
-} from '@/';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import EmptyState from '@/components/common/EmptyState';
+import CategoryGrid from '@/components/customerMenu/components/CategoryGrid';
+import MenuListView from '@/components/customerMenu/components/MenuListView';
+import {useMenu} from '@/hooks/useMenu';
+import {useCategories} from '@/hooks/useCategories';
+import {useCategoryScrollSpy} from '@/hooks/useCategoryScrollSpy';
+import {useDraggable} from '@/hooks/useDraggable';
 
 const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
     const {menu, loading: isMenuLoading} = useMenu(restaurantId);

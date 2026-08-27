@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {NavTabButton} from '@/';
+import {NavTabButton} from '@/components/common/button/Buttons';
 
 const SideBar = ({
     menuItems,

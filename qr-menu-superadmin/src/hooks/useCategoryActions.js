@@ -8,7 +8,7 @@ import {
     serverTimestamp,
 } from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
-import {useToast} from '@/';
+import {useToast} from '@/hooks/useToast';
 
 export const useCategoryActions = (restaurantId, categories, menu) => {
     const toast = useToast();

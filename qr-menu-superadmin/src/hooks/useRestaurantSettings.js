@@ -1,10 +1,46 @@
-import {useState, useEffect} from 'react';
-import {doc, updateDoc} from 'firebase/firestore';
+import {useEffect, useState} from 'react';
+import {doc, serverTimestamp, updateDoc} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
-import {uploadImageAndGetUrl, useToast} from '@/';
+import {uploadImageAndGetUrl} from '@/utils/helpers';
+import {useToast} from '@/hooks/useToast';
+
+const EDITABLE_FIELDS = new Set([
+    'name',
+    'logo',
+    'wifiNetworkName',
+    'wifiPassword',
+    'instagram',
+    'whatsapp',
+]);
+
+const FIELD_LABELS = {
+    name: 'Restoran adı',
+    logo: 'Logo',
+    wifiNetworkName: 'Wi-Fi ağ adı',
+    wifiPassword: 'Wi-Fi şifresi',
+    instagram: 'Instagram hesabı',
+    whatsapp: 'WhatsApp numarası',
+};
+
+const getSaveErrorMessage = (error, fieldLabel) => {
+    switch (error?.code) {
+        case 'permission-denied':
+            return `${fieldLabel} kaydedilemedi. Bu işlem için yetkiniz bulunmuyor.`;
+
+        case 'unavailable':
+            return `${fieldLabel} kaydedilemedi. İnternet bağlantınızı kontrol edin.`;
+
+        case 'not-found':
+            return 'Restoran kaydı bulunamadı.';
+
+        default:
+            return `${fieldLabel} kaydedilemedi. Lütfen tekrar deneyin.`;
+    }
+};
 
 export const useRestaurantSettings = (restaurantId, restaurantData) => {
     const toast = useToast();
+
     const [name, setName] = useState('');
     const [logo, setLogo] = useState('');
     const [wifiNetworkName, setWifiNetworkName] = useState('');
@@ -14,40 +50,116 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
     const [isLogoLoading, setIsLogoLoading] = useState(false);
 
     useEffect(() => {
-        if (restaurantData) {
-            setName(restaurantData.name || '');
-            setLogo(restaurantData.logo || '');
-            setWifiNetworkName(restaurantData.wifiNetworkName || '');
-            setWifiPassword(restaurantData.wifiPassword || '');
-            setInstagram(restaurantData.instagram || '');
-            setWhatsapp(restaurantData.whatsapp || '');
-        }
+        if (!restaurantData) return;
+
+        setName(restaurantData.name ?? '');
+        setLogo(restaurantData.logo ?? '');
+        setWifiNetworkName(restaurantData.wifiNetworkName ?? '');
+        setWifiPassword(restaurantData.wifiPassword ?? '');
+        setInstagram(restaurantData.instagram ?? '');
+        setWhatsapp(restaurantData.whatsapp ?? '');
     }, [restaurantData]);
 
+    const setLocalFieldValue = (fieldName, value) => {
+        const setters = {
+            name: setName,
+            logo: setLogo,
+            wifiNetworkName: setWifiNetworkName,
+            wifiPassword: setWifiPassword,
+            instagram: setInstagram,
+            whatsapp: setWhatsapp,
+        };
+
+        setters[fieldName]?.(value);
+    };
+
     const updateField = async (fieldName, newValue) => {
-        if (restaurantData && restaurantData[fieldName] === newValue) return;
+        if (!restaurantId) {
+            toast.error(
+                'Restoran bilgisi bulunamadığı için ayar kaydedilemedi.'
+            );
+            return false;
+        }
+
+        if (!EDITABLE_FIELDS.has(fieldName)) {
+            toast.error('Geçersiz ayar alanı.');
+            return false;
+        }
+
+        const previousValue = restaurantData?.[fieldName] ?? '';
+
+        const normalizedValue =
+            fieldName === 'name'
+                ? String(newValue ?? '').trim()
+                : (newValue ?? '');
+
+        if (fieldName === 'name' && !normalizedValue) {
+            setName(previousValue);
+            toast.error('Restoran adı boş bırakılamaz.');
+            return false;
+        }
+
+        if (previousValue === normalizedValue) {
+            setLocalFieldValue(fieldName, normalizedValue);
+            return true;
+        }
+
         try {
             await updateDoc(doc(db, 'restaurants', restaurantId), {
-                [fieldName]: newValue,
+                [fieldName]: normalizedValue,
+                updatedAt: serverTimestamp(),
             });
-            console.log(`${fieldName} başarıyla güncellendi!`);
+
+            setLocalFieldValue(fieldName, normalizedValue);
+            return true;
         } catch (error) {
-            console.error('Güncelleme hatası:', error);
+            console.error(`${fieldName} güncelleme hatası:`, error);
+
+            // Başarısız kaydı ekranda başarılıymış gibi bırakma.
+            setLocalFieldValue(fieldName, previousValue);
+
+            toast.error(
+                getSaveErrorMessage(error, FIELD_LABELS[fieldName] ?? 'Ayar')
+            );
+
+            return false;
         }
     };
 
-    const handleLogoFileSelect = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
+    const handleLogoFileSelect = async (event) => {
+        const file = event.target.files?.[0];
+
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            toast.error('Lütfen geçerli bir görsel dosyası seçin.');
+            event.target.value = '';
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error('Logo en fazla 2 MB olabilir.');
+            event.target.value = '';
+            return;
+        }
+
+        try {
             setIsLogoLoading(true);
+
             const url = await uploadImageAndGetUrl(file, () => {});
-            if (url) {
-                setLogo(url);
-                await updateField('logo', url);
-            } else {
-                toast.error('Logo yüklenirken hata oluştu.');
+
+            if (!url) {
+                toast.error('Logo yüklenemedi. Lütfen tekrar deneyin.');
+                return;
             }
+
+            await updateField('logo', url);
+        } catch (error) {
+            console.error('Logo yükleme hatası:', error);
+            toast.error('Logo yüklenirken beklenmeyen bir hata oluştu.');
+        } finally {
             setIsLogoLoading(false);
+            event.target.value = '';
         }
     };
 
@@ -61,6 +173,7 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
             whatsapp,
             isLogoLoading,
         },
+
         setters: {
             setName,
             setLogo,
@@ -69,6 +182,10 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
             setInstagram,
             setWhatsapp,
         },
-        handlers: {updateField, handleLogoFileSelect},
+
+        handlers: {
+            updateField,
+            handleLogoFileSelect,
+        },
     };
 };

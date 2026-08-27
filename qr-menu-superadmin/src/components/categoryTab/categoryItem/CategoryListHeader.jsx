@@ -1,5 +1,5 @@
 import React from 'react';
-import {Badge} from '@/';
+import Badge from '@/components/common/Badge';
 import {TagIcon} from '@/components/common/icon/Icons';
 
 export const CategoryListHeader = ({

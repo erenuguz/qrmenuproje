@@ -1,16 +1,14 @@
 import React from 'react';
-import {
-    ProductTab,
-    CategoryTab,
-    SettingsTab,
-    Header,
-    SideBar,
-    useResponsive,
-    useRestaurantDoc,
-    useMenu,
-    useAdminShell,
-    adminMenuItems,
-} from '@/';
+import ProductTab from '@/components/productTab/ProductTab';
+import CategoryTab from '@/components/categoryTab/CategoryTab';
+import SettingsTab from '@/components/settingsTab/SettingsTab';
+import Header from '@/components/layout/Header';
+import SideBar from '@/components/layout/SideBar';
+import {useResponsive} from '@/hooks/useResponsive';
+import {useRestaurantDoc} from '@/hooks/useRestaurantDoc';
+import {useMenu} from '@/hooks/useMenu';
+import {useAdminShell} from '@/hooks/useAdminShell';
+import {adminMenuItems} from '@/constants/menuItems';
 
 const AdminPanel = ({restaurantId}) => {
     const {menu, loading: menuLoading} = useMenu(restaurantId);

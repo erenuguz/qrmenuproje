@@ -1,6 +1,7 @@
 import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
-import {StatCard, PageHeader} from '@/';
+import StatCard from '@/components/common/StatCard';
+import PageHeader from '@/components/common/PageHeader';
 import {FolderIcon, PackageIcon} from '@/components/common/icon/Icons';
 import {iconContainerStyle} from '@/styles/shared';
 

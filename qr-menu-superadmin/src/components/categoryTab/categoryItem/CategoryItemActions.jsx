@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react';
-import {useToast, uploadImageAndGetUrl} from '@/';
+import {useToast} from '@/hooks/useToast';
+import {uploadImageAndGetUrl} from '@/utils/helpers';
 import {
     UploadImageButton,
     EditButton,

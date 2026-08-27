@@ -1,5 +1,5 @@
 import React from 'react';
-import {DeleteButton} from '@/';
+import {DeleteButton} from '@/components/common/button/Buttons';
 import {MailIcon, TrashIcon} from '@/components/common/icon/Icons';
 import {useResponsive} from '@/hooks/useResponsive';
 
@@ -115,7 +115,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                     >
                         <div style={textStyles.email}>
                             <MailIcon size={14} />
-                            {res.admin_email}
+                            {res.adminEmail}
                         </div>
 
                         <div
@@ -180,7 +180,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
             <td style={cellStyle}>
                 <div style={textStyles.email}>
                     <MailIcon size={14} />
-                    {res.admin_email}
+                    {res.adminEmail}
                 </div>
             </td>
             <td style={cellStyle}>{statusBadge}</td>

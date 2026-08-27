@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
-import {
-    CategoryHeader,
-    CategoryAdd,
-    CategoryItem,
-    useCategoryActions,
-    useCategories,
-    cardStyle,
-} from '@/';
-import {EmptyState} from '@/components/common/EmptyState';
+import CategoryHeader from '@/components/categoryTab/CategoryHeader';
+import CategoryAdd from '@/components/categoryTab/CategoryAdd';
+import CategoryItem from '@/components/categoryTab/CategoryItem';
+import EmptyState from '@/components/common/EmptyState';
+import {useCategoryActions} from '@/hooks/useCategoryActions';
+import {useCategories} from '@/hooks/useCategories';
+import {cardStyle} from '@/styles/shared';
 
 const CategoryTab = ({restaurantId, menu}) => {
     const [newCategoryName, setNewCategoryName] = useState('');
