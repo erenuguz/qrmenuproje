@@ -197,11 +197,53 @@ categoryCount;
 
 Yeni restoran oluşturulurken sayaçlar template içeriğine göre oluşturulur.
 
-Ürün ve kategori ekleme/silme işlemlerinde sayaçlar atomik olarak güncellenmelidir.
+Ürün ve kategori ekleme/silme işlemlerinde sayaçlar atomik olarak güncellenir.
 
-Sayaçlar sıfırın altına düşmemelidir. Olmayan bir belgeyi silme girişimi sayacı değiştirmemelidir.
+Sayaçlar sıfırın altına düşmez. Olmayan bir belgeyi silme girişimi sayacı değiştirmez.
 
 Eski restoran belgelerinde bu alanlar bulunmayabilir. Sayaç sistemi esas olarak yeni oluşturulan restoranlar için uygulanmaktadır.
+
+Sayaçların güncellenmesi mümkün olduğunca ilgili Firestore veri değişikliğiyle aynı transaction içerisinde gerçekleştirilir. Böylece belge silinip sayacın güncellenmemesi veya sayacın değişip belgenin silinememesi gibi tutarsız durumların önüne geçilir.
+
+## Toplu ürün silme
+
+Birden fazla ürün aynı anda seçilerek toplu olarak silinebilir.
+
+Toplu ürün silme işlemi Firestore `runTransaction` kullanılarak gerçekleştirilir.
+
+İşlem sırasında:
+
+1. Kullanıcının seçtiği ürünlerin document referansları hazırlanır.
+2. Transaction içerisinde seçilen bütün ürünler okunur.
+3. Restoran belgesi ve mevcut `productCount` değeri okunur.
+4. Seçilen ürünlerden Firestore’da gerçekten var olanlar belirlenir.
+5. Yalnızca mevcut ürünler silinir.
+6. `productCount`, gerçekten silinen ürün sayısı kadar azaltılır.
+7. Restoranın `updatedAt` alanı güncellenir.
+8. Bütün işlemler transaction kapsamında atomik olarak tamamlanır.
+
+Örneğin 5 ürün seçilmiş ancak bunlardan yalnızca 3 tanesi Firestore’da mevcutsa:
+
+```text
+Seçilen ürün: 5
+Gerçekten bulunan ürün: 3
+Silinen ürün: 3
+productCount değişimi: -3
+```
+
+Bu nedenle sayaç doğrudan seçilen ürün sayısına göre değil, gerçekten bulunan ve silinen ürünlerin sayısına göre güncellenir.
+
+Sayaç güncellenirken:
+
+```js
+Math.max(0, currentProductCount - existingProducts.length);
+```
+
+mantığı kullanıldığı için `productCount` hiçbir zaman sıfırın altına düşmez.
+
+Seçilen ürünlerin hiçbiri artık Firestore’da bulunmuyorsa herhangi bir ürün silinmez ve `productCount` değiştirilmez. Kullanıcıya seçilen ürünlerin zaten silinmiş olduğu bilgisi gösterilir.
+
+Başarılı toplu silme işleminden sonra kullanıcıya gerçekten silinen ürün sayısı gösterilir.
 
 ## Restoran silme
 
@@ -265,6 +307,24 @@ Tema değerleri ve tasarım tokenları `styles` altında yönetilir.
 
 Firebase veri işlemleri mümkün olduğunca ilgili hook’larda tutulur.
 
+## Ortak form ve UI bileşenleri
+
+Tekrar eden arayüz ve form yapıları ortak componentlere taşınmaktadır.
+
+Bu kapsamda Input, Select ve TextArea gibi form elemanları ortak tasarım ve davranış kullanacak şekilde düzenlenmiştir.
+
+`TextArea` componenti:
+
+- Otomatik `id` oluşturabilir.
+- `label` ile textarea arasında `htmlFor` bağlantısı kurar.
+- Focus durumunu yönetir.
+- Focus olduğunda tema içerisindeki primary border rengini kullanır.
+- Ortak `inputStyle` stilini kullanır.
+- `rows` ve `resize` değerlerinin dışarıdan değiştirilmesini destekler.
+- `style`, `labelStyle` ve `containerStyle` ile özelleştirilebilir.
+
+Ortak UI yapısının amacı farklı ekranlarda aynı işlevi yapan componentlerin farklı stiller ve davranışlar kullanmasını engellemektir.
+
 ## Kod kontrolü
 
 Lint çalıştırmak için:
@@ -311,5 +371,9 @@ npm run build
 - `WelcomeScreen`, müşteri projesine özel ve ayrı kapsamda tutulmaktadır.
 - Cloud Functions kullanılmamaktadır.
 - `isActive` yerine `isInactive` kullanılır.
+- Ürün ve kategori sayaçları ilgili veri değişiklikleriyle tutarlı tutulmalıdır.
+- Toplu ürün silmede sayaç seçilen ürün sayısına göre değil, gerçekten silinen ürün sayısına göre azaltılır.
+- Sayaçların sıfırın altına düşmesine izin verilmez.
+- Firestore transaction işlemlerinde okumalar yazma işlemlerinden önce gerçekleştirilir.
 - Görsel URL’leri Firestore’da tutulur; büyük base64 verileri saklanmamalıdır.
 - `VITE_IMGBB_API_KEY` gerçek bir backend sırrı değildir ve istemci bundle’ında görülebilir.
