@@ -2,43 +2,65 @@ import {useEffect, useState} from 'react';
 import {collection, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
+const INITIAL_STATE = {
+    restaurantId: null,
+    menu: [],
+    error: null,
+};
+
 export const useMenu = (restaurantId) => {
-    const [menu, setMenu] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [snapshotState, setSnapshotState] = useState(INITIAL_STATE);
 
     useEffect(() => {
-        setMenu([]);
-        setError(null);
-
         if (!restaurantId) {
-            setLoading(false);
-            return;
+            return undefined;
         }
 
-        setLoading(true);
+        const menuReference = collection(
+            db,
+            'restaurants',
+            restaurantId,
+            'menu'
+        );
 
         const unsubscribe = onSnapshot(
-            collection(db, 'restaurants', restaurantId, 'menu'),
+            menuReference,
+
             (snapshot) => {
-                setMenu(
-                    snapshot.docs.map((document) => ({
-                        id: document.id,
-                        ...document.data(),
-                    }))
-                );
-                setLoading(false);
+                const menu = snapshot.docs.map((document) => ({
+                    id: document.id,
+                    ...document.data(),
+                }));
+
+                setSnapshotState({
+                    restaurantId,
+                    menu,
+                    error: null,
+                });
             },
+
             (snapshotError) => {
                 console.error('Menü alınamadı:', snapshotError);
-                setMenu([]);
-                setError(snapshotError);
-                setLoading(false);
+
+                setSnapshotState({
+                    restaurantId,
+                    menu: [],
+                    error: snapshotError,
+                });
             }
         );
 
         return unsubscribe;
     }, [restaurantId]);
 
-    return {menu, loading, error};
+    const belongsToCurrentRestaurant =
+        snapshotState.restaurantId === restaurantId;
+
+    return {
+        menu: belongsToCurrentRestaurant ? snapshotState.menu : [],
+
+        loading: Boolean(restaurantId) && !belongsToCurrentRestaurant,
+
+        error: belongsToCurrentRestaurant ? snapshotState.error : null,
+    };
 };

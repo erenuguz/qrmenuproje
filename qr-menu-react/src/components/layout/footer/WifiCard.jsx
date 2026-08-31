@@ -1,4 +1,3 @@
-import React from 'react';
 import {WifiIcon} from '@/components/common/icon/Icons';
 import {iconContainerStyle} from '@/styles/shared';
 import {CopyButton} from '@/components/common/button/Buttons';

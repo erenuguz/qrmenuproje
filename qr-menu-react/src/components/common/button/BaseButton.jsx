@@ -1,5 +1,3 @@
-import React, {useState} from 'react';
-
 const BUTTON_VARIANTS = {
     default: {
         bgColor: 'transparent',
@@ -45,6 +43,7 @@ const BUTTON_VARIANTS = {
         borderColor: 'var(--danger)',
         hoverBgColor: 'var(--danger)',
         hoverTextColor: 'var(--textWhite)',
+        hoverBorderColor: 'var(--danger)',
     },
 };
 
@@ -72,20 +71,18 @@ const BaseButton = ({
     loadingText = 'Yükleniyor...',
     icon = null,
 
-    onPointerEnter,
-    onPointerLeave,
-    onPointerCancel,
-
+    className = '',
     style = {},
     ...props
 }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
     const isActionDisabled = disabled || isLoading;
+
     const variantStyle = BUTTON_VARIANTS[variant] || BUTTON_VARIANTS.default;
 
     const resolvedBgColor = bgColor ?? variantStyle.bgColor;
+
     const resolvedTextColor = textColor ?? variantStyle.textColor;
+
     const resolvedBorderColor = borderColor ?? variantStyle.borderColor;
 
     const resolvedHoverBgColor =
@@ -99,58 +96,22 @@ const BaseButton = ({
         variantStyle.hoverBorderColor ??
         resolvedBorderColor;
 
-    const shouldShowHover = isHovered && !isActionDisabled;
-
-    const currentBorderColor = shouldShowHover
-        ? resolvedHoverBorderColor
-        : resolvedBorderColor;
-
-    const handlePointerEnter = (event) => {
-        if (event.pointerType === 'mouse' && !isActionDisabled) {
-            setIsHovered(true);
-        }
-
-        onPointerEnter?.(event);
-    };
-
-    const handlePointerLeave = (event) => {
-        setIsHovered(false);
-        onPointerLeave?.(event);
-    };
-
-    const handlePointerCancel = (event) => {
-        setIsHovered(false);
-        onPointerCancel?.(event);
-    };
-
     return (
         <button
             type={type}
             onClick={onClick}
             disabled={isActionDisabled}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
-            onPointerCancel={handlePointerCancel}
+            aria-busy={isLoading || undefined}
+            className={`ui-button ${className}`.trim()}
             style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
+                '--ui-button-bg': resolvedBgColor,
+                '--ui-button-color': resolvedTextColor,
+                '--ui-button-border': resolvedBorderColor,
+                '--ui-button-hover-bg': resolvedHoverBgColor,
+                '--ui-button-hover-color': resolvedHoverTextColor,
+                '--ui-button-hover-border': resolvedHoverBorderColor,
+
                 padding,
-
-                backgroundColor: shouldShowHover
-                    ? resolvedHoverBgColor
-                    : resolvedBgColor,
-
-                color: shouldShowHover
-                    ? resolvedHoverTextColor
-                    : resolvedTextColor,
-
-                border:
-                    currentBorderColor === 'transparent'
-                        ? 'none'
-                        : `1px solid ${currentBorderColor}`,
-
                 borderRadius,
                 fontWeight,
                 fontSize,
@@ -161,11 +122,6 @@ const BaseButton = ({
                         : 'not-allowed'
                     : 'pointer',
 
-                opacity: isActionDisabled ? 0.6 : 1,
-
-                transition:
-                    'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease',
-
                 ...style,
             }}
             {...props}
@@ -175,7 +131,13 @@ const BaseButton = ({
             ) : (
                 <>
                     {icon && (
-                        <span style={{display: 'inline-flex'}}>{icon}</span>
+                        <span
+                            style={{
+                                display: 'inline-flex',
+                            }}
+                        >
+                            {icon}
+                        </span>
                     )}
 
                     {children}

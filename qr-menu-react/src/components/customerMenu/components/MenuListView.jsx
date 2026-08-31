@@ -1,10 +1,9 @@
-import React from 'react';
 import MenuItemCard from '@/components/customerMenu/components/MenuItemCard';
 import CategoryBar from '@/components/customerMenu/components/CategoryBar';
 
 const MenuListView = ({
     categories,
-    menu,
+    productsByCategory,
     activeCategory,
     scrollToCategory,
     navRef,
@@ -33,9 +32,8 @@ const MenuListView = ({
                 }}
             >
                 {categories.map((category) => {
-                    const categoryItems = menu.filter(
-                        (item) => item.categoryId === category.id
-                    );
+                    const categoryItems =
+                        productsByCategory.get(category.id) ?? [];
                     if (categoryItems.length === 0) return null;
 
                     return (

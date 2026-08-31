@@ -1,4 +1,3 @@
-import React from 'react';
 import {BackButton} from '@/components/common/button/Buttons';
 
 const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
@@ -16,7 +15,7 @@ const Header = ({activeCategory, onBack, restaurantName, restaurantLogo}) => {
                 borderBottom: '1px solid var(--border)',
                 position: 'sticky',
                 top: 0,
-                zIndex: 1000,
+                zIndex: 'var(--z-header)',
                 fontFamily: 'var(--font-family)',
             }}
         >

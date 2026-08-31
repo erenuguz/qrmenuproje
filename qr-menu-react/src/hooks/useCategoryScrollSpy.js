@@ -1,74 +1,156 @@
-import {useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
+
+const SCROLL_OFFSET = 60;
+const CATEGORY_ID_PREFIX = 'category-';
 
 export const useCategoryScrollSpy = (
     categories,
     activeCategory,
     setActiveCategory
 ) => {
-    const isClickScrolling = useRef(false);
+    const activeCategoryRef = useRef(activeCategory);
+    const scrollFrameRef = useRef(null);
 
-    // Ekran kaydırıldıkça hangi kategorinin ekranda olduğunu bulma
+    const isMenuListVisible = activeCategory !== null;
+
     useEffect(() => {
-        const handleScroll = () => {
-            if (activeCategory === null || isClickScrolling.current) return;
-
-            const scrollPosition = window.scrollY + 80;
-            let currentCategoryId = null;
-
-            for (const category of categories) {
-                const element = document.getElementById(
-                    `category-${category.id}`
-                );
-                if (element && element.offsetTop <= scrollPosition) {
-                    currentCategoryId = category.id;
-                }
-            }
-            if (currentCategoryId && currentCategoryId !== activeCategory) {
-                setActiveCategory(currentCategoryId);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [categories, activeCategory, setActiveCategory]);
-
-    // Aktif kategori değiştiğinde üst menüdeki butonu ortalayarak gösterme
-    useEffect(() => {
-        if (activeCategory) {
-            const activeButton = document.getElementById(
-                `btn-${activeCategory}`
-            );
-            if (activeButton) {
-                activeButton.scrollIntoView({
-                    behavior: 'smooth',
-                    inline: 'center',
-                    block: 'nearest',
-                });
-            }
-        }
+        activeCategoryRef.current = activeCategory;
     }, [activeCategory]);
 
-    // Kullanıcı menüden bir kategoriye tıkladığında oraya kaydırma
-    const scrollToCategory = (categoryId) => {
-        isClickScrolling.current = true;
-        setActiveCategory(categoryId);
+    useEffect(() => {
+        if (!isMenuListVisible || categories.length === 0) {
+            return;
+        }
 
-        setTimeout(() => {
-            const element = document.getElementById(`category-${categoryId}`);
-            if (element) {
-                const y =
-                    element.getBoundingClientRect().top + window.scrollY - 60;
-                window.scrollTo({top: y, behavior: 'smooth'});
+        const categoryElements = categories
+            .map((category) =>
+                document.getElementById(`${CATEGORY_ID_PREFIX}${category.id}`)
+            )
+            .filter(Boolean);
 
-                // Kaydırma animasyonunun bitmesini bekle
-                setTimeout(() => {
-                    isClickScrolling.current = false;
-                }, 800);
-            } else {
-                isClickScrolling.current = false;
+        if (categoryElements.length === 0) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visibleEntries = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort(
+                        (firstEntry, secondEntry) =>
+                            Math.abs(
+                                firstEntry.boundingClientRect.top -
+                                    SCROLL_OFFSET
+                            ) -
+                            Math.abs(
+                                secondEntry.boundingClientRect.top -
+                                    SCROLL_OFFSET
+                            )
+                    );
+
+                const closestEntry = visibleEntries[0];
+
+                if (!closestEntry) {
+                    return;
+                }
+
+                const categoryId = closestEntry.target.id.slice(
+                    CATEGORY_ID_PREFIX.length
+                );
+
+                if (categoryId && categoryId !== activeCategoryRef.current) {
+                    activeCategoryRef.current = categoryId;
+                    setActiveCategory(categoryId);
+                }
+            },
+            {
+                root: null,
+                rootMargin: `-${SCROLL_OFFSET}px 0px -65% 0px`,
+                threshold: [0, 0.1, 0.5],
             }
-        }, 100);
-    };
+        );
+
+        categoryElements.forEach((element) => {
+            observer.observe(element);
+        });
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [categories, isMenuListVisible, setActiveCategory]);
+
+    useEffect(() => {
+        if (!activeCategory) {
+            return;
+        }
+
+        const activeButton = document.getElementById(`btn-${activeCategory}`);
+
+        activeButton?.scrollIntoView({
+            behavior: 'smooth',
+            inline: 'center',
+            block: 'nearest',
+        });
+    }, [activeCategory]);
+
+    const scrollToCategory = useCallback(
+        (categoryId) => {
+            activeCategoryRef.current = categoryId;
+            setActiveCategory(categoryId);
+
+            if (scrollFrameRef.current !== null) {
+                cancelAnimationFrame(scrollFrameRef.current);
+            }
+
+            const findAndScroll = (remainingAttempts) => {
+                const element = document.getElementById(
+                    `${CATEGORY_ID_PREFIX}${categoryId}`
+                );
+
+                if (element) {
+                    const targetPosition =
+                        element.getBoundingClientRect().top +
+                        window.scrollY -
+                        SCROLL_OFFSET;
+
+                    const prefersReducedMotion = window.matchMedia(
+                        '(prefers-reduced-motion: reduce)'
+                    ).matches;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+                    });
+
+                    scrollFrameRef.current = null;
+                    return;
+                }
+
+                if (remainingAttempts > 0) {
+                    scrollFrameRef.current = requestAnimationFrame(() => {
+                        findAndScroll(remainingAttempts - 1);
+                    });
+
+                    return;
+                }
+
+                scrollFrameRef.current = null;
+            };
+
+            scrollFrameRef.current = requestAnimationFrame(() => {
+                findAndScroll(2);
+            });
+        },
+        [setActiveCategory]
+    );
+
+    useEffect(() => {
+        return () => {
+            if (scrollFrameRef.current !== null) {
+                cancelAnimationFrame(scrollFrameRef.current);
+            }
+        };
+    }, []);
 
     return {scrollToCategory};
 };

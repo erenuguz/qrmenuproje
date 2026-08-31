@@ -1,4 +1,3 @@
-import React from 'react';
 import {PillButton} from '@/components/common/button/Buttons';
 
 const CategoryBar = ({
@@ -18,7 +17,7 @@ const CategoryBar = ({
                 display: 'flex',
                 overflowX: 'auto',
                 padding: '12px 20px',
-                gap: '9px',
+                gap: 'var(--space-8)',
                 backgroundColor:
                     'color-mix(in srgb, var(--surface) 90%, transparent)',
                 backdropFilter: 'blur(14px)',
@@ -26,7 +25,7 @@ const CategoryBar = ({
                 borderBottom: '1px solid var(--border)',
                 position: 'sticky',
                 top: '65px',
-                zIndex: 990,
+                zIndex: 'var(--z-sticky)',
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
                 cursor: isDragging ? 'grabbing' : 'grab',

@@ -1,5 +1,3 @@
-import React from 'react';
-
 const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
     return (
         <div
@@ -9,7 +7,7 @@ const LoadingSpinner = ({message = 'Yükleniyor...'}) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '200px',
-                gap: '16px',
+                gap: 'var(--space-16)',
                 fontFamily: 'var(--font-family)',
             }}
         >

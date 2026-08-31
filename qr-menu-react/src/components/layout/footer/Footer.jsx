@@ -1,4 +1,3 @@
-import React from 'react';
 import WifiCard from './WifiCard';
 import SocialLinks from './SocialLinks';
 

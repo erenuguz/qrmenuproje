@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 const CONTACT_EMAIL = 'erenn.uguz@gmail.com';
 const CONTACT_PHONE = '+90 541 534 01 87';

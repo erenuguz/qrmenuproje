@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import BaseButton from './BaseButton';
 import {
     ChevronLeftIcon,
@@ -153,7 +153,7 @@ export const FloatingButton = ({
                 position,
                 bottom,
                 right,
-                zIndex: 1000,
+                zIndex: 'var(--z-sticky)',
                 width: size,
                 height: size,
                 minWidth: size,

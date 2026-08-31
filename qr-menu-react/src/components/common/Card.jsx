@@ -1,44 +1,39 @@
-import React, {useState} from 'react';
 import {cardStyle} from '@/styles/shared';
 
 const Card = ({
     children,
     onClick,
     padding = '16px',
+    className = '',
     style = {},
-    hoverStyle = {},
     ...props
 }) => {
-    const [isActive, setIsActive] = useState(false);
-
     const isInteractive = typeof onClick === 'function';
     const Component = isInteractive ? 'button' : 'div';
+
+    const cardClassName = [
+        'ui-card',
+        isInteractive && 'ui-card--interactive',
+        className,
+    ]
+        .filter(Boolean)
+        .join(' ');
 
     return (
         <Component
             {...props}
             type={isInteractive ? 'button' : undefined}
             onClick={onClick}
-            onMouseEnter={() => isInteractive && setIsActive(true)}
-            onMouseLeave={() => isInteractive && setIsActive(false)}
-            onFocus={() => isInteractive && setIsActive(true)}
-            onBlur={() => isInteractive && setIsActive(false)}
+            className={cardClassName}
             style={{
                 ...cardStyle,
+                borderColor: 'var(--ui-card-border-color, var(--border))',
                 padding,
                 fontFamily: 'inherit',
                 color: 'inherit',
                 textAlign: 'inherit',
                 cursor: isInteractive ? 'pointer' : 'default',
-                transition: 'border-color 0.15s ease, transform 0.15s ease',
                 ...style,
-                ...(isInteractive && isActive
-                    ? {
-                          borderColor: 'var(--primary)',
-                          transform: 'translateY(-2px)',
-                          ...hoverStyle,
-                      }
-                    : {}),
             }}
         >
             {children}

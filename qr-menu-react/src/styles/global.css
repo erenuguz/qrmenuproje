@@ -31,3 +31,108 @@
         animation-duration: 1.6s;
     }
 }
+.ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-sizing: border-box;
+    appearance: none;
+    background-color: var(--ui-button-bg);
+    color: var(--ui-button-color);
+    border: 1px solid var(--ui-button-border);
+    opacity: 1;
+    transition:
+        background-color var(--motion-normal) ease,
+        color var(--motion-normal) ease,
+        border-color var(--motion-normal) ease,
+        transform var(--motion-fast) ease,
+        opacity var(--motion-normal) ease;
+}
+
+.ui-button:disabled {
+    opacity: 0.6;
+}
+
+.ui-button:focus-visible:not(:disabled) {
+    background-color: var(--ui-button-hover-bg);
+    color: var(--ui-button-hover-color);
+    border-color: var(--ui-button-hover-border);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ui-button:hover:not(:disabled) {
+        background-color: var(--ui-button-hover-bg);
+        color: var(--ui-button-hover-color);
+        border-color: var(--ui-button-hover-border);
+    }
+}
+.ui-card--interactive {
+    appearance: none;
+    transition:
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.ui-card--interactive:focus-visible {
+    --ui-card-border-color: var(--primary);
+
+    transform: translateY(-2px);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ui-card--interactive:hover {
+        --ui-card-border-color: var(--primary);
+
+        transform: translateY(-2px);
+    }
+}
+.social-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: var(--font-semibold);
+    font-size: var(--font-caption);
+    transition:
+        background-color var(--motion-normal) ease,
+        color var(--motion-normal) ease,
+        border-color var(--motion-normal) ease;
+}
+
+.social-link--instagram {
+    --social-link-color: var(--insta);
+    --social-link-bg: var(--instaBg);
+}
+
+.social-link--whatsapp {
+    --social-link-color: var(--whatsapp);
+    --social-link-bg: var(--whatsappBg);
+}
+
+.social-link:focus-visible {
+    color: var(--social-link-color);
+    background-color: var(--social-link-bg);
+    border-color: var(--social-link-color);
+    outline: 2px solid var(--social-link-color);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .social-link:hover {
+        color: var(--social-link-color);
+        background-color: var(--social-link-bg);
+        border-color: var(--social-link-color);
+    }
+}

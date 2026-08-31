@@ -1,5 +1,3 @@
-import React from 'react';
-
 const BaseIcon = ({
     size = 18,
     color = 'currentColor',

@@ -1,4 +1,3 @@
-import React from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import EmptyState from '@/components/common/EmptyState';
 import CategoryGrid from '@/components/customerMenu/components/CategoryGrid';
@@ -7,11 +6,21 @@ import {useMenu} from '@/hooks/useMenu';
 import {useCategories} from '@/hooks/useCategories';
 import {useCategoryScrollSpy} from '@/hooks/useCategoryScrollSpy';
 import {useDraggable} from '@/hooks/useDraggable';
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
+import {useMenuIndex} from '@/hooks/useMenuIndex';
 
 const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
-    const {menu, loading: isMenuLoading} = useMenu(restaurantId);
-    const {categories, loading: isCategoriesLoading} =
-        useCategories(restaurantId);
+    const {
+        menu,
+        loading: isMenuLoading,
+        error: menuError,
+    } = useMenu(restaurantId);
+
+    const {
+        categories,
+        loading: isCategoriesLoading,
+        error: categoriesError,
+    } = useCategories(restaurantId);
 
     const {scrollToCategory} = useCategoryScrollSpy(
         categories,
@@ -19,10 +28,22 @@ const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
         setActiveCategory
     );
     const {dragRef, isDragging, dragHandlers} = useDraggable();
-
     const loading = isMenuLoading || isCategoriesLoading;
+    const {productsByCategory} = useMenuIndex(menu);
 
     if (loading) return <LoadingSpinner message="Menü Yükleniyor..." />;
+
+    const snapshotError = menuError || categoriesError;
+
+    if (snapshotError) {
+        return (
+            <SnapshotErrorState
+                error={snapshotError}
+                resourceName="Menü"
+                minHeight="60vh"
+            />
+        );
+    }
 
     return (
         <div
@@ -42,13 +63,13 @@ const CustomerMenu = ({restaurantId, activeCategory, setActiveCategory}) => {
                 ) : activeCategory === null ? (
                     <CategoryGrid
                         categories={categories}
-                        menu={menu}
+                        productsByCategory={productsByCategory}
                         scrollToCategory={scrollToCategory}
                     />
                 ) : (
                     <MenuListView
                         categories={categories}
-                        menu={menu}
+                        productsByCategory={productsByCategory}
                         activeCategory={activeCategory}
                         scrollToCategory={scrollToCategory}
                         navRef={dragRef}

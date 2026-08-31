@@ -2,40 +2,61 @@ import {useEffect, useState} from 'react';
 import {doc, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
+const INITIAL_STATE = {
+    restaurantId: null,
+    restaurantData: null,
+    error: null,
+};
+
 export const useRestaurantDoc = (restaurantId) => {
-    const [restaurantData, setRestaurantData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [snapshotState, setSnapshotState] = useState(INITIAL_STATE);
 
     useEffect(() => {
-        setError(null);
-        setRestaurantData(null);
-
         if (!restaurantId) {
-            setLoading(false);
-            return;
+            return undefined;
         }
 
-        setLoading(true);
+        const restaurantReference = doc(db, 'restaurants', restaurantId);
 
         const unsubscribe = onSnapshot(
-            doc(db, 'restaurants', restaurantId),
+            restaurantReference,
+
             (documentSnapshot) => {
-                setRestaurantData(
-                    documentSnapshot.exists() ? documentSnapshot.data() : null
-                );
-                setLoading(false);
+                setSnapshotState({
+                    restaurantId,
+
+                    restaurantData: documentSnapshot.exists()
+                        ? documentSnapshot.data()
+                        : null,
+
+                    error: null,
+                });
             },
+
             (snapshotError) => {
                 console.error('Restoran verisi alınamadı:', snapshotError);
-                setRestaurantData(null);
-                setError(snapshotError);
-                setLoading(false);
+
+                setSnapshotState({
+                    restaurantId,
+                    restaurantData: null,
+                    error: snapshotError,
+                });
             }
         );
 
         return unsubscribe;
     }, [restaurantId]);
 
-    return {restaurantData, loading, error};
+    const belongsToCurrentRestaurant =
+        snapshotState.restaurantId === restaurantId;
+
+    return {
+        restaurantData: belongsToCurrentRestaurant
+            ? snapshotState.restaurantData
+            : null,
+
+        loading: Boolean(restaurantId) && !belongsToCurrentRestaurant,
+
+        error: belongsToCurrentRestaurant ? snapshotState.error : null,
+    };
 };

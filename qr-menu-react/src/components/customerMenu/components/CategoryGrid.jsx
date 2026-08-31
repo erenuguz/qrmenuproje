@@ -1,7 +1,6 @@
-import React from 'react';
 import Card from '@/components/common/Card';
 
-const CategoryGrid = ({categories, menu, scrollToCategory}) => {
+const CategoryGrid = ({categories, productsByCategory, scrollToCategory}) => {
     return (
         <div
             style={{
@@ -12,9 +11,7 @@ const CategoryGrid = ({categories, menu, scrollToCategory}) => {
             }}
         >
             {categories.map((category) => {
-                const categoryItems = menu.filter(
-                    (item) => item.categoryId === category.id
-                );
+                const categoryItems = productsByCategory.get(category.id) ?? [];
                 if (categoryItems.length === 0) return null;
 
                 return (
