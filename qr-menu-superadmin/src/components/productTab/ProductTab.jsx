@@ -10,7 +10,6 @@ import {useSearch} from '@/hooks/useSearch';
 import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import {useMenuIndex} from '@/hooks/useMenuIndex';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import EmptyState from '@/components/common/EmptyState';
 
 const PRODUCT_SEARCH_KEYS = ['name'];
 
@@ -100,18 +99,6 @@ const ProductTab = ({
 
     if (categoriesLoading) {
         return <LoadingSpinner message="Kategoriler yükleniyor..." />;
-    }
-
-    if (categoriesError) {
-        return (
-            <EmptyState
-                title="Kategoriler alınamadı"
-                description={
-                    categoriesError.message ||
-                    'Kategoriler alınırken bir hata oluştu.'
-                }
-            />
-        );
     }
 
     return (

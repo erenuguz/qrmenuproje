@@ -7,7 +7,7 @@ import {useSearch} from '@/hooks/useSearch';
 
 const RESTAURANT_SEARCH_KEYS = ['name', 'id', 'adminEmail'];
 
-const RestaurantManagementTab = ({restaurants = []}) => {
+const RestaurantTab = ({restaurants = []}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newId, setNewId] = useState('');
     const [newName, setNewName] = useState('');
@@ -38,14 +38,12 @@ const RestaurantManagementTab = ({restaurants = []}) => {
             <RestaurantHeader restaurants={restaurants} />
 
             <RestaurantTable
-                restaurants={restaurants}
                 onDelete={deleteRestaurant}
                 isProcessing={isProcessing}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 setIsModalOpen={setIsModalOpen}
                 filteredRestaurants={filteredRestaurants}
-                handleDelete={deleteRestaurant}
             />
 
             <RestaurantAddModal
@@ -64,4 +62,4 @@ const RestaurantManagementTab = ({restaurants = []}) => {
     );
 };
 
-export default RestaurantManagementTab;
+export default RestaurantTab;

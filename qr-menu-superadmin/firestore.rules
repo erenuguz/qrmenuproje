@@ -42,15 +42,13 @@ service cloud.firestore {
       return superAdminMi() || ownerWriteAllowed(restaurantId);
     }
 
+    // getAfter kullanılarak güncellenmiş validCategory fonksiyonu
     function validCategory(restaurantId) {
       let categoryId = request.resource.data.categoryId;
 
       return categoryId is string &&
              categoryId.size() > 0 &&
-             exists(
-               /databases/$(database)/documents/restaurants/$(restaurantId)/categories/$(categoryId)
-             ) &&
-             get(
+             getAfter(
                /databases/$(database)/documents/restaurants/$(restaurantId)/categories/$(categoryId)
              ).data.get("isDeleting", false) == false;
     }

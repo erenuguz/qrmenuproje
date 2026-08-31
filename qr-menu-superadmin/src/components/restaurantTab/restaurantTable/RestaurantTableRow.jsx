@@ -31,12 +31,12 @@ const textStyles = {
     },
 };
 
-const RestaurantTableRow = ({res, isLast, handleDelete}) => {
+const RestaurantTableRow = ({restaurant, isLast, onDelete, isProcessing}) => {
     const {isMobile} = useResponsive();
-    const isInactive = res.isInactive === true;
+    const isInactive = restaurant.isInactive === true;
 
-    const productCount = Number(res.productCount) || 0;
-    const categoryCount = Number(res.categoryCount) || 0;
+    const productCount = Number(restaurant.productCount) || 0;
+    const categoryCount = Number(restaurant.categoryCount) || 0;
 
     const badgeBg = isInactive ? 'var(--dangerBg)' : 'var(--successBg)';
     const badgeColor = isInactive ? 'var(--danger)' : 'var(--success)';
@@ -89,7 +89,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                         }}
                     >
                         <div>
-                            <div style={textStyles.name}>{res.name}</div>
+                            <div style={textStyles.name}>{restaurant.name}</div>
                             <div
                                 style={{
                                     display: 'flex',
@@ -98,7 +98,9 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                                 }}
                             >
                                 <span style={textStyles.idHash}>#</span>
-                                <span style={textStyles.id}>{res.id}</span>
+                                <span style={textStyles.id}>
+                                    {restaurant.id}
+                                </span>
                             </div>
                         </div>
                         {statusBadge}
@@ -114,7 +116,7 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                     >
                         <div style={textStyles.email}>
                             <MailIcon size={14} />
-                            {res.adminEmail}
+                            {restaurant.adminEmail}
                         </div>
 
                         <div
@@ -133,7 +135,11 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                                 {productCount} ürün · {categoryCount} kategori
                             </div>
                             <DeleteButton
-                                onClick={() => handleDelete(res.id, res.name)}
+                                onClick={() =>
+                                    onDelete(restaurant.id, restaurant.name)
+                                }
+                                disabled={isProcessing}
+                                aria-busy={isProcessing}
                                 title="Sil"
                                 bgColor="transparent"
                                 textColor="var(--textMuted)"
@@ -162,11 +168,11 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                     style={{display: 'flex', alignItems: 'center', gap: '4px'}}
                 >
                     <span style={textStyles.idHash}>#</span>
-                    <span style={textStyles.id}>{res.id}</span>
+                    <span style={textStyles.id}>{restaurant.id}</span>
                 </div>
             </td>
             <td style={cellStyle}>
-                <div style={textStyles.name}>{res.name}</div>
+                <div style={textStyles.name}>{restaurant.name}</div>
                 <div
                     style={{
                         fontSize: 'var(--font-small)',
@@ -179,15 +185,17 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
             <td style={cellStyle}>
                 <div style={textStyles.email}>
                     <MailIcon size={14} />
-                    {res.adminEmail}
+                    {restaurant.adminEmail}
                 </div>
             </td>
             <td style={cellStyle}>{statusBadge}</td>
             <td style={{...cellStyle, textAlign: 'right'}}>
                 <DeleteButton
-                    onClick={() => handleDelete(res.id, res.name)}
+                    onClick={() => onDelete(restaurant.id, restaurant.name)}
+                    disabled={isProcessing}
+                    aria-busy={isProcessing}
                     title="Sil"
-                    aria-label={`${res.name} restoranını sil`}
+                    aria-label={`${restaurant.name} restoranını sil`}
                     bgColor="transparent"
                     textColor="var(--textMuted)"
                     borderColor="transparent"
