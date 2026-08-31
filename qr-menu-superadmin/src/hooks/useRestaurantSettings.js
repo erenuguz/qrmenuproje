@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {doc, serverTimestamp, updateDoc} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {uploadImageAndGetUrl} from '@/utils/helpers';
@@ -39,6 +39,7 @@ const getSaveErrorMessage = (error, fieldLabel) => {
 };
 
 export const useRestaurantSettings = (restaurantId, restaurantData) => {
+    const initializedRestaurantIdRef = useRef(null);
     const toast = useToast();
 
     const [name, setName] = useState('');
@@ -50,7 +51,12 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
     const [isLogoLoading, setIsLogoLoading] = useState(false);
 
     useEffect(() => {
-        if (!restaurantData) return;
+        if (!restaurantId || !restaurantData) return;
+
+        const isAlreadyInitialized =
+            initializedRestaurantIdRef.current === restaurantId;
+
+        if (isAlreadyInitialized) return;
 
         setName(restaurantData.name ?? '');
         setLogo(restaurantData.logo ?? '');
@@ -58,7 +64,9 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
         setWifiPassword(restaurantData.wifiPassword ?? '');
         setInstagram(restaurantData.instagram ?? '');
         setWhatsapp(restaurantData.whatsapp ?? '');
-    }, [restaurantData]);
+
+        initializedRestaurantIdRef.current = restaurantId;
+    }, [restaurantId, restaurantData]);
 
     const setLocalFieldValue = (fieldName, value) => {
         const setters = {
@@ -156,7 +164,11 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
             await updateField('logo', url);
         } catch (error) {
             console.error('Logo yükleme hatası:', error);
-            toast.error('Logo yüklenirken beklenmeyen bir hata oluştu.');
+
+            toast.error(
+                error?.message ||
+                    'Logo yüklenirken beklenmeyen bir hata oluştu.'
+            );
         } finally {
             setIsLogoLoading(false);
             event.target.value = '';

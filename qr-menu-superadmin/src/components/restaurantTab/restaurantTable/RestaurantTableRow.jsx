@@ -1,4 +1,3 @@
-import React from 'react';
 import {DeleteButton} from '@/components/common/button/Buttons';
 import {MailIcon, TrashIcon} from '@/components/common/icon/Icons';
 import {useResponsive} from '@/hooks/useResponsive';
@@ -188,17 +187,15 @@ const RestaurantTableRow = ({res, isLast, handleDelete}) => {
                 <DeleteButton
                     onClick={() => handleDelete(res.id, res.name)}
                     title="Sil"
+                    aria-label={`${res.name} restoranını sil`}
                     bgColor="transparent"
                     textColor="var(--textMuted)"
                     borderColor="transparent"
+                    hoverBgColor="var(--dangerBg)"
+                    hoverTextColor="var(--danger)"
+                    hoverBorderColor="transparent"
                     padding="4px"
                     icon={<TrashIcon size={18} />}
-                    onMouseEnter={(e) =>
-                        (e.currentTarget.style.color = 'var(--danger)')
-                    }
-                    onMouseLeave={(e) =>
-                        (e.currentTarget.style.color = 'var(--textMuted)')
-                    }
                 />
             </td>
         </tr>

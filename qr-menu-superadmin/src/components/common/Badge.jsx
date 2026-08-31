@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Sayaç/etiket göstermek için kullanılan küçük rozet.
  * Kaynak: CategoryList ("X kategori"), ProductList kategori başlıkları

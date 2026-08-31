@@ -1,10 +1,12 @@
 import {useContext} from 'react';
-import {ToastContext} from '@/context/ToastContext';
+import {ToastContext} from '@/context/toast-context';
 
 export const useToast = () => {
-    const ctx = useContext(ToastContext);
-    if (!ctx) {
-        throw new Error('useToast, ToastProvider içinde kullanılmalı');
+    const context = useContext(ToastContext);
+
+    if (!context) {
+        throw new Error('useToast, ToastProvider içinde kullanılmalı.');
     }
-    return ctx.toast;
+
+    return context.toast;
 };

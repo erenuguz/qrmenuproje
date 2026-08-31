@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const CategoryItemInfo = ({name, image, productCount = 0}) => {
     return (
         <div
@@ -37,7 +35,7 @@ export const CategoryItemInfo = ({name, image, productCount = 0}) => {
                         }}
                     />
                 ) : (
-                    <span style={{fontSize: 'var(--icon-small)'}}>🍲</span>
+                    <span style={{fontSize: 'var(--iconSmall)'}}>🍲</span>
                 )}
             </div>
 

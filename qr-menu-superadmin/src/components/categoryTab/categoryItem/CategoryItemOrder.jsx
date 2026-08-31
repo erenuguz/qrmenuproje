@@ -1,4 +1,3 @@
-import React from 'react';
 import {MoveUpButton, MoveDownButton} from '@/components/common/button/Buttons';
 
 export const CategoryItemOrder = ({

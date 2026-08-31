@@ -1,4 +1,3 @@
-import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import {SearchIcon} from '@/components/common/icon/Icons';
 import Input from '@/components/common/Input';

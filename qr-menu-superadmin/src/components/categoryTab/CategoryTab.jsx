@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import CategoryHeader from '@/components/categoryTab/CategoryHeader';
 import CategoryAdd from '@/components/categoryTab/CategoryAdd';
 import CategoryItem from '@/components/categoryTab/CategoryItem';
@@ -6,14 +6,14 @@ import EmptyState from '@/components/common/EmptyState';
 import {useCategoryActions} from '@/hooks/useCategoryActions';
 import {useCategories} from '@/hooks/useCategories';
 import {cardStyle} from '@/styles/shared';
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
+import {useMenuIndex} from '@/hooks/useMenuIndex';
 
 const CategoryTab = ({restaurantId, menu}) => {
     const [newCategoryName, setNewCategoryName] = useState('');
+    const {categories, error: categoriesError} = useCategories(restaurantId);
+    const {productsByCategory} = useMenuIndex(menu);
 
-    // Veriyi Çek
-    const {categories} = useCategories(restaurantId);
-
-    // İşlemleri Çek
     const {
         addCategory,
         updateCategoryName,
@@ -21,15 +21,23 @@ const CategoryTab = ({restaurantId, menu}) => {
         updateImage,
         moveCategoryUp,
         moveCategoryDown,
-    } = useCategoryActions(restaurantId, categories, menu);
+    } = useCategoryActions(restaurantId, categories);
 
-    // Ekleme başarılı olursa input'u temizle
     const handleAddCategory = async () => {
         const success = await addCategory(newCategoryName);
         if (success) {
             setNewCategoryName('');
         }
     };
+
+    if (categoriesError) {
+        return (
+            <SnapshotErrorState
+                error={categoriesError}
+                resourceName="Kategoriler"
+            />
+        );
+    }
 
     return (
         <div>
@@ -51,10 +59,8 @@ const CategoryTab = ({restaurantId, menu}) => {
             >
                 {categories.length > 0 ? (
                     categories.map((category, index) => {
-                        // Her bir kategoriye ait ürün sayısını hesapla
-                        const productCount = menu.filter(
-                            (product) => product.categoryId === category.id
-                        ).length;
+                        const productCount =
+                            productsByCategory.get(category.id)?.length ?? 0;
 
                         return (
                             <CategoryItem

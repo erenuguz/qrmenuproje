@@ -1,4 +1,3 @@
-import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import {DeleteButton, EditButton} from '@/components/common/button/Buttons';
 

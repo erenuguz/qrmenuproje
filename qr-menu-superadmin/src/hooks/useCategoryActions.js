@@ -1,4 +1,9 @@
 import {
+    getDocs,
+    query,
+    where,
+    limit,
+    deleteField,
     collection,
     doc,
     updateDoc,
@@ -10,7 +15,7 @@ import {
 import {db} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
 
-export const useCategoryActions = (restaurantId, categories, menu) => {
+export const useCategoryActions = (restaurantId, categories) => {
     const toast = useToast();
 
     const addCategory = async (newName) => {
@@ -54,7 +59,7 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
                 name,
                 image: '',
                 order: newOrder,
-                isActive: true,
+                isInactive: false,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
             });
@@ -111,18 +116,6 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
     };
 
     const deleteCategory = async (id, name) => {
-        const productsInCategory = menu.filter(
-            (product) => product.categoryId === id
-        );
-
-        if (productsInCategory.length > 0) {
-            toast.error(
-                `"${name}" kategorisinde ${productsInCategory.length} adet ürün var. Önce ürünleri silin!`
-            );
-
-            return;
-        }
-
         const confirmed = window.confirm(
             `"${name}" kategorisini tamamen silmek istediğine emin misin?`
         );
@@ -139,7 +132,75 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
 
         const restaurantReference = doc(db, 'restaurants', restaurantId);
 
+        let categoryLocked = false;
+
         try {
+            const wasLocked = await runTransaction(db, async (transaction) => {
+                const categorySnapshot =
+                    await transaction.get(categoryReference);
+
+                if (!categorySnapshot.exists()) {
+                    return false;
+                }
+
+                transaction.update(categoryReference, {
+                    isDeleting: true,
+                    updatedAt: serverTimestamp(),
+                });
+
+                return true;
+            });
+
+            if (!wasLocked) {
+                toast.info('Kategori zaten silinmiş.');
+                return;
+            }
+
+            categoryLocked = true;
+
+            const menuReference = collection(
+                db,
+                'restaurants',
+                restaurantId,
+                'menu'
+            );
+
+            const [productsSnapshot, legacyProductsSnapshot] =
+                await Promise.all([
+                    getDocs(
+                        query(
+                            menuReference,
+                            where('categoryId', '==', id),
+                            limit(1)
+                        )
+                    ),
+                    getDocs(
+                        query(
+                            menuReference,
+                            where('kategoriId', '==', id),
+                            limit(1)
+                        )
+                    ),
+                ]);
+
+            const hasProducts =
+                !productsSnapshot.empty || !legacyProductsSnapshot.empty;
+
+            if (hasProducts) {
+                await updateDoc(categoryReference, {
+                    isDeleting: deleteField(),
+                    updatedAt: serverTimestamp(),
+                });
+
+                categoryLocked = false;
+
+                toast.error(
+                    `"${name}" kategorisinde ürün var. Önce ürünleri silin!`
+                );
+
+                return;
+            }
+
             const wasDeleted = await runTransaction(db, async (transaction) => {
                 const [categorySnapshot, restaurantSnapshot] =
                     await Promise.all([
@@ -147,13 +208,16 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
                         transaction.get(restaurantReference),
                     ]);
 
-                // Kategori daha önce silinmişse count tekrar azaltılmaz.
                 if (!categorySnapshot.exists()) {
                     return false;
                 }
 
                 if (!restaurantSnapshot.exists()) {
                     throw new Error('Restoran bulunamadı.');
+                }
+
+                if (categorySnapshot.data().isDeleting !== true) {
+                    throw new Error('Kategori silme kilidi bulunamadı.');
                 }
 
                 const currentCategoryCount = Number(
@@ -170,10 +234,19 @@ export const useCategoryActions = (restaurantId, categories, menu) => {
                 return true;
             });
 
+            categoryLocked = false;
+
             if (!wasDeleted) {
                 toast.info('Kategori zaten silinmiş.');
             }
         } catch (error) {
+            if (categoryLocked) {
+                await updateDoc(categoryReference, {
+                    isDeleting: deleteField(),
+                    updatedAt: serverTimestamp(),
+                }).catch(() => {});
+            }
+
             console.error('Kategori silinirken hata:', error);
             toast.error('Kategori silinemedi.');
         }

@@ -1,4 +1,4 @@
-import React, {useId, useRef} from 'react';
+import {useId, useRef} from 'react';
 import {uploadImageAndGetUrl} from '@/utils/helpers';
 import {useToast} from '@/hooks/useToast';
 import {
@@ -41,19 +41,18 @@ export default function ProductForm({
 
         if (!file) return;
 
-        const url = await uploadImageAndGetUrl(file, setIsImageLoading);
+        try {
+            const url = await uploadImageAndGetUrl(file, setIsImageLoading);
 
-        if (url) {
             setActiveForm((currentForm) => ({
                 ...currentForm,
                 image: url,
             }));
-        } else {
-            toast.error('Resim yüklenirken hata oluştu.');
+        } catch (error) {
+            toast.error(error?.message || 'Resim yüklenirken hata oluştu.');
+        } finally {
+            input.value = '';
         }
-
-        // Aynı dosyanın tekrar seçilebilmesini sağlar.
-        input.value = '';
     };
 
     return (
@@ -169,7 +168,7 @@ export default function ProductForm({
                             padding="0 16px"
                             borderRadius="var(--radiusLarge)"
                             style={{
-                                height: '45px',
+                                height: 'var(--control-height)',
                                 flexShrink: 0,
                             }}
                         >
@@ -180,7 +179,7 @@ export default function ProductForm({
                             ref={fileInputRef}
                             id={imageInputId}
                             type="file"
-                            accept="image/*"
+                            accept=".jpg,.jpeg,.png,.webp"
                             onChange={handleImageUpload}
                             style={{display: 'none'}}
                         />

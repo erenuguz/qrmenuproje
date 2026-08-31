@@ -1,4 +1,4 @@
-import React, {useId, useState} from 'react';
+import {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 import {ChevronDownIcon} from '@/components/common/icon/Icons';
 
@@ -68,7 +68,9 @@ export const Select = ({
                     }}
                     style={{
                         ...inputStyle,
-                        height: isMobile ? '42px' : '45px',
+                        height: isMobile
+                            ? 'var(--control-height-mobile)'
+                            : 'var(--control-height)',
                         padding: isMobile ? '0 38px 0 16px' : '0 48px 0 24px',
                         borderRadius: isMobile
                             ? 'var(--radiusSmall)'

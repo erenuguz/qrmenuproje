@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Tüm sekmelerde kullanılan sabit sayfa başlığı deseni.
  * Title + subtitle her yerde aynı stille render edilir, varyant yok.

@@ -1,4 +1,3 @@
-import React from 'react';
 import StatCard from '@/components/common/StatCard';
 import PageHeader from '@/components/common/PageHeader';
 import {useResponsive} from '@/hooks/useResponsive';

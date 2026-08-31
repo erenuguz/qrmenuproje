@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useCallback} from 'react';
+import {useState, useMemo, useCallback} from 'react';
 import ProductHeader from '@/components/productTab/ProductHeader';
 import RestaurantSelector from '@/components/productTab/RestaurantSelector';
 import ProductFilters from '@/components/productTab/ProductFilters';
@@ -7,6 +7,10 @@ import ProductForm from '@/components/productTab/ProductForm';
 import {useProductActions} from '@/hooks/useProductActions';
 import {useCategories} from '@/hooks/useCategories';
 import {useSearch} from '@/hooks/useSearch';
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
+import {useMenuIndex} from '@/hooks/useMenuIndex';
+
+const PRODUCT_SEARCH_KEYS = ['name'];
 
 const ProductTab = ({
     restaurantId,
@@ -22,7 +26,11 @@ const ProductTab = ({
 
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
 
-    const {categories} = useCategories(restaurantId);
+    const {categories, error: categoriesError} = useCategories(restaurantId);
+    const {productsByCategory, categoryNameById} = useMenuIndex(
+        menu,
+        categories
+    );
     const {deleteProduct, saveForm, bulkDeleteProducts, isProcessing} =
         useProductActions(restaurantId);
 
@@ -36,7 +44,9 @@ const ProductTab = ({
         searchQuery,
         setSearchQuery,
         filteredData: searchResults,
-    } = useSearch(menu, ['name'], {extraFilter: categoryFilter});
+    } = useSearch(menu, PRODUCT_SEARCH_KEYS, {
+        extraFilter: categoryFilter,
+    });
 
     // Formu Kaydetme Handleri
     const handleSaveForm = () => {
@@ -72,6 +82,15 @@ const ProductTab = ({
                   (category) => category.id === selectedCategoryFilter
               );
     }, [categories, selectedCategoryFilter]);
+
+    if (categoriesError) {
+        return (
+            <SnapshotErrorState
+                error={categoriesError}
+                resourceName="Ürün kategorileri"
+            />
+        );
+    }
 
     return (
         <div style={{backgroundColor: 'var(--background)'}}>
@@ -117,7 +136,8 @@ const ProductTab = ({
 
                     <ProductList
                         menu={menu}
-                        categories={categories}
+                        productsByCategory={productsByCategory}
+                        categoryNameById={categoryNameById}
                         searchQuery={searchQuery}
                         searchResults={searchResults}
                         displayedCategories={displayedCategories}

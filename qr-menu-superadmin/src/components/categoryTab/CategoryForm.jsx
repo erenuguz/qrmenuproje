@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {SaveButton, CancelButton} from '@/components/common/button/Buttons';
 import Input from '@/components/common/Input';
 

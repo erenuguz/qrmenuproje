@@ -1,4 +1,4 @@
-import React, {useId, useState} from 'react';
+import {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 
 export const Input = ({
@@ -103,7 +103,9 @@ export const Input = ({
                     }}
                     style={{
                         ...inputStyle,
-                        height: isMobile ? '42px' : '45px',
+                        height: isMobile
+                            ? 'var(--control-height-mobile)'
+                            : 'var(--control-height)',
                         paddingTop: 0,
                         paddingBottom: 0,
                         paddingRight: isMobile ? '16px' : '24px',

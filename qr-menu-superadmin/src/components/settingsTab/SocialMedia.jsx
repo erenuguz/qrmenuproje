@@ -1,4 +1,3 @@
-import React from 'react';
 import Input from '@/components/common/Input';
 import SectionHeader from '@/components/settingsTab/SectionHeader';
 import {

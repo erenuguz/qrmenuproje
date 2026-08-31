@@ -1,4 +1,3 @@
-import React from 'react';
 import RestaurantTableRow from '@/components/restaurantTab/restaurantTable/RestaurantTableRow';
 import EmptyState from '@/components/common/EmptyState';
 import RestaurantTableHeader from '@/components/restaurantTab/restaurantTable/RestaurantTableHeader';

@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {
     collection,
     doc,
-    updateDoc,
+    deleteDoc,
     getDoc,
     getDocs,
     writeBatch,
@@ -82,7 +82,7 @@ export const useRestaurantActions = () => {
 
         if (!confirmed) return;
 
-        let createdUser = null;
+        let createdUser;
 
         try {
             setIsProcessing(true);
@@ -127,6 +127,33 @@ export const useRestaurantActions = () => {
                 );
             }
 
+            const templateCategoryIds = new Set(
+                templateCategoriesSnapshot.docs.map(
+                    (categoryDocument) => categoryDocument.id
+                )
+            );
+
+            const invalidTemplateProduct = templateMenuSnapshot.docs.find(
+                (menuDocument) => {
+                    const menuData = menuDocument.data();
+
+                    const categoryId =
+                        menuData.categoryId || menuData.kategoriId || '';
+
+                    return !categoryId || !templateCategoryIds.has(categoryId);
+                }
+            );
+
+            if (invalidTemplateProduct) {
+                const productName =
+                    invalidTemplateProduct.data().name ||
+                    invalidTemplateProduct.id;
+
+                throw new Error(
+                    `"${productName}" isimli taslak ürün geçerli bir kategoriye bağlı değil. Restoran oluşturulmadı.`
+                );
+            }
+
             const temporaryPassword = createTemporaryPassword();
 
             const userCredential = await createUserWithEmailAndPassword(
@@ -137,16 +164,17 @@ export const useRestaurantActions = () => {
 
             createdUser = userCredential.user;
 
-            const {
-                status: _legacyStatus,
-                adminEmail: _templateAdminEmail,
-                userId: _templateUserId,
-                productCount: _templateProductCount,
-                categoryCount: _templateCategoryCount,
-                createdAt: _templateCreatedAt,
-                updatedAt: _templateUpdatedAt,
-                ...templateData
-            } = templateSnapshot.data();
+            const templateData = {
+                ...templateSnapshot.data(),
+            };
+
+            delete templateData.status;
+            delete templateData.adminEmail;
+            delete templateData.userId;
+            delete templateData.productCount;
+            delete templateData.categoryCount;
+            delete templateData.createdAt;
+            delete templateData.updatedAt;
 
             const batch = writeBatch(db);
             const categoryIdMap = {};
@@ -174,7 +202,7 @@ export const useRestaurantActions = () => {
             });
 
             templateCategoriesSnapshot.forEach((categoryDocument) => {
-                const oldCategory = categoryDocument.data();
+                const templateCategoryData = categoryDocument.data();
 
                 const newCategoryId = categoryIdMap[categoryDocument.id];
 
@@ -187,7 +215,8 @@ export const useRestaurantActions = () => {
                 );
 
                 batch.set(newCategoryReference, {
-                    ...oldCategory,
+                    ...templateCategoryData,
+                    isInactive: templateCategoryData.isInactive ?? false,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
                 });
@@ -196,18 +225,19 @@ export const useRestaurantActions = () => {
             templateMenuSnapshot.forEach((menuItemDocument) => {
                 const oldItem = menuItemDocument.data();
 
-                const {
-                    kategoriId: oldTurkishCategoryId,
-                    categoryId: oldEnglishCategoryId,
-                    createdAt: _oldCreatedAt,
-                    updatedAt: _oldUpdatedAt,
-                    ...menuItemData
-                } = oldItem;
-
                 const oldCategoryId =
-                    oldEnglishCategoryId || oldTurkishCategoryId || '';
+                    oldItem.categoryId || oldItem.kategoriId || '';
 
-                const newCategoryId = categoryIdMap[oldCategoryId] || '';
+                const menuItemData = {
+                    ...oldItem,
+                };
+
+                delete menuItemData.categoryId;
+                delete menuItemData.kategoriId;
+                delete menuItemData.createdAt;
+                delete menuItemData.updatedAt;
+
+                const newCategoryId = categoryIdMap[oldCategoryId];
 
                 const newMenuItemReference = doc(
                     collection(db, 'restaurants', cleanId, 'menu')
@@ -280,7 +310,7 @@ export const useRestaurantActions = () => {
         }
 
         const confirmed = window.confirm(
-            `DİKKAT: "${name}" tamamen silinecek! Onaylıyor musunuz?`
+            `DİKKAT: "${name}" ve bütün menü verileri tamamen silinecek! Onaylıyor musunuz?`
         );
 
         if (!confirmed) return;
@@ -288,25 +318,44 @@ export const useRestaurantActions = () => {
         try {
             setIsProcessing(true);
 
-            const restaurantRef = doc(db, 'restaurants', cleanId);
+            const restaurantReference = doc(db, 'restaurants', cleanId);
 
-            // Soft-delete işlemi: Belgeyi silmek yerine işaretliyoruz.
-            // Arka plandaki bir trigger (Cloud Function) bu durumu yakalayıp
-            // asıl temizliği yapacak.
-            await updateDoc(restaurantRef, {
-                deletionStatus: 'pending',
-                isInactive: true, // Frontend'de (App.jsx) hemen erişime kapatılır
-                deletedAt: serverTimestamp(),
-            });
+            const categoriesReference = collection(
+                db,
+                'restaurants',
+                cleanId,
+                'categories'
+            );
 
-            toast.success(`"${name}" silinme kuyruğuna eklendi.`);
+            const menuReference = collection(
+                db,
+                'restaurants',
+                cleanId,
+                'menu'
+            );
+
+            const [categoriesSnapshot, menuSnapshot] = await Promise.all([
+                getDocs(categoriesReference),
+                getDocs(menuReference),
+            ]);
+
+            // Alt koleksiyonlar önce silinir.
+            await deleteDocumentsInChunks([
+                ...categoriesSnapshot.docs,
+                ...menuSnapshot.docs,
+            ]);
+
+            // Ana restoran belgesi en son silinir.
+            await deleteDoc(restaurantReference);
+
+            toast.success(`"${name}" tamamen silindi.`);
         } catch (error) {
-            console.error('Restoran işaretleme hatası:', error);
+            console.error('Restoran silme hatası:', error);
 
             toast.error(
                 error?.message
                     ? `Silme hatası: ${error.message}`
-                    : 'Restoran silinmek üzere işaretlenemedi.'
+                    : 'Restoran silinemedi.'
             );
         } finally {
             setIsProcessing(false);

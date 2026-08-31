@@ -1,4 +1,4 @@
-import React from 'react';
+
 import GeneralInfo from '@/components/settingsTab/GeneralInfo';
 import CustomerWifi from '@/components/settingsTab/CustomerWifi';
 import SocialMedia from '@/components/settingsTab/SocialMedia';

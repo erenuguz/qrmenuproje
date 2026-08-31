@@ -1,4 +1,3 @@
-import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import Badge from '@/components/common/Badge';
 import {HomeIcon} from '@/components/common/icon/Icons';

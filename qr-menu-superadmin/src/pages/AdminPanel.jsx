@@ -1,7 +1,11 @@
-import React from 'react';
-import ProductTab from '@/components/productTab/ProductTab';
-import CategoryTab from '@/components/categoryTab/CategoryTab';
-import SettingsTab from '@/components/settingsTab/SettingsTab';
+import {lazy, Suspense} from 'react';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+
+const ProductTab = lazy(() => import('@/components/productTab/ProductTab'));
+
+const CategoryTab = lazy(() => import('@/components/categoryTab/CategoryTab'));
+
+const SettingsTab = lazy(() => import('@/components/settingsTab/SettingsTab'));
 import Header from '@/components/layout/Header';
 import SideBar from '@/components/layout/SideBar';
 import {useResponsive} from '@/hooks/useResponsive';
@@ -9,12 +13,20 @@ import {useRestaurantDoc} from '@/hooks/useRestaurantDoc';
 import {useMenu} from '@/hooks/useMenu';
 import {useAdminShell} from '@/hooks/useAdminShell';
 import {adminMenuItems} from '@/constants/menuItems';
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 
 const AdminPanel = ({restaurantId}) => {
-    const {menu, loading: menuLoading} = useMenu(restaurantId);
+    const {
+        menu,
+        loading: menuLoading,
+        error: menuError,
+    } = useMenu(restaurantId);
 
-    const {restaurantData, loading: restaurantLoading} =
-        useRestaurantDoc(restaurantId);
+    const {
+        restaurantData,
+        loading: restaurantLoading,
+        error: restaurantError,
+    } = useRestaurantDoc(restaurantId);
 
     const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
         useAdminShell('products');
@@ -36,6 +48,20 @@ const AdminPanel = ({restaurantId}) => {
                 Yönetim Paneli Yükleniyor...
             </div>
         );
+
+    const activeError =
+        restaurantError ||
+        (['products', 'categories'].includes(activeTab) ? menuError : null);
+
+    if (activeError) {
+        return (
+            <SnapshotErrorState
+                error={activeError}
+                resourceName="Yönetim paneli verileri"
+                minHeight="100vh"
+            />
+        );
+    }
 
     return (
         <div
@@ -84,20 +110,32 @@ const AdminPanel = ({restaurantId}) => {
                     }}
                 >
                     {/* İçerikler */}
-                    {activeTab === 'products' && (
-                        <ProductTab restaurantId={restaurantId} menu={menu} />
-                    )}
+                    <Suspense
+                        fallback={
+                            <LoadingSpinner message="Sekme Yükleniyor..." />
+                        }
+                    >
+                        {activeTab === 'products' && (
+                            <ProductTab
+                                restaurantId={restaurantId}
+                                menu={menu}
+                            />
+                        )}
 
-                    {activeTab === 'categories' && (
-                        <CategoryTab restaurantId={restaurantId} menu={menu} />
-                    )}
+                        {activeTab === 'categories' && (
+                            <CategoryTab
+                                restaurantId={restaurantId}
+                                menu={menu}
+                            />
+                        )}
 
-                    {activeTab === 'settings' && (
-                        <SettingsTab
-                            restaurantId={restaurantId}
-                            restaurantData={restaurantData}
-                        />
-                    )}
+                        {activeTab === 'settings' && (
+                            <SettingsTab
+                                restaurantId={restaurantId}
+                                restaurantData={restaurantData}
+                            />
+                        )}
+                    </Suspense>
                 </div>
             </div>
         </div>

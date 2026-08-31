@@ -1,4 +1,3 @@
-import React from 'react';
 import {SearchIcon} from '@/components/common/icon/Icons';
 import {NewRestaurantButton} from '@/components/common/button/Buttons';
 import {useResponsive} from '@/hooks/useResponsive';

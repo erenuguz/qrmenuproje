@@ -1,4 +1,3 @@
-import React from 'react';
 import BaseIcon from './BaseIcon';
 
 export const WifiIcon = ({

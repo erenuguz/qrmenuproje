@@ -1,12 +1,8 @@
-import React, {useRef} from 'react';
+import {useRef} from 'react';
 import Input from '@/components/common/Input';
 import SectionHeader from '@/components/settingsTab/SectionHeader';
 import {UploadImageButton} from '@/components/common/button/Buttons';
-import {
-    sectionCardStyle,
-    smallLabelStyle,
-    iconContainerStyle,
-} from '@/styles/shared';
+import {sectionCardStyle, smallLabelStyle} from '@/styles/shared';
 import {HomeIcon} from '@/components/common/icon/Icons';
 
 const GeneralInfo = ({
@@ -131,7 +127,7 @@ const GeneralInfo = ({
 
                             <input
                                 type="file"
-                                accept="image/*"
+                                accept=".jpg,.jpeg,.png,.webp"
                                 onChange={handleLogoFileSelect}
                                 ref={fileInputRef}
                                 style={{display: 'none'}}

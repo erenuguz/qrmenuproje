@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import {useState, useRef} from 'react';
 import {useToast} from '@/hooks/useToast';
 import {uploadImageAndGetUrl} from '@/utils/helpers';
 import {
@@ -19,18 +19,20 @@ export const CategoryItemActions = ({
     const fileInputRef = useRef(null);
     const toast = useToast();
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setIsUploading(true);
-            const url = await uploadImageAndGetUrl(file, () => {});
-            if (url) {
-                onImageUpdate(categoryId, url);
-            } else {
-                toast.error('Resim yüklenirken hata oluştu.');
-            }
-            setIsUploading(false);
-            e.target.value = '';
+    const handleFileChange = async (event) => {
+        const input = event.target;
+        const file = input.files?.[0];
+
+        if (!file) return;
+
+        try {
+            const url = await uploadImageAndGetUrl(file, setIsUploading);
+
+            await onImageUpdate(categoryId, url);
+        } catch (error) {
+            toast.error(error?.message || 'Resim yüklenirken hata oluştu.');
+        } finally {
+            input.value = '';
         }
     };
 
@@ -46,7 +48,7 @@ export const CategoryItemActions = ({
             <input
                 type="file"
                 ref={fileInputRef}
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp"
                 disabled={isUploading}
                 style={{display: 'none'}}
                 onChange={handleFileChange}

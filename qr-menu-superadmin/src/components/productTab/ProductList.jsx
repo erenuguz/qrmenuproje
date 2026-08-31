@@ -1,4 +1,3 @@
-import React from 'react';
 import ProductCard from '@/components/productTab/ProductCard';
 import EmptyState from '@/components/common/EmptyState';
 import Badge from '@/components/common/Badge';
@@ -7,7 +6,8 @@ import {cardStyle} from '@/styles/shared';
 
 const ProductList = ({
     menu,
-    categories,
+    productsByCategory,
+    categoryNameById,
     searchQuery,
     searchResults,
     displayedCategories,
@@ -58,13 +58,9 @@ const ProductList = ({
                                 <ProductCard
                                     key={product.id}
                                     product={product}
-                                    categoryName={
-                                        categories.find(
-                                            (category) =>
-                                                category.id ===
-                                                product.categoryId
-                                        )?.name
-                                    }
+                                    categoryName={categoryNameById.get(
+                                        product.categoryId
+                                    )}
                                     isBulkDeleteMode={isBulkDeleteMode}
                                     selectedProducts={selectedProducts}
                                     handleProductSelectionChange={
@@ -84,9 +80,8 @@ const ProductList = ({
             ) : (
                 // KATEGORİLERE GÖRE GRUPLANMIŞ LİSTE
                 displayedCategories.map((category) => {
-                    const categoryProducts = menu.filter(
-                        (product) => product.categoryId === category.id
-                    );
+                    const categoryProducts =
+                        productsByCategory.get(category.id) ?? [];
                     if (categoryProducts.length === 0) return null;
 
                     return (

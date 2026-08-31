@@ -86,12 +86,14 @@ export const useProductActions = (restaurantId) => {
         const trimmedName = String(activeForm?.name || '').trim();
         const trimmedDescription = String(activeForm?.description || '').trim();
 
-        const numericPrice = Number(activeForm?.price);
+        const rawPrice = String(activeForm?.price ?? '').trim();
 
-        if (!trimmedName || !activeForm?.categoryId) {
+        if (!trimmedName || !rawPrice || !activeForm?.categoryId) {
             toast.error('Ad, fiyat ve kategori seçimi zorunludur!');
             return;
         }
+
+        const numericPrice = Number(rawPrice);
 
         if (!Number.isFinite(numericPrice) || numericPrice < 0) {
             toast.error('Geçerli bir fiyat girin!');

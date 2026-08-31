@@ -1,4 +1,3 @@
-import React from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import {cardStyle} from '@/styles/shared';
 import Input from '@/components/common/Input';

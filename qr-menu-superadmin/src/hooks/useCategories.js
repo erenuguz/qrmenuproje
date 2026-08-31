@@ -1,22 +1,20 @@
 import {useEffect, useState} from 'react';
-import {collection, query, orderBy, onSnapshot} from 'firebase/firestore';
+import {collection, onSnapshot, orderBy, query} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 
+const INITIAL_STATE = {
+    restaurantId: null,
+    categories: [],
+    error: null,
+};
+
 export const useCategories = (restaurantId) => {
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [snapshotState, setSnapshotState] = useState(INITIAL_STATE);
 
     useEffect(() => {
-        setCategories([]);
-        setError(null);
-
         if (!restaurantId) {
-            setLoading(false);
-            return;
+            return undefined;
         }
-
-        setLoading(true);
 
         const categoriesQuery = query(
             collection(db, 'restaurants', restaurantId, 'categories'),
@@ -25,25 +23,42 @@ export const useCategories = (restaurantId) => {
 
         const unsubscribe = onSnapshot(
             categoriesQuery,
+
             (snapshot) => {
-                setCategories(
-                    snapshot.docs.map((document) => ({
-                        id: document.id,
-                        ...document.data(),
-                    }))
-                );
-                setLoading(false);
+                const categories = snapshot.docs.map((document) => ({
+                    id: document.id,
+                    ...document.data(),
+                }));
+
+                setSnapshotState({
+                    restaurantId,
+                    categories,
+                    error: null,
+                });
             },
+
             (snapshotError) => {
                 console.error('Kategoriler alınamadı:', snapshotError);
-                setCategories([]);
-                setError(snapshotError);
-                setLoading(false);
+
+                setSnapshotState({
+                    restaurantId,
+                    categories: [],
+                    error: snapshotError,
+                });
             }
         );
 
         return unsubscribe;
     }, [restaurantId]);
 
-    return {categories, loading, error};
+    const belongsToCurrentRestaurant =
+        snapshotState.restaurantId === restaurantId;
+
+    return {
+        categories: belongsToCurrentRestaurant ? snapshotState.categories : [],
+
+        loading: Boolean(restaurantId) && !belongsToCurrentRestaurant,
+
+        error: belongsToCurrentRestaurant ? snapshotState.error : null,
+    };
 };

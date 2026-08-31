@@ -1,4 +1,3 @@
-import React from 'react';
 import {cardStyle} from '@/styles/shared';
 /**
  * İkon + değer + etiket gösteren istatistik kartı.

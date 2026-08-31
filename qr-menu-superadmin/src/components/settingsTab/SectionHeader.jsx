@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {iconContainerStyle} from '@/styles/shared';
 
 export const SectionHeader = ({icon, iconBg, iconColor, title, subtitle}) => {

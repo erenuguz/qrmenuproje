@@ -1,4 +1,3 @@
-import React from 'react';
 import {SuccessIcon, ErrorIcon, InfoIcon} from '@/components/common/icon/Icons';
 
 const COLORS = {
@@ -23,7 +22,7 @@ export const ToastContainer = ({toasts, onDismiss}) => {
                 bottom: '25px',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                zIndex: 2000,
+                zIndex: 'var(--z-toast)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '10px',

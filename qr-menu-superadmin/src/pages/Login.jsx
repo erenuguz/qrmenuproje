@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
@@ -35,7 +35,7 @@ const Login = () => {
         try {
             await setPersistence(auth, browserSessionPersistence);
             await signInWithEmailAndPassword(auth, email, password);
-        } catch (err) {
+        } catch {
             setError('Hatalı e-posta veya şifre!');
             setLoading(false);
             setPassword('');
@@ -53,7 +53,7 @@ const Login = () => {
             setInfo(
                 'Şifre sıfırlama linki e-postanıza gönderildi! Gelen kutunuzu kontrol edin.'
             );
-        } catch (err) {
+        } catch {
             setError('Şifre sıfırlama e-postası gönderilemedi.');
         } finally {
             setLoading(false);

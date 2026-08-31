@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import CategoryListHeader from '@/components/categoryTab/categoryItem/CategoryListHeader';
 import CategoryItemOrder from '@/components/categoryTab/categoryItem/CategoryItemOrder';
@@ -53,7 +53,7 @@ export const CategoryItem = ({
                         : '1px solid var(--borderLight)',
                     gap: isMobile ? '14px' : '20px',
                     backgroundColor: isEditing ? 'var(--hover)' : 'transparent',
-                    transition: 'background-color 0.2s ease',
+                    transition: `background-color var(--motion-normal) ease`,
                     boxSizing: 'border-box',
                     width: '100%',
                 }}

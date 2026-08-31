@@ -1,7 +1,9 @@
-import React from 'react';
 import {signOut} from 'firebase/auth';
 import {auth} from '@/firebaseConfig';
-import { HamburgerButton, SignOutButton } from '@/components/common/button/Buttons';
+import {
+    HamburgerButton,
+    SignOutButton,
+} from '@/components/common/button/Buttons';
 import {CubeIcon} from '@/components/common/icon/Icons';
 
 const Header = ({isSidebarOpen, setIsSidebarOpen, restaurantData}) => {
@@ -24,7 +26,7 @@ const Header = ({isSidebarOpen, setIsSidebarOpen, restaurantData}) => {
                     alignItems: 'center',
                     backgroundColor: 'var(--header)',
                     borderBottom: '1px solid var(--border)',
-                    zIndex: 1000,
+                    zIndex: 'var(--z-header)',
                 }}
             >
                 <div

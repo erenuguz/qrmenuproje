@@ -31,3 +31,41 @@
         animation-duration: 1.6s;
     }
 }
+.ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-sizing: border-box;
+    appearance: none;
+    background-color: var(--ui-button-bg);
+    color: var(--ui-button-color);
+    border: 1px solid var(--ui-button-border);
+    opacity: 1;
+    transition:
+        background-color var(--motion-normal) ease,
+        color var(--motion-normal) ease,
+        border-color var(--motion-normal) ease,
+        transform var(--motion-fast) ease,
+        opacity var(--motion-normal) ease;
+}
+
+.ui-button:disabled {
+    opacity: 0.6;
+}
+
+.ui-button:focus-visible:not(:disabled) {
+    background-color: var(--ui-button-hover-bg);
+    color: var(--ui-button-hover-color);
+    border-color: var(--ui-button-hover-border);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ui-button:hover:not(:disabled) {
+        background-color: var(--ui-button-hover-bg);
+        color: var(--ui-button-hover-color);
+        border-color: var(--ui-button-hover-border);
+    }
+}

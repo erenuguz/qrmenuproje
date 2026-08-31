@@ -1,11 +1,6 @@
-import React from 'react';
 import Input from '@/components/common/Input';
 import SectionHeader from '@/components/settingsTab/SectionHeader';
-import {
-    sectionCardStyle,
-    smallLabelStyle,
-    iconContainerStyle,
-} from '@/styles/shared';
+import {sectionCardStyle, smallLabelStyle} from '@/styles/shared';
 import {WifiIcon} from '@/components/common/icon/Icons';
 
 const CustomerWifi = ({

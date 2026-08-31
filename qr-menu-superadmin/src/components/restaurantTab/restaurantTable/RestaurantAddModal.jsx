@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Input from '@/components/common/Input';
 import {CancelButton, CreateButton} from '@/components/common/button/Buttons';
 import {cardStyle} from '@/styles/shared';
@@ -29,7 +29,7 @@ const RestaurantAddModal = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 50,
+                zIndex: 'var(--z-modal)',
                 backdropFilter: 'blur(4px)',
             }}
         >

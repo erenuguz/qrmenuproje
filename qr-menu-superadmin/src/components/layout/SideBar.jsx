@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import {NavTabButton} from '@/components/common/button/Buttons';
 
 const SideBar = ({
@@ -54,13 +54,16 @@ const SideBar = ({
                 overflowY: 'auto',
                 overflowX: 'hidden',
                 whiteSpace: 'nowrap',
-                transition:
-                    'width 0.3s ease, min-width 0.3s ease, padding 0.3s ease, opacity 0.2s ease',
+                transition: `
+                    width var(--motion-slow) ease,
+                    min-width var(--motion-slow) ease,
+                    padding var(--motion-slow) ease,
+                    opacity var(--motion-normal) ease`,
                 boxSizing: 'border-box',
                 height: 'calc(100vh - 70px)',
                 position: 'fixed',
                 top: '70px',
-                zIndex: 1000,
+                zIndex: 'var(--z-header)',
             }}
         >
             <span

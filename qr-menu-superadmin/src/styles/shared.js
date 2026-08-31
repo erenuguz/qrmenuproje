@@ -10,7 +10,7 @@ export const cardStyle = {
 // Standart text input
 export const inputStyle = {
     width: '100%',
-    padding: '12px 16px',
+    padding: 'var(--space-12) var(--space-16)',
     borderRadius: 'var(--radiusSmall)',
     border: '1px solid var(--inputBorder)',
     backgroundColor: 'var(--inputBackground)',
@@ -28,7 +28,7 @@ export const smallLabelStyle = {
     color: 'var(--textSecondary)',
     fontWeight: 'var(--font-bold)',
     textTransform: 'uppercase',
-    marginBottom: '8px',
+    marginBottom: 'var(--space-8)',
     letterSpacing: '0.5px',
 };
 
@@ -47,7 +47,7 @@ export const iconContainerStyle = {
 // Ayar kartlarındaki başlık (GeneralInfo, CustomerWifi, SocialMedia)
 export const sectionCardStyle = {
     ...cardStyle,
-    padding: '24px',
+    padding: 'var(--space-24)',
 };
 
 export const formFieldStyle = {
@@ -57,7 +57,7 @@ export const formFieldStyle = {
 
 export const labelStyle = {
     display: 'block',
-    marginBottom: '8px',
+    marginBottom: 'var(--space-8)',
     fontWeight: 'var(--font-semibold)',
     color: 'var(--text)',
     fontSize: 'var(--font-caption)',
