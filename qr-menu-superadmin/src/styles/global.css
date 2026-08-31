@@ -69,3 +69,25 @@
         border-color: var(--ui-button-hover-border);
     }
 }
+.ui-card {
+    display: block;
+    width: 100%;
+}
+
+.ui-card--interactive {
+    cursor: pointer;
+    text-align: inherit;
+    border: 0;
+    transition:
+        transform var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease;
+}
+
+.ui-card--interactive:hover {
+    transform: translateY(-1px);
+}
+
+.ui-card--interactive:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

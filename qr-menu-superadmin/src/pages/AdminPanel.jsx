@@ -105,7 +105,7 @@ const AdminPanel = ({restaurantId}) => {
                               ? '250px'
                               : '0',
                         padding: '30px',
-                        transition: 'margin-left .3s ease',
+                        transition: 'margin-left var(--motion-slow) ease',
                         minWidth: 0,
                     }}
                 >

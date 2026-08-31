@@ -1,4 +1,4 @@
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 /**
  * İkon + değer + etiket gösteren istatistik kartı.
  * Kaynak: CategoryHeader.jsx'teki local StatCard (size="sm", varsayılan)
@@ -29,14 +29,12 @@ const StatCard = ({bgColor, iconColor, icon, value, label, size = 'sm'}) => {
     const s = SIZES[size];
 
     return (
-        <div
+        <Card
+            padding={s.cardPadding}
             style={{
-                ...cardStyle,
-                padding: s.cardPadding,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
-                height: '100%',
             }}
         >
             {/* İkon SADECE gönderilmişse render edilir */}
@@ -81,7 +79,7 @@ const StatCard = ({bgColor, iconColor, icon, value, label, size = 'sm'}) => {
                     {label}
                 </p>
             </div>
-        </div>
+        </Card>
     );
 };
 

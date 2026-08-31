@@ -135,12 +135,23 @@ export const useCategoryActions = (restaurantId, categories) => {
         let categoryLocked = false;
 
         try {
+            /*
+             * Kategoriyi önce kilitliyoruz.
+             * Firestore Rules, isDeleting=true olan kategoriye
+             * yeni ürün eklenmesini engelleyecek.
+             */
             const wasLocked = await runTransaction(db, async (transaction) => {
                 const categorySnapshot =
                     await transaction.get(categoryReference);
 
                 if (!categorySnapshot.exists()) {
                     return false;
+                }
+
+                if (categorySnapshot.data().isDeleting === true) {
+                    throw new Error(
+                        'Bu kategori için zaten silme işlemi devam ediyor.'
+                    );
                 }
 
                 transaction.update(categoryReference, {
@@ -165,28 +176,11 @@ export const useCategoryActions = (restaurantId, categories) => {
                 'menu'
             );
 
-            const [productsSnapshot, legacyProductsSnapshot] =
-                await Promise.all([
-                    getDocs(
-                        query(
-                            menuReference,
-                            where('categoryId', '==', id),
-                            limit(1)
-                        )
-                    ),
-                    getDocs(
-                        query(
-                            menuReference,
-                            where('kategoriId', '==', id),
-                            limit(1)
-                        )
-                    ),
-                ]);
+            const productsSnapshot = await getDocs(
+                query(menuReference, where('categoryId', '==', id), limit(1))
+            );
 
-            const hasProducts =
-                !productsSnapshot.empty || !legacyProductsSnapshot.empty;
-
-            if (hasProducts) {
+            if (!productsSnapshot.empty) {
                 await updateDoc(categoryReference, {
                     isDeleting: deleteField(),
                     updatedAt: serverTimestamp(),
@@ -238,17 +232,35 @@ export const useCategoryActions = (restaurantId, categories) => {
 
             if (!wasDeleted) {
                 toast.info('Kategori zaten silinmiş.');
+                return;
             }
+
+            toast.success(`"${name}" kategorisi silindi.`);
         } catch (error) {
+            /*
+             * Silme başarısız olursa kategori kilitli kalmasın.
+             */
             if (categoryLocked) {
                 await updateDoc(categoryReference, {
                     isDeleting: deleteField(),
                     updatedAt: serverTimestamp(),
-                }).catch(() => {});
+                }).catch((unlockError) => {
+                    console.error(
+                        'Kategori kilidi kaldırılamadı:',
+                        unlockError
+                    );
+                });
             }
 
             console.error('Kategori silinirken hata:', error);
-            toast.error('Kategori silinemedi.');
+
+            if (error.code === 'permission-denied') {
+                toast.error(
+                    'Kategori silinemedi. Restoran pasif veya işlem yetkiniz bulunmuyor.'
+                );
+            } else {
+                toast.error(error.message || 'Kategori silinemedi.');
+            }
         }
     };
 

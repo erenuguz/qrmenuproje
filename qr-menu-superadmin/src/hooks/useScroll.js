@@ -8,7 +8,7 @@ export const useScroll = (limit = 300) => {
             setShow(window.scrollY > limit);
         };
 
-        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('scroll', checkScroll, {passive: true});
 
         return () => window.removeEventListener('scroll', checkScroll);
     }, [limit]);

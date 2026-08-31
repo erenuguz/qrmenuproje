@@ -1,6 +1,5 @@
 import {initializeApp} from 'firebase/app';
 import {getFirestore} from 'firebase/firestore';
-import {getAuth} from 'firebase/auth';
 
 // Firebase platformunda oluşturduğumuz projeye bağlanabilmemiz için gerekli benzersiz kimlik bilgileri
 const firebaseConfig = {
@@ -18,6 +17,3 @@ const app = initializeApp(firebaseConfig);
 
 // Uygulama genelinde veritabanı işlemlerini (CRUD) yapabilmek için Firestore referansını dışa aktarıyoruz
 export const db = getFirestore(app);
-
-// Uygulama genelinde kullanıcı giriş/çıkış ve oturum yönetimini sağlamak için Auth referansını dışa aktarıyoruz
-export const auth = getAuth(app);

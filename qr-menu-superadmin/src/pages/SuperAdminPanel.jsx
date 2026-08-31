@@ -1,15 +1,6 @@
 import {lazy, Suspense} from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-
-const RestaurantTab = lazy(
-    () => import('@/components/restaurantTab/RestaurantTab')
-);
-
-const ProductTab = lazy(() => import('@/components/productTab/ProductTab'));
-
-const CategoryTab = lazy(() => import('@/components/categoryTab/CategoryTab'));
-
-const SettingsTab = lazy(() => import('@/components/settingsTab/SettingsTab'));
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import Header from '@/components/layout/Header';
 import SideBar from '@/components/layout/SideBar';
 import {useResponsive} from '@/hooks/useResponsive';
@@ -18,55 +9,61 @@ import {useRestaurantDoc} from '@/hooks/useRestaurantDoc';
 import {useMenu} from '@/hooks/useMenu';
 import {useAdminShell} from '@/hooks/useAdminShell';
 import {superAdminMenuItems} from '@/constants/menuItems';
-import SnapshotErrorState from '@/components/common/SnapshotErrorState';
+const RestaurantTab = lazy(
+    () => import('@/components/restaurantTab/RestaurantTab')
+);
+const ProductTab = lazy(() => import('@/components/productTab/ProductTab'));
+const CategoryTab = lazy(() => import('@/components/categoryTab/CategoryTab'));
+const SettingsTab = lazy(() => import('@/components/settingsTab/SettingsTab'));
 
 const SuperAdminPanel = () => {
+    const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
+        useAdminShell('restaurants');
+
     const {
         restaurants,
-        loading,
+        loading: restaurantsLoading,
         selectedRestaurantId,
         setSelectedRestaurantId,
         error: restaurantsError,
     } = useRestaurants();
 
+    const {isMobile} = useResponsive();
+    const needsMenu = activeTab === 'products' || activeTab === 'categories';
+    const needsRestaurantDocument = activeTab === 'settings';
+    const menuRestaurantId =
+        needsMenu && selectedRestaurantId ? selectedRestaurantId : '';
+    const settingsRestaurantId =
+        needsRestaurantDocument && selectedRestaurantId
+            ? selectedRestaurantId
+            : '';
     const {
         menu: selectedMenu,
         loading: menuLoading,
         error: menuError,
-    } = useMenu(selectedRestaurantId);
-
+    } = useMenu(menuRestaurantId);
     const {
         restaurantData: selectedRestaurantData,
-        loading: restaurantDocLoading,
-        error: restaurantDocError,
-    } = useRestaurantDoc(selectedRestaurantId);
-
-    const {activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen} =
-        useAdminShell('restaurants');
-
-    const {isMobile} = useResponsive();
+        loading: restaurantDocumentLoading,
+        error: restaurantDocumentError,
+    } = useRestaurantDoc(settingsRestaurantId);
 
     const generalLoading =
-        loading ||
-        (selectedRestaurantId && (restaurantDocLoading || menuLoading));
-
-    if (generalLoading)
-        return (
-            <div
-                style={{
-                    padding: '50px',
-                    textAlign: 'center',
-                    color: 'var(--textSecondary)',
-                }}
-            >
-                Sistem Yükleniyor...
-            </div>
+        restaurantsLoading ||
+        Boolean(
+            selectedRestaurantId &&
+            ((needsMenu && menuLoading) ||
+                (needsRestaurantDocument && restaurantDocumentLoading))
         );
 
     const activeError =
         restaurantsError ||
-        (['products', 'categories'].includes(activeTab) ? menuError : null) ||
-        (activeTab === 'settings' ? restaurantDocError : null);
+        (needsMenu ? menuError : null) ||
+        (needsRestaurantDocument ? restaurantDocumentError : null);
+
+    if (generalLoading) {
+        return <LoadingSpinner message="Sistem Yükleniyor..." />;
+    }
 
     if (activeError) {
         return (
@@ -82,7 +79,7 @@ const SuperAdminPanel = () => {
         <div
             style={{
                 minHeight: '100vh',
-                padding: '0',
+                padding: 0,
                 paddingTop: '70px',
                 backgroundColor: 'var(--background)',
                 display: 'flex',
@@ -93,7 +90,6 @@ const SuperAdminPanel = () => {
                 setIsSidebarOpen={setIsSidebarOpen}
             />
 
-            {/* Ana İçerik Düzeni */}
             <div
                 style={{
                     display: 'flex',
@@ -106,11 +102,10 @@ const SuperAdminPanel = () => {
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen} // <-- Bunu eklemeyi unutma
+                    setIsSidebarOpen={setIsSidebarOpen}
                 />
 
-                {/* Sağ Alan */}
-                <div
+                <main
                     style={{
                         flex: 1,
                         marginLeft: isMobile
@@ -119,11 +114,10 @@ const SuperAdminPanel = () => {
                               ? '250px'
                               : '0',
                         padding: '30px',
-                        transition: 'margin-left .3s ease',
+                        transition: 'margin-left var(--motion-slow) ease',
                         minWidth: 0,
                     }}
                 >
-                    {/* İçerikler */}
                     <Suspense
                         fallback={
                             <LoadingSpinner message="Sekme Yükleniyor..." />
@@ -135,6 +129,7 @@ const SuperAdminPanel = () => {
 
                         {activeTab === 'products' && selectedRestaurantId && (
                             <ProductTab
+                                key={selectedRestaurantId}
                                 restaurantId={selectedRestaurantId}
                                 menu={selectedMenu}
                                 restaurants={restaurants}
@@ -159,7 +154,7 @@ const SuperAdminPanel = () => {
                             />
                         )}
                     </Suspense>
-                </div>
+                </main>
             </div>
         </div>
     );

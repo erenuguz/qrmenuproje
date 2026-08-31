@@ -1,25 +1,24 @@
 import RestaurantTableRow from '@/components/restaurantTab/restaurantTable/RestaurantTableRow';
 import EmptyState from '@/components/common/EmptyState';
 import RestaurantTableHeader from '@/components/restaurantTab/restaurantTable/RestaurantTableHeader';
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 
 const RestaurantTable = ({
+    onDelete,
+    isProcessing,
     searchQuery,
     setSearchQuery,
     setIsModalOpen,
     filteredRestaurants,
-    handleDelete,
 }) => {
     return (
-        <div style={cardStyle}>
-            {/* Taşıdığımız Header Bileşeni */}
+        <Card padding={0}>
             <RestaurantTableHeader
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 setIsModalOpen={setIsModalOpen}
             />
 
-            {/* TABLO */}
             <div style={{overflowX: 'auto'}}>
                 <table
                     style={{
@@ -29,16 +28,20 @@ const RestaurantTable = ({
                     }}
                 >
                     <thead>
-                        <tr style={{borderBottom: '1px solid var(--border)'}}>
+                        <tr
+                            style={{
+                                borderBottom: '1px solid var(--border)',
+                            }}
+                        >
                             {[
                                 'SİSTEM ID',
                                 'RESTORAN ADI',
                                 'YÖNETİCİ E-POSTA',
                                 'DURUM',
                                 'İŞLEM',
-                            ].map((baslik, index) => (
+                            ].map((heading) => (
                                 <th
-                                    key={index}
+                                    key={heading}
                                     style={{
                                         padding: '16px 24px',
                                         fontSize: 'var(--font-small)',
@@ -46,32 +49,34 @@ const RestaurantTable = ({
                                         color: 'var(--textMuted)',
                                         letterSpacing: '0.5px',
                                         textAlign:
-                                            baslik === 'İŞLEM'
+                                            heading === 'İŞLEM'
                                                 ? 'right'
                                                 : 'left',
                                         whiteSpace: 'nowrap',
                                     }}
                                 >
-                                    {baslik}
+                                    {heading}
                                 </th>
                             ))}
                         </tr>
                     </thead>
+
                     <tbody>
                         {filteredRestaurants.length > 0 ? (
-                            filteredRestaurants.map((res, index) => (
+                            filteredRestaurants.map((restaurant, index) => (
                                 <RestaurantTableRow
-                                    key={res.id || index}
-                                    res={res}
+                                    key={restaurant.id}
+                                    restaurant={restaurant}
                                     isLast={
                                         index === filteredRestaurants.length - 1
                                     }
-                                    handleDelete={handleDelete}
+                                    onDelete={onDelete}
+                                    isProcessing={isProcessing}
                                 />
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5">
+                                <td colSpan={5}>
                                     <EmptyState message="Aranan kriterlere uygun restoran bulunamadı." />
                                 </td>
                             </tr>
@@ -79,7 +84,7 @@ const RestaurantTable = ({
                     </tbody>
                 </table>
             </div>
-        </div>
+        </Card>
     );
 };
 

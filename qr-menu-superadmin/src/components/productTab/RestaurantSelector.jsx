@@ -1,7 +1,7 @@
 import {useResponsive} from '@/hooks/useResponsive';
 import Badge from '@/components/common/Badge';
 import {HomeIcon} from '@/components/common/icon/Icons';
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 import {Select} from '@/components/common/Select';
 
 const RestaurantSelector = ({
@@ -13,15 +13,14 @@ const RestaurantSelector = ({
     const {isMobile} = useResponsive();
 
     return (
-        <div
+        <Card
+            padding="18px 24px"
             style={{
-                ...cardStyle,
                 display: 'flex',
                 flexWrap: isMobile ? 'wrap' : 'nowrap',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: isMobile ? '12px' : undefined,
-                padding: '18px 24px',
                 marginBottom: '20px',
             }}
         >
@@ -88,7 +87,7 @@ const RestaurantSelector = ({
             >
                 <Badge>{totalProducts} toplam ürün</Badge>
             </div>
-        </div>
+        </Card>
     );
 };
 

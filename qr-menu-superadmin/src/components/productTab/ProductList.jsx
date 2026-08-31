@@ -2,7 +2,7 @@ import ProductCard from '@/components/productTab/ProductCard';
 import EmptyState from '@/components/common/EmptyState';
 import Badge from '@/components/common/Badge';
 import {TagIcon} from '@/components/common/icon/Icons';
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 
 const ProductList = ({
     menu,
@@ -20,13 +20,7 @@ const ProductList = ({
     return (
         <div>
             {searchQuery.trim() !== '' ? (
-                <div
-                    style={{
-                        ...cardStyle,
-                        padding: 0,
-                        overflow: 'hidden',
-                    }}
-                >
+                <Card padding={0} style={{overflow: 'hidden'}}>
                     <div
                         style={{
                             padding: '14px 20px',
@@ -76,7 +70,7 @@ const ProductList = ({
                             <EmptyState message="Sonuç bulunamadı." />
                         )}
                     </div>
-                </div>
+                </Card>
             ) : (
                 // KATEGORİLERE GÖRE GRUPLANMIŞ LİSTE
                 displayedCategories.map((category) => {
@@ -85,11 +79,10 @@ const ProductList = ({
                     if (categoryProducts.length === 0) return null;
 
                     return (
-                        <div
+                        <Card
                             key={category.id}
+                            padding={0}
                             style={{
-                                ...cardStyle,
-                                padding: 0,
                                 marginBottom: '24px',
                                 overflow: 'hidden',
                             }}
@@ -148,7 +141,7 @@ const ProductList = ({
                                     />
                                 ))}
                             </div>
-                        </div>
+                        </Card>
                     );
                 })
             )}

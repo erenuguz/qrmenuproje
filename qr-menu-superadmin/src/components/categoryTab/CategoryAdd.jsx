@@ -1,5 +1,5 @@
 import {useResponsive} from '@/hooks/useResponsive';
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 import Input from '@/components/common/Input';
 import {AddButton} from '@/components/common/button/Buttons';
 import {TagIcon} from '@/components/common/icon/Icons';
@@ -9,12 +9,9 @@ const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
     const isActive = newCategoryName.trim();
 
     return (
-        <div
-            style={{
-                ...cardStyle,
-                padding: isMobile ? '16px 20px' : '20px 24px',
-                marginBottom: '24px',
-            }}
+        <Card
+            padding={isMobile ? '16px 20px' : '20px 24px'}
+            style={{marginBottom: '24px'}}
         >
             <h3
                 style={{
@@ -61,7 +58,7 @@ const CategoryAdd = ({newCategoryName, setNewCategoryName, addCategory}) => {
                     Ekle
                 </AddButton>
             </div>
-        </div>
+        </Card>
     );
 };
 

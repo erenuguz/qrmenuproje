@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {
     collection,
     doc,
-    deleteDoc,
     getDoc,
     getDocs,
     writeBatch,
@@ -17,33 +16,11 @@ import {auth, db, secondaryAuth} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
 
 const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
-const FIRESTORE_BATCH_LIMIT = 400;
 
 const createTemporaryPassword = () => {
     const randomPart = crypto.randomUUID().replaceAll('-', '').slice(0, 16);
 
     return `${randomPart}Aa1!`;
-};
-
-const deleteDocumentsInChunks = async (documents) => {
-    for (
-        let index = 0;
-        index < documents.length;
-        index += FIRESTORE_BATCH_LIMIT
-    ) {
-        const documentChunk = documents.slice(
-            index,
-            index + FIRESTORE_BATCH_LIMIT
-        );
-
-        const batch = writeBatch(db);
-
-        documentChunk.forEach((documentSnapshot) => {
-            batch.delete(documentSnapshot.ref);
-        });
-
-        await batch.commit();
-    }
 };
 
 export const useRestaurantActions = () => {
@@ -136,9 +113,7 @@ export const useRestaurantActions = () => {
             const invalidTemplateProduct = templateMenuSnapshot.docs.find(
                 (menuDocument) => {
                     const menuData = menuDocument.data();
-
-                    const categoryId =
-                        menuData.categoryId || menuData.kategoriId || '';
+                    const categoryId = String(menuData.categoryId || '').trim();
 
                     return !categoryId || !templateCategoryIds.has(categoryId);
                 }
@@ -215,8 +190,10 @@ export const useRestaurantActions = () => {
                 );
 
                 batch.set(newCategoryReference, {
-                    ...templateCategoryData,
-                    isInactive: templateCategoryData.isInactive ?? false,
+                    name: String(templateCategoryData.name ?? '').trim(),
+                    image: templateCategoryData.image ?? '',
+                    order: Number(templateCategoryData.order) || 0,
+                    isInactive: templateCategoryData.isInactive === true,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
                 });
@@ -224,27 +201,26 @@ export const useRestaurantActions = () => {
 
             templateMenuSnapshot.forEach((menuItemDocument) => {
                 const oldItem = menuItemDocument.data();
-
-                const oldCategoryId =
-                    oldItem.categoryId || oldItem.kategoriId || '';
-
-                const menuItemData = {
-                    ...oldItem,
-                };
-
-                delete menuItemData.categoryId;
-                delete menuItemData.kategoriId;
-                delete menuItemData.createdAt;
-                delete menuItemData.updatedAt;
+                const oldCategoryId = String(oldItem.categoryId || '').trim();
 
                 const newCategoryId = categoryIdMap[oldCategoryId];
+
+                if (!newCategoryId) {
+                    throw new Error(
+                        `"${oldItem.name || menuItemDocument.id}" ` +
+                            'ürününün kategorisi bulunamadı.'
+                    );
+                }
 
                 const newMenuItemReference = doc(
                     collection(db, 'restaurants', cleanId, 'menu')
                 );
 
                 batch.set(newMenuItemReference, {
-                    ...menuItemData,
+                    name: String(oldItem.name ?? '').trim(),
+                    description: String(oldItem.description ?? '').trim(),
+                    price: Number(oldItem.price) || 0,
+                    image: oldItem.image ?? '',
                     categoryId: newCategoryId,
                     createdAt: serverTimestamp(),
                     updatedAt: serverTimestamp(),
@@ -310,7 +286,8 @@ export const useRestaurantActions = () => {
         }
 
         const confirmed = window.confirm(
-            `DİKKAT: "${name}" ve bütün menü verileri tamamen silinecek! Onaylıyor musunuz?`
+            `DİKKAT: "${name}" ve bütün menü verileri ` +
+                'tamamen silinecek! Onaylıyor musunuz?'
         );
 
         if (!confirmed) return;
@@ -334,29 +311,65 @@ export const useRestaurantActions = () => {
                 'menu'
             );
 
-            const [categoriesSnapshot, menuSnapshot] = await Promise.all([
-                getDocs(categoriesReference),
-                getDocs(menuReference),
-            ]);
+            const [restaurantSnapshot, categoriesSnapshot, menuSnapshot] =
+                await Promise.all([
+                    getDoc(restaurantReference),
+                    getDocs(categoriesReference),
+                    getDocs(menuReference),
+                ]);
 
-            // Alt koleksiyonlar önce silinir.
-            await deleteDocumentsInChunks([
-                ...categoriesSnapshot.docs,
-                ...menuSnapshot.docs,
-            ]);
+            if (!restaurantSnapshot.exists()) {
+                toast.info('Restoran zaten silinmiş.');
+                return;
+            }
 
-            // Ana restoran belgesi en son silinir.
-            await deleteDoc(restaurantReference);
+            /*
+             * Kategoriler + ürünler + restoran belgesi.
+             */
+            const totalDeleteCount =
+                categoriesSnapshot.size + menuSnapshot.size + 1;
+
+            /*
+             * Firestore batch üst sınırı 500 yazma işlemidir.
+             * Sınır aşılırsa hiçbir belge silinmeden işlem durur.
+             */
+            if (totalDeleteCount > 500) {
+                throw new Error(
+                    `Bu restoran toplam ${totalDeleteCount} belge içeriyor. ` +
+                        'Firestore tek batch sınırı 500 belgedir. ' +
+                        'Veri kaybını önlemek için silme işlemi başlatılmadı.'
+                );
+            }
+
+            const batch = writeBatch(db);
+
+            categoriesSnapshot.docs.forEach((categoryDocument) => {
+                batch.delete(categoryDocument.ref);
+            });
+
+            menuSnapshot.docs.forEach((productDocument) => {
+                batch.delete(productDocument.ref);
+            });
+
+            batch.delete(restaurantReference);
+
+            /*
+             * Ya bütün belgeler birlikte silinir
+             * ya da hiçbiri silinmez.
+             */
+            await batch.commit();
 
             toast.success(`"${name}" tamamen silindi.`);
         } catch (error) {
             console.error('Restoran silme hatası:', error);
 
-            toast.error(
-                error?.message
-                    ? `Silme hatası: ${error.message}`
-                    : 'Restoran silinemedi.'
-            );
+            if (error.code === 'permission-denied') {
+                toast.error(
+                    'Restoran silinemedi. Bu işlem yalnızca SuperAdmin tarafından yapılabilir.'
+                );
+            } else {
+                toast.error(error.message || 'Restoran silinemedi.');
+            }
         } finally {
             setIsProcessing(false);
         }

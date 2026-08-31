@@ -38,6 +38,9 @@ const RestaurantManagementTab = ({restaurants = []}) => {
             <RestaurantHeader restaurants={restaurants} />
 
             <RestaurantTable
+                restaurants={restaurants}
+                onDelete={deleteRestaurant}
+                isProcessing={isProcessing}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 setIsModalOpen={setIsModalOpen}

@@ -195,10 +195,6 @@ Temel ürün alanları:
 }
 ```
 
-Ürünlerin kategori bağlantısı `categoryId` üzerinden kurulur.
-
-Eski `kategoriId` alanı yeni kayıtlarda kullanılmaz.
-
 ## Veri akışı
 
 Restoran sayfası açıldığında aşağıdaki sıra izlenir:

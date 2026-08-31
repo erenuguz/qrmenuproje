@@ -1,0 +1,112 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function superAdminMi() {
+      return signedIn() &&
+             request.auth.token.email == "erenuguz301@gmail.com";
+    }
+
+    function restaurantExists(restaurantId) {
+      return exists(
+        /databases/$(database)/documents/restaurants/$(restaurantId)
+      );
+    }
+
+    function restaurantOwnerMi(restaurantId) {
+      return signedIn() &&
+             restaurantExists(restaurantId) &&
+             get(
+               /databases/$(database)/documents/restaurants/$(restaurantId)
+             ).data.userId == request.auth.uid;
+    }
+
+    function restaurantActiveMi(restaurantId) {
+      return restaurantExists(restaurantId) &&
+             get(
+               /databases/$(database)/documents/restaurants/$(restaurantId)
+             ).data.get("isInactive", false) == false;
+    }
+
+    function ownerWriteAllowed(restaurantId) {
+      return restaurantOwnerMi(restaurantId) &&
+             restaurantActiveMi(restaurantId);
+    }
+
+    function restaurantWriteAllowed(restaurantId) {
+      return superAdminMi() || ownerWriteAllowed(restaurantId);
+    }
+
+    function validCategory(restaurantId) {
+      let categoryId = request.resource.data.categoryId;
+
+      return categoryId is string &&
+             categoryId.size() > 0 &&
+             exists(
+               /databases/$(database)/documents/restaurants/$(restaurantId)/categories/$(categoryId)
+             ) &&
+             get(
+               /databases/$(database)/documents/restaurants/$(restaurantId)/categories/$(categoryId)
+             ).data.get("isDeleting", false) == false;
+    }
+
+    match /restaurants/{restaurantId} {
+
+      allow read: if true;
+
+      // Restoranı yalnızca SuperAdmin oluşturabilir veya tamamen silebilir.
+      allow create, delete: if superAdminMi();
+
+      // Restoran sahibi yalnızca izin verilen ayarları değiştirebilir.
+      allow update: if superAdminMi() ||
+        (
+          ownerWriteAllowed(restaurantId) &&
+          request.resource.data
+            .diff(resource.data)
+            .affectedKeys()
+            .hasOnly([
+              "name",
+              "logo",
+              "wifiNetworkName",
+              "wifiPassword",
+              "instagram",
+              "whatsapp",
+              "productCount",
+              "categoryCount",
+              "updatedAt"
+            ])
+        );
+
+      match /categories/{categoryId} {
+
+        allow read: if true;
+
+        allow create, update:
+          if restaurantWriteAllowed(restaurantId);
+
+        // Kategori önce isDeleting=true yapılarak kilitlenmeli.
+        allow delete:
+          if restaurantWriteAllowed(restaurantId) &&
+             resource.data.get("isDeleting", false) == true;
+      }
+
+      match /menu/{productId} {
+
+        allow read: if true;
+
+        // Ürün yalnızca var olan ve silinmeyen kategoriye bağlanabilir.
+        allow create, update:
+          if restaurantWriteAllowed(restaurantId) &&
+             validCategory(restaurantId);
+
+        allow delete:
+          if restaurantWriteAllowed(restaurantId);
+      }
+    }
+  }
+}

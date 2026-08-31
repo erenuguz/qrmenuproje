@@ -5,13 +5,18 @@ import CategoryItem from '@/components/categoryTab/CategoryItem';
 import EmptyState from '@/components/common/EmptyState';
 import {useCategoryActions} from '@/hooks/useCategoryActions';
 import {useCategories} from '@/hooks/useCategories';
-import {cardStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import {useMenuIndex} from '@/hooks/useMenuIndex';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 const CategoryTab = ({restaurantId, menu}) => {
     const [newCategoryName, setNewCategoryName] = useState('');
-    const {categories, error: categoriesError} = useCategories(restaurantId);
+    const {
+        categories,
+        loading: categoriesLoading,
+        error: categoriesError,
+    } = useCategories(restaurantId);
     const {productsByCategory} = useMenuIndex(menu);
 
     const {
@@ -39,6 +44,10 @@ const CategoryTab = ({restaurantId, menu}) => {
         );
     }
 
+    if (categoriesLoading) {
+        return <LoadingSpinner message="Kategoriler yükleniyor..." />;
+    }
+
     return (
         <div>
             <CategoryHeader categories={categories} menu={menu} />
@@ -50,9 +59,9 @@ const CategoryTab = ({restaurantId, menu}) => {
             />
 
             {/* Kategori Listesi Ana Çerçevesi */}
-            <div
+            <Card
+                padding={0}
                 style={{
-                    ...cardStyle,
                     overflow: 'hidden',
                     marginTop: '24px',
                 }}
@@ -85,7 +94,7 @@ const CategoryTab = ({restaurantId, menu}) => {
                         message="Menünüzü düzenlemek için ilk kategorinizi ekleyin."
                     />
                 )}
-            </div>
+            </Card>
         </div>
     );
 };

@@ -9,6 +9,8 @@ import {useCategories} from '@/hooks/useCategories';
 import {useSearch} from '@/hooks/useSearch';
 import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import {useMenuIndex} from '@/hooks/useMenuIndex';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import EmptyState from '@/components/common/EmptyState';
 
 const PRODUCT_SEARCH_KEYS = ['name'];
 
@@ -26,7 +28,11 @@ const ProductTab = ({
 
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
 
-    const {categories, error: categoriesError} = useCategories(restaurantId);
+    const {
+        categories,
+        loading: categoriesLoading,
+        error: categoriesError,
+    } = useCategories(restaurantId);
     const {productsByCategory, categoryNameById} = useMenuIndex(
         menu,
         categories
@@ -88,6 +94,22 @@ const ProductTab = ({
             <SnapshotErrorState
                 error={categoriesError}
                 resourceName="Ürün kategorileri"
+            />
+        );
+    }
+
+    if (categoriesLoading) {
+        return <LoadingSpinner message="Kategoriler yükleniyor..." />;
+    }
+
+    if (categoriesError) {
+        return (
+            <EmptyState
+                title="Kategoriler alınamadı"
+                description={
+                    categoriesError.message ||
+                    'Kategoriler alınırken bir hata oluştu.'
+                }
             />
         );
     }

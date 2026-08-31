@@ -161,8 +161,6 @@ Temel ürün alanları:
 }
 ```
 
-Yeni kayıtlarda eski `kategoriId` alanı kullanılmaz. Standart alan adı `categoryId` değeridir.
-
 ## Template restoran mantığı
 
 Yeni restoranlar, sistemde bulunan template restoranın kategori, ürün ve genel ayarları kullanılarak oluşturulur.
@@ -193,8 +191,8 @@ Firestore batch sınırı aşılıyorsa işlem durdurulur.
 Restoran belgelerinde şu sayaçlar tutulur:
 
 ```js
-productCount
-categoryCount
+productCount;
+categoryCount;
 ```
 
 Yeni restoran oluşturulurken sayaçlar template içeriğine göre oluşturulur.
@@ -313,6 +311,5 @@ npm run build
 - `WelcomeScreen`, müşteri projesine özel ve ayrı kapsamda tutulmaktadır.
 - Cloud Functions kullanılmamaktadır.
 - `isActive` yerine `isInactive` kullanılır.
-- Yeni ürünlerde `kategoriId` yerine `categoryId` kullanılır.
 - Görsel URL’leri Firestore’da tutulur; büyük base64 verileri saklanmamalıdır.
 - `VITE_IMGBB_API_KEY` gerçek bir backend sırrı değildir ve istemci bundle’ında görülebilir.

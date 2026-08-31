@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {
     collection,
     doc,
+    getDoc,
     updateDoc,
     writeBatch,
     runTransaction,
@@ -85,10 +86,10 @@ export const useProductActions = (restaurantId) => {
 
         const trimmedName = String(activeForm?.name || '').trim();
         const trimmedDescription = String(activeForm?.description || '').trim();
-
+        const categoryId = String(activeForm?.categoryId || '').trim();
         const rawPrice = String(activeForm?.price ?? '').trim();
 
-        if (!trimmedName || !rawPrice || !activeForm?.categoryId) {
+        if (!trimmedName || !rawPrice || !categoryId) {
             toast.error('Ad, fiyat ve kategori seçimi zorunludur!');
             return;
         }
@@ -100,9 +101,17 @@ export const useProductActions = (restaurantId) => {
             return;
         }
 
+        const categoryReference = doc(
+            db,
+            'restaurants',
+            restaurantId,
+            'categories',
+            categoryId
+        );
+
         const payload = {
             name: trimmedName,
-            categoryId: activeForm.categoryId,
+            categoryId,
             image:
                 activeForm.image ||
                 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300',
@@ -113,6 +122,23 @@ export const useProductActions = (restaurantId) => {
 
         try {
             setIsProcessing(true);
+
+            /*
+             * Kullanıcıya daha anlaşılır hata göstermek için kategoriyi
+             * önceden kontrol ediyoruz.
+             *
+             * Asıl güvenlik kontrolü yine Firestore Rules tarafından
+             * yapılmalıdır.
+             */
+            const categorySnapshot = await getDoc(categoryReference);
+
+            if (!categorySnapshot.exists()) {
+                throw new Error('Seçilen kategori artık mevcut değil.');
+            }
+
+            if (categorySnapshot.data().isDeleting === true) {
+                throw new Error('Seçilen kategori şu anda siliniyor.');
+            }
 
             if (activeForm.id) {
                 // Düzenlemede ürün sayısı değişmez.
@@ -149,7 +175,14 @@ export const useProductActions = (restaurantId) => {
             onSuccess?.();
         } catch (error) {
             console.error('Ürün kaydetme hatası:', error);
-            toast.error('Ürün kaydedilirken hata oluştu.');
+
+            if (error.code === 'permission-denied') {
+                toast.error(
+                    'Ürün kaydedilemedi. Kategori siliniyor, restoran pasif veya işlem yetkiniz bulunmuyor.'
+                );
+            } else {
+                toast.error(error.message || 'Ürün kaydedilirken hata oluştu.');
+            }
         } finally {
             setIsProcessing(false);
         }

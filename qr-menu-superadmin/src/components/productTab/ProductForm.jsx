@@ -7,7 +7,8 @@ import {
     UploadImageButton,
 } from '@/components/common/button/Buttons';
 import Input from '@/components/common/Input';
-import {cardStyle, formFieldStyle, labelStyle} from '@/styles/shared';
+import {formFieldStyle, labelStyle} from '@/styles/shared';
+import Card from '@/components/common/Card';
 import Select from '@/components/common/Select';
 import TextArea from '@/components/common/TextArea';
 
@@ -56,12 +57,7 @@ export default function ProductForm({
     };
 
     return (
-        <div
-            style={{
-                ...cardStyle,
-                padding: 'clamp(15px, 5vw, 30px)',
-            }}
-        >
+        <Card padding="clamp(15px, 5vw, 30px)">
             {/* Başlık */}
             <div
                 style={{
@@ -237,6 +233,6 @@ export default function ProductForm({
                     }
                 />
             </div>
-        </div>
+        </Card>
     );
 }
