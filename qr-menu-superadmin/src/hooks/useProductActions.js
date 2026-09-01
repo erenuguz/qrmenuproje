@@ -207,10 +207,20 @@ export const useProductActions = (restaurantId) => {
 
         if (!confirmed) return;
 
-        const restaurantReference = doc(db, 'restaurants', restaurantId);
+        const restaurantReference = doc(
+            db,
+            COLLECTIONS.RESTAURANTS,
+            restaurantId
+        );
 
         const productReferences = selectedProducts.map((productId) =>
-            doc(db, COLLECTIONS.RESTAURANTS, restaurantId, 'menu', productId)
+            doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                restaurantId,
+                COLLECTIONS.MENU,
+                productId
+            )
         );
 
         try {

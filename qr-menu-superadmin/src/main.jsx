@@ -11,12 +11,12 @@ validateEnv();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <ThemeProvider>
-            <ToastProvider>
-                <ErrorBoundary>
+        <ErrorBoundary>
+            <ThemeProvider>
+                <ToastProvider>
                     <App />
-                </ErrorBoundary>
-            </ToastProvider>
-        </ThemeProvider>
+                </ToastProvider>
+            </ThemeProvider>
+        </ErrorBoundary>
     </React.StrictMode>
 );

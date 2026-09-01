@@ -14,9 +14,10 @@ export const validateEnv = () => {
     );
 
     if (missingVars.length > 0) {
-        const errorMessage = `[ENV ERROR] Aşağıdaki zorunlu çevre değişkenleri eksik veya tanımlanmamış:\n- ${missingVars.join(
-            '\n- '
-        )}`;
+        const errorMessage =
+            `[ENV ERROR] Aşağıdaki zorunlu çevre değişkenleri eksik:\n- ` +
+            missingVars.join('\n- ');
+
         console.error(errorMessage);
         throw new Error(errorMessage);
     }

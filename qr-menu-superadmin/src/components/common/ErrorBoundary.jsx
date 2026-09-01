@@ -4,11 +4,16 @@ import EmptyState from '@/components/common/EmptyState';
 class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
-        this.state = {hasError: false};
+
+        this.state = {
+            hasError: false,
+        };
     }
 
     static getDerivedStateFromError() {
-        return {hasError: true};
+        return {
+            hasError: true,
+        };
     }
 
     componentDidCatch(error, info) {
@@ -32,8 +37,7 @@ class ErrorBoundary extends Component {
                         justifyContent: 'center',
                         minHeight: '100vh',
                         padding: '20px',
-                        backgroundColor:
-                            'var(--bgMain, var(--background, #fff))',
+                        backgroundColor: 'var(--background, #fff)',
                     }}
                 >
                     <EmptyState
@@ -51,9 +55,9 @@ class ErrorBoundary extends Component {
                             marginTop: '16px',
                             height: 'var(--control-height, 45px)',
                             padding: '0 24px',
-                            borderRadius: 'var(--radiusMedium, 12px)',
-                            backgroundColor: 'var(--primary)',
-                            color: '#fff',
+                            borderRadius: 'var(--radius, 12px)',
+                            backgroundColor: 'var(--primary, #111827)',
+                            color: 'var(--textWhite, #fff)',
                             border: 'none',
                             fontWeight: 'var(--font-semibold, 600)',
                             fontSize: 'var(--font-body, 15px)',
@@ -61,7 +65,8 @@ class ErrorBoundary extends Component {
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'opacity 0.2s',
+                            transition:
+                                'opacity var(--motion-normal, 0.2s) ease',
                         }}
                     >
                         Sayfayı Yenile

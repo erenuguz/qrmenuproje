@@ -6,12 +6,11 @@ const CategoryGrid = ({
     productsByCategory,
     scrollToCategory,
 }) => {
-    // Sayfa/bileşen yüklendiğinde ekranı otomatik olarak en üste kaydırır
     useEffect(() => {
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'instant', // Açılışta gecikme olmadan anında tepeye alır
+            behavior: 'instant',
         });
     }, []);
 
@@ -20,23 +19,21 @@ const CategoryGrid = ({
             style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                alignContent: 'start', // Öğeler az olduğunda grid satırlarının dikeyde gereksiz esnemesini engeller
+                alignContent: 'start',
                 gap: '14px',
                 padding: '20px',
-                minHeight: 'calc(100dvh - 180px)', // Ekran boyunu doldurur, footer'ı doğal olarak alta iter (180px: Header/Footer yaklaşık payı)
             }}
         >
             {categories.map((category) => {
                 const categoryItems =
                     productsByCategory?.get(category.id) ?? [];
+
                 if (categoryItems.length === 0) return null;
 
                 return (
                     <Card
                         key={`grid-${category.id}`}
                         onClick={() => scrollToCategory(category.id)}
-                        role="button"
-                        tabIndex={0}
                         aria-label={`${category.name} kategorisine git`}
                         padding="18px"
                         style={{
@@ -44,7 +41,6 @@ const CategoryGrid = ({
                             flexDirection: 'column',
                             alignItems: 'center',
                             gap: '10px',
-                            cursor: 'pointer',
                         }}
                     >
                         {category.image ? (
@@ -77,6 +73,7 @@ const CategoryGrid = ({
                                 🍽️
                             </span>
                         )}
+
                         <span
                             style={{
                                 fontSize: 'var(--font-caption)',

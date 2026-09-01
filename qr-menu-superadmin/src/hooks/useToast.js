@@ -8,5 +8,5 @@ export const useToast = () => {
         throw new Error('useToast, ToastProvider içinde kullanılmalı.');
     }
 
-    return context.toast;
+    return context;
 };

@@ -1,15 +1,32 @@
 import {SuccessIcon, ErrorIcon, InfoIcon} from '@/components/common/icon/Icons';
 
 const COLORS = {
-    success: {border: 'var(--success)', icon: 'var(--success)'},
-    error: {border: 'var(--danger)', icon: 'var(--danger)'},
-    info: {border: 'var(--info)', icon: 'var(--info)'},
+    success: {
+        border: 'var(--success)',
+        icon: 'var(--success)',
+    },
+
+    error: {
+        border: 'var(--danger)',
+        icon: 'var(--danger)',
+    },
+
+    info: {
+        border: 'var(--info)',
+        icon: 'var(--info)',
+    },
+
+    warning: {
+        border: 'var(--warning)',
+        icon: 'var(--warning)',
+    },
 };
 
 const ICONS = {
     success: <SuccessIcon />,
     error: <ErrorIcon />,
     info: <InfoIcon />,
+    warning: <InfoIcon />,
 };
 
 export const ToastContainer = ({toasts, onDismiss}) => {
@@ -65,6 +82,7 @@ export const ToastContainer = ({toasts, onDismiss}) => {
                         >
                             {iconComponent}
                         </span>
+
                         <span
                             style={{
                                 fontSize: 'var(--font-caption)',

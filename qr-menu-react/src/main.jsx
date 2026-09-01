@@ -10,10 +10,10 @@ validateEnv();
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <ThemeProvider>
-            <ErrorBoundary>
+        <ErrorBoundary>
+            <ThemeProvider>
                 <App />
-            </ErrorBoundary>
-        </ThemeProvider>
+            </ThemeProvider>
+        </ErrorBoundary>
     </StrictMode>
 );
