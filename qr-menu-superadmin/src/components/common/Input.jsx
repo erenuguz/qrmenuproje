@@ -1,7 +1,7 @@
 import {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 
-export const Input = ({
+const Input = ({
     id,
     label,
     labelStyle = {},

@@ -1,4 +1,4 @@
-export const EmptyState = ({
+const EmptyState = ({
     icon,
     title,
     message,
@@ -14,7 +14,7 @@ export const EmptyState = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight,
-                gap: '12px',
+                gap: 'var(--space-12)',
                 padding: '40px 20px',
                 textAlign: 'center',
                 fontFamily: 'var(--font-family)',

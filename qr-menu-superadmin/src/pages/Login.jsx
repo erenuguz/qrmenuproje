@@ -16,7 +16,7 @@ import {
     ForgotPasswordButton,
     PasswordToggleButton,
 } from '@/components/common/button/Buttons';
-import {Input} from '@/components/common/Input';
+import Input from '@/components/common/Input';
 import {cardStyle} from '@/styles/shared';
 
 const Login = () => {

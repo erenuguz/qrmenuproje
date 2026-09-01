@@ -1,4 +1,4 @@
-export const EmptyState = ({
+const EmptyState = ({
     icon,
     title,
     message,

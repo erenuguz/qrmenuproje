@@ -24,9 +24,7 @@ const ProductTab = ({
     const [isImageLoading, setIsImageLoading] = useState(false);
     const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState([]);
-
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
-
     const {
         categories,
         loading: categoriesLoading,
@@ -38,7 +36,6 @@ const ProductTab = ({
     );
     const {deleteProduct, saveForm, bulkDeleteProducts, isProcessing} =
         useProductActions(restaurantId);
-
     const categoryFilter = useCallback(
         (product) =>
             selectedCategoryFilter === 'all' ||
@@ -52,23 +49,17 @@ const ProductTab = ({
     } = useSearch(menu, PRODUCT_SEARCH_KEYS, {
         extraFilter: categoryFilter,
     });
-
-    // Formu Kaydetme Handleri
     const handleSaveForm = () => {
         saveForm(activeForm, isImageLoading, () => {
             setActiveForm(null);
         });
     };
-
-    // Toplu Silme Handleri
     const handleBulkDelete = () => {
         bulkDeleteProducts(selectedProducts, () => {
             setSelectedProducts([]);
             setIsBulkDeleteMode(false);
         });
     };
-
-    // Seçim kutucuğu mantığı
     const handleProductSelectionChange = (productId) => {
         if (selectedProducts.includes(productId)) {
             setSelectedProducts(
@@ -78,8 +69,6 @@ const ProductTab = ({
             setSelectedProducts([...selectedProducts, productId]);
         }
     };
-
-    // useMemo ile Gösterilecek Kategorileri Filtreleme
     const displayedCategories = useMemo(() => {
         return selectedCategoryFilter === 'all'
             ? categories

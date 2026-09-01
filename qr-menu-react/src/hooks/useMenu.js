@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {collection, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const INITIAL_STATE = {
     restaurantId: null,
@@ -18,9 +19,9 @@ export const useMenu = (restaurantId) => {
 
         const menuReference = collection(
             db,
-            'restaurants',
+            COLLECTIONS.RESTAURANTS,
             restaurantId,
-            'menu'
+            COLLECTIONS.MENU
         );
 
         const unsubscribe = onSnapshot(

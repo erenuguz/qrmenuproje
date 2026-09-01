@@ -14,6 +14,7 @@ import {
 } from 'firebase/auth';
 import {auth, db, secondaryAuth} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
 
@@ -64,9 +65,17 @@ export const useRestaurantActions = () => {
         try {
             setIsProcessing(true);
 
-            const templateReference = doc(db, 'restaurants', TEMPLATE_ID);
+            const templateReference = doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                TEMPLATE_ID
+            );
 
-            const newRestaurantReference = doc(db, 'restaurants', cleanId);
+            const newRestaurantReference = doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                cleanId
+            );
 
             const [
                 templateSnapshot,
@@ -79,10 +88,22 @@ export const useRestaurantActions = () => {
                 getDoc(newRestaurantReference),
 
                 getDocs(
-                    collection(db, 'restaurants', TEMPLATE_ID, 'categories')
+                    collection(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        TEMPLATE_ID,
+                        COLLECTIONS.CATEGORIES
+                    )
                 ),
 
-                getDocs(collection(db, 'restaurants', TEMPLATE_ID, 'menu')),
+                getDocs(
+                    collection(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        TEMPLATE_ID,
+                        COLLECTIONS.MENU
+                    )
+                ),
             ]);
 
             if (!templateSnapshot.exists()) {
@@ -156,7 +177,12 @@ export const useRestaurantActions = () => {
 
             templateCategoriesSnapshot.forEach((categoryDocument) => {
                 const newCategoryReference = doc(
-                    collection(db, 'restaurants', cleanId, 'categories')
+                    collection(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        cleanId,
+                        COLLECTIONS.CATEGORIES
+                    )
                 );
 
                 categoryIdMap[categoryDocument.id] = newCategoryReference.id;
@@ -183,9 +209,9 @@ export const useRestaurantActions = () => {
 
                 const newCategoryReference = doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     cleanId,
-                    'categories',
+                    COLLECTIONS.CATEGORIES,
                     newCategoryId
                 );
 
@@ -213,7 +239,12 @@ export const useRestaurantActions = () => {
                 }
 
                 const newMenuItemReference = doc(
-                    collection(db, 'restaurants', cleanId, 'menu')
+                    collection(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        cleanId,
+                        COLLECTIONS.MENU
+                    )
                 );
 
                 batch.set(newMenuItemReference, {
@@ -295,20 +326,24 @@ export const useRestaurantActions = () => {
         try {
             setIsProcessing(true);
 
-            const restaurantReference = doc(db, 'restaurants', cleanId);
+            const restaurantReference = doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                cleanId
+            );
 
             const categoriesReference = collection(
                 db,
-                'restaurants',
+                COLLECTIONS.RESTAURANTS,
                 cleanId,
-                'categories'
+                COLLECTIONS.CATEGORIES
             );
 
             const menuReference = collection(
                 db,
-                'restaurants',
+                COLLECTIONS.RESTAURANTS,
                 cleanId,
-                'menu'
+                COLLECTIONS.MENU
             );
 
             const [restaurantSnapshot, categoriesSnapshot, menuSnapshot] =
@@ -323,16 +358,9 @@ export const useRestaurantActions = () => {
                 return;
             }
 
-            /*
-             * Kategoriler + ürünler + restoran belgesi.
-             */
             const totalDeleteCount =
                 categoriesSnapshot.size + menuSnapshot.size + 1;
 
-            /*
-             * Firestore batch üst sınırı 500 yazma işlemidir.
-             * Sınır aşılırsa hiçbir belge silinmeden işlem durur.
-             */
             if (totalDeleteCount > 500) {
                 throw new Error(
                     `Bu restoran toplam ${totalDeleteCount} belge içeriyor. ` +
@@ -353,10 +381,6 @@ export const useRestaurantActions = () => {
 
             batch.delete(restaurantReference);
 
-            /*
-             * Ya bütün belgeler birlikte silinir
-             * ya da hiçbiri silinmez.
-             */
             await batch.commit();
 
             toast.success(`"${name}" tamamen silindi.`);

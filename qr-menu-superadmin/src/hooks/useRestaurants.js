@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {collection, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
 
@@ -12,7 +13,7 @@ export const useRestaurants = () => {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
-            collection(db, 'restaurants'),
+            collection(db, COLLECTIONS.RESTAURANTS),
             (snapshot) => {
                 const list = snapshot.docs
                     .map((document) => ({

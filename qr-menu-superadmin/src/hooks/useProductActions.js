@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
+import {COLLECTIONS} from '@/constants/firestore';
 
 export const useProductActions = (restaurantId) => {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -25,13 +26,17 @@ export const useProductActions = (restaurantId) => {
 
         const productReference = doc(
             db,
-            'restaurants',
+            COLLECTIONS.RESTAURANTS,
             restaurantId,
-            'menu',
+            COLLECTIONS.MENU,
             id
         );
 
-        const restaurantReference = doc(db, 'restaurants', restaurantId);
+        const restaurantReference = doc(
+            db,
+            COLLECTIONS.RESTAURANTS,
+            restaurantId
+        );
 
         try {
             setIsProcessing(true);
@@ -44,7 +49,6 @@ export const useProductActions = (restaurantId) => {
                     ]
                 );
 
-                // Ürün daha önce silinmişse count tekrar azaltılmaz.
                 if (!productSnapshot.exists()) {
                     return false;
                 }
@@ -103,9 +107,9 @@ export const useProductActions = (restaurantId) => {
 
         const categoryReference = doc(
             db,
-            'restaurants',
+            COLLECTIONS.RESTAURANTS,
             restaurantId,
-            'categories',
+            COLLECTIONS.CATEGORIES,
             categoryId
         );
 
@@ -123,13 +127,6 @@ export const useProductActions = (restaurantId) => {
         try {
             setIsProcessing(true);
 
-            /*
-             * Kullanıcıya daha anlaşılır hata göstermek için kategoriyi
-             * önceden kontrol ediyoruz.
-             *
-             * Asıl güvenlik kontrolü yine Firestore Rules tarafından
-             * yapılmalıdır.
-             */
             const categorySnapshot = await getDoc(categoryReference);
 
             if (!categorySnapshot.exists()) {
@@ -141,20 +138,30 @@ export const useProductActions = (restaurantId) => {
             }
 
             if (activeForm.id) {
-                // Düzenlemede ürün sayısı değişmez.
                 await updateDoc(
-                    doc(db, 'restaurants', restaurantId, 'menu', activeForm.id),
+                    doc(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        restaurantId,
+                        COLLECTIONS.MENU,
+                        activeForm.id
+                    ),
                     payload
                 );
             } else {
                 const restaurantReference = doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     restaurantId
                 );
 
                 const productReference = doc(
-                    collection(db, 'restaurants', restaurantId, 'menu')
+                    collection(
+                        db,
+                        COLLECTIONS.RESTAURANTS,
+                        restaurantId,
+                        COLLECTIONS.MENU
+                    )
                 );
 
                 const batch = writeBatch(db);
@@ -203,7 +210,7 @@ export const useProductActions = (restaurantId) => {
         const restaurantReference = doc(db, 'restaurants', restaurantId);
 
         const productReferences = selectedProducts.map((productId) =>
-            doc(db, 'restaurants', restaurantId, 'menu', productId)
+            doc(db, COLLECTIONS.RESTAURANTS, restaurantId, 'menu', productId)
         );
 
         try {

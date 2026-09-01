@@ -2,7 +2,7 @@ import {useId, useState} from 'react';
 import {inputStyle} from '@/styles/shared';
 import {ChevronDownIcon} from '@/components/common/icon/Icons';
 
-export const Select = ({
+const Select = ({
     label,
     labelStyle = {},
     value,

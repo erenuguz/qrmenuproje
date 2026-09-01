@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {collection, onSnapshot, orderBy, query} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const INITIAL_STATE = {
     restaurantId: null,
@@ -17,7 +18,7 @@ export const useCategories = (restaurantId) => {
         }
 
         const categoriesQuery = query(
-            collection(db, 'restaurants', restaurantId, 'categories'),
+            collection(db, COLLECTIONS.RESTAURANTS, restaurantId, COLLECTIONS.CATEGORIES),
             orderBy('order', 'asc')
         );
 

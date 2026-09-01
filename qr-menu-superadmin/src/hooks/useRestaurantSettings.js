@@ -3,6 +3,7 @@ import {doc, serverTimestamp, updateDoc} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {uploadImageAndGetUrl} from '@/utils/helpers';
 import {useToast} from '@/hooks/useToast';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const EDITABLE_FIELDS = new Set([
     'name',
@@ -113,7 +114,7 @@ export const useRestaurantSettings = (restaurantId, restaurantData) => {
         }
 
         try {
-            await updateDoc(doc(db, 'restaurants', restaurantId), {
+            await updateDoc(doc(db, COLLECTIONS.RESTAURANTS, restaurantId), {
                 [fieldName]: normalizedValue,
                 updatedAt: serverTimestamp(),
             });

@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
+import {COLLECTIONS} from '@/constants/firestore';
 
 export const useCategoryActions = (restaurantId, categories) => {
     const toast = useToast();
@@ -47,10 +48,19 @@ export const useCategoryActions = (restaurantId, categories) => {
                 : 0;
 
         try {
-            const restaurantReference = doc(db, 'restaurants', restaurantId);
+            const restaurantReference = doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                restaurantId
+            );
 
             const categoryReference = doc(
-                collection(db, 'restaurants', restaurantId, 'categories')
+                collection(
+                    db,
+                    COLLECTIONS.RESTAURANTS,
+                    restaurantId,
+                    COLLECTIONS.CATEGORIES
+                )
             );
 
             const batch = writeBatch(db);
@@ -103,7 +113,13 @@ export const useCategoryActions = (restaurantId, categories) => {
 
         try {
             await updateDoc(
-                doc(db, 'restaurants', restaurantId, 'categories', id),
+                doc(
+                    db,
+                    COLLECTIONS.RESTAURANTS,
+                    restaurantId,
+                    COLLECTIONS.CATEGORIES,
+                    id
+                ),
                 {
                     name: trimmedName,
                     updatedAt: serverTimestamp(),
@@ -124,22 +140,21 @@ export const useCategoryActions = (restaurantId, categories) => {
 
         const categoryReference = doc(
             db,
-            'restaurants',
+            COLLECTIONS.RESTAURANTS,
             restaurantId,
-            'categories',
+            COLLECTIONS.CATEGORIES,
             id
         );
 
-        const restaurantReference = doc(db, 'restaurants', restaurantId);
+        const restaurantReference = doc(
+            db,
+            COLLECTIONS.RESTAURANTS,
+            restaurantId
+        );
 
         let categoryLocked = false;
 
         try {
-            /*
-             * Kategoriyi önce kilitliyoruz.
-             * Firestore Rules, isDeleting=true olan kategoriye
-             * yeni ürün eklenmesini engelleyecek.
-             */
             const wasLocked = await runTransaction(db, async (transaction) => {
                 const categorySnapshot =
                     await transaction.get(categoryReference);
@@ -171,9 +186,9 @@ export const useCategoryActions = (restaurantId, categories) => {
 
             const menuReference = collection(
                 db,
-                'restaurants',
+                COLLECTIONS.RESTAURANTS,
                 restaurantId,
-                'menu'
+                COLLECTIONS.MENU
             );
 
             const productsSnapshot = await getDocs(
@@ -237,9 +252,6 @@ export const useCategoryActions = (restaurantId, categories) => {
 
             toast.success(`"${name}" kategorisi silindi.`);
         } catch (error) {
-            /*
-             * Silme başarısız olursa kategori kilitli kalmasın.
-             */
             if (categoryLocked) {
                 await updateDoc(categoryReference, {
                     isDeleting: deleteField(),
@@ -267,7 +279,13 @@ export const useCategoryActions = (restaurantId, categories) => {
     const updateImage = async (id, url) => {
         try {
             await updateDoc(
-                doc(db, 'restaurants', restaurantId, 'categories', id),
+                doc(
+                    db,
+                    COLLECTIONS.RESTAURANTS,
+                    restaurantId,
+                    COLLECTIONS.CATEGORIES,
+                    id
+                ),
                 {
                     image: url,
                     updatedAt: serverTimestamp(),
@@ -289,9 +307,9 @@ export const useCategoryActions = (restaurantId, categories) => {
             batch.update(
                 doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     restaurantId,
-                    'categories',
+                    COLLECTIONS.CATEGORIES,
                     activeCategory.id
                 ),
                 {order: upperCategory.order}
@@ -299,9 +317,9 @@ export const useCategoryActions = (restaurantId, categories) => {
             batch.update(
                 doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     restaurantId,
-                    'categories',
+                    COLLECTIONS.CATEGORIES,
                     upperCategory.id
                 ),
                 {order: activeCategory.order}
@@ -323,9 +341,9 @@ export const useCategoryActions = (restaurantId, categories) => {
             batch.update(
                 doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     restaurantId,
-                    'categories',
+                    COLLECTIONS.CATEGORIES,
                     activeCategory.id
                 ),
                 {order: lowerCategory.order}
@@ -333,9 +351,9 @@ export const useCategoryActions = (restaurantId, categories) => {
             batch.update(
                 doc(
                     db,
-                    'restaurants',
+                    COLLECTIONS.RESTAURANTS,
                     restaurantId,
-                    'categories',
+                    COLLECTIONS.CATEGORIES,
                     lowerCategory.id
                 ),
                 {order: activeCategory.order}

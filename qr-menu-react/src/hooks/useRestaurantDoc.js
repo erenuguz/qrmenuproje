@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {doc, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
+import {COLLECTIONS} from '@/constants/firestore';
 
 const INITIAL_STATE = {
     restaurantId: null,
@@ -16,7 +17,11 @@ export const useRestaurantDoc = (restaurantId) => {
             return undefined;
         }
 
-        const restaurantReference = doc(db, 'restaurants', restaurantId);
+        const restaurantReference = doc(
+            db,
+            COLLECTIONS.RESTAURANTS,
+            restaurantId
+        );
 
         const unsubscribe = onSnapshot(
             restaurantReference,

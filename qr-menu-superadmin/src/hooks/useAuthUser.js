@@ -9,15 +9,18 @@ export const useAuthUser = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+            if (!isMounted) return;
             setUser(authUser);
 
             if (!authUser) {
-                setRestaurantId(null);
+                if (isMounted) setRestaurantId(null);
             } else if (authUser.email === 'erenuguz301@gmail.com') {
-                setRestaurantId(null);
+                if (isMounted) setRestaurantId(null);
             } else {
-                setRestaurantId(null);
+                if (isMounted) setRestaurantId(null);
                 try {
                     const q = query(
                         collection(db, 'restaurants'),
@@ -25,7 +28,7 @@ export const useAuthUser = () => {
                     );
                     const querySnapshot = await getDocs(q);
 
-                    if (!querySnapshot.empty) {
+                    if (isMounted && !querySnapshot.empty) {
                         setRestaurantId(querySnapshot.docs[0].id);
                     }
                 } catch (error) {
@@ -36,10 +39,15 @@ export const useAuthUser = () => {
                 }
             }
 
-            setLoading(false);
+            if (isMounted) {
+                setLoading(false);
+            }
         });
 
-        return () => unsubscribe();
+        return () => {
+            isMounted = false;
+            unsubscribe();
+        };
     }, []);
 
     return {user, restaurantId, loading};

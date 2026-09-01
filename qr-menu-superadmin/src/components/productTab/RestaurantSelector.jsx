@@ -2,7 +2,7 @@ import {useResponsive} from '@/hooks/useResponsive';
 import Badge from '@/components/common/Badge';
 import {HomeIcon} from '@/components/common/icon/Icons';
 import Card from '@/components/common/Card';
-import {Select} from '@/components/common/Select';
+import Select from '@/components/common/Select';
 
 const RestaurantSelector = ({
     restaurants,
