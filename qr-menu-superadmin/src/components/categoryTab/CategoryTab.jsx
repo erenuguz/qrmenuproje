@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import CategoryHeader from '@/components/categoryTab/CategoryHeader';
-import CategoryAdd from '@/components/categoryTab/CategoryAdd';
 import CategoryItem from '@/components/categoryTab/CategoryItem';
+import CategoryForm from '@/components/categoryTab/CategoryForm';
 import EmptyState from '@/components/common/EmptyState';
 import {useCategoryActions} from '@/hooks/useCategoryActions';
 import {useCategories} from '@/hooks/useCategories';
@@ -10,29 +10,45 @@ import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import {useMenuIndex} from '@/hooks/useMenuIndex';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
-const CategoryTab = ({restaurantId, menu}) => {
-    const [newCategoryName, setNewCategoryName] = useState('');
+const CategoryTab = ({restaurantId, menu = []}) => {
+    const [activeForm, setActiveForm] = useState(null);
+    const [isImageLoading, setIsImageLoading] = useState(false);
+
     const {
         categories,
         loading: categoriesLoading,
         error: categoriesError,
     } = useCategories(restaurantId);
-    const {productsByCategory} = useMenuIndex(menu);
+
+    const {productsByCategory} = useMenuIndex(menu, categories);
 
     const {
-        addCategory,
-        updateCategoryName,
+        saveCategory,
         deleteCategory,
-        updateImage,
         moveCategoryUp,
         moveCategoryDown,
+        isProcessing,
     } = useCategoryActions(restaurantId, categories);
 
-    const handleAddCategory = async () => {
-        const success = await addCategory(newCategoryName);
-        if (success) {
-            setNewCategoryName('');
-        }
+    const handleNewCategory = () => {
+        setActiveForm({
+            name: '',
+            image: '',
+        });
+    };
+
+    const handleEditCategory = (category) => {
+        setActiveForm({
+            id: category.id,
+            name: category.name ?? '',
+            image: category.image ?? '',
+        });
+    };
+
+    const handleSaveCategory = () => {
+        saveCategory(activeForm, isImageLoading, () => {
+            setActiveForm(null);
+        });
     };
 
     if (categoriesError) {
@@ -48,24 +64,29 @@ const CategoryTab = ({restaurantId, menu}) => {
         return <LoadingSpinner message="Kategoriler yükleniyor..." />;
     }
 
+    if (activeForm) {
+        return (
+            <CategoryForm
+                activeForm={activeForm}
+                setActiveForm={setActiveForm}
+                isImageLoading={isImageLoading}
+                setIsImageLoading={setIsImageLoading}
+                saveForm={handleSaveCategory}
+                isProcessing={isProcessing}
+            />
+        );
+    }
+
     return (
         <div>
-            <CategoryHeader categories={categories} menu={menu} />
-
-            <CategoryAdd
-                newCategoryName={newCategoryName}
-                setNewCategoryName={setNewCategoryName}
-                addCategory={handleAddCategory}
+            <CategoryHeader
+                categories={categories}
+                menu={menu}
+                onAddCategory={handleNewCategory}
+                isProcessing={isProcessing}
             />
 
-            {/* Kategori Listesi Ana Çerçevesi */}
-            <Card
-                padding={0}
-                style={{
-                    overflow: 'hidden',
-                    marginTop: '24px',
-                }}
-            >
+            <Card padding={0} style={{overflow: 'hidden'}}>
                 {categories.length > 0 ? (
                     categories.map((category, index) => {
                         const productCount =
@@ -81,14 +102,12 @@ const CategoryTab = ({restaurantId, menu}) => {
                                 moveCategoryUp={moveCategoryUp}
                                 moveCategoryDown={moveCategoryDown}
                                 deleteCategory={deleteCategory}
-                                updateCategoryName={updateCategoryName}
-                                updateImage={updateImage}
-                                showHeader={index === 0} // Yalnızca ilk elemanın üstünde başlığı göster
+                                onEditCategory={handleEditCategory}
+                                showHeader={index === 0}
                             />
                         );
                     })
                 ) : (
-                    // Hiç kategori yoksa gösterilecek boş durum tasarımı
                     <EmptyState
                         title="Henüz kategori yok"
                         message="Menünüzü düzenlemek için ilk kategorinizi ekleyin."

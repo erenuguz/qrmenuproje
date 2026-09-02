@@ -1,10 +1,8 @@
-import {useState} from 'react';
 import {useResponsive} from '@/hooks/useResponsive';
 import CategoryListHeader from '@/components/categoryTab/categoryItem/CategoryListHeader';
 import CategoryItemOrder from '@/components/categoryTab/categoryItem/CategoryItemOrder';
 import CategoryItemInfo from '@/components/categoryTab/categoryItem/CategoryItemInfo';
 import CategoryItemActions from '@/components/categoryTab/categoryItem/CategoryItemActions';
-import CategoryForm from '@/components/categoryTab/CategoryForm';
 
 export const CategoryItem = ({
     category,
@@ -14,19 +12,11 @@ export const CategoryItem = ({
     moveCategoryUp,
     moveCategoryDown,
     deleteCategory,
-    updateCategoryName,
-    updateImage,
+    onEditCategory,
     showHeader = false,
 }) => {
-    const [isEditing, setIsEditing] = useState(false);
     const {isMobile} = useResponsive();
     const isLast = index === totalCategoryCount - 1;
-
-    // Formdan gelen yeni ismi kaydetme işlemi
-    const handleSaveName = (newName) => {
-        updateCategoryName(category.id, category.name, newName);
-        setIsEditing(false); // Kaydettikten sonra formu kapat
-    };
 
     return (
         <div
@@ -37,10 +27,8 @@ export const CategoryItem = ({
                 boxSizing: 'border-box',
             }}
         >
-            {/* 1. Header (İsteğe bağlı veya ilk satırda gösterim için) */}
             {showHeader && <CategoryListHeader count={totalCategoryCount} />}
 
-            {/* 2. Satır İskeleti: Order + Info + Actions */}
             <div
                 style={{
                     display: 'flex',
@@ -52,8 +40,6 @@ export const CategoryItem = ({
                         ? 'none'
                         : '1px solid var(--borderLight)',
                     gap: isMobile ? '14px' : '20px',
-                    backgroundColor: isEditing ? 'var(--hover)' : 'transparent',
-                    transition: `background-color var(--motion-normal) ease`,
                     boxSizing: 'border-box',
                     width: '100%',
                 }}
@@ -68,7 +54,6 @@ export const CategoryItem = ({
                         width: isMobile ? '100%' : undefined,
                     }}
                 >
-                    {/* Sol: Sıralama */}
                     <CategoryItemOrder
                         index={index}
                         totalCount={totalCategoryCount}
@@ -77,44 +62,29 @@ export const CategoryItem = ({
                         isMobile={isMobile}
                     />
 
-                    {/* Orta: Düzenleme Formu YADA Kategori Bilgisi (BURASI DEĞİŞTİ) */}
-                    <div style={{flex: 1, minWidth: 0}}>
-                        {isEditing ? (
-                            <CategoryForm
-                                initialName={category.name}
-                                onSave={handleSaveName}
-                                onCancel={() => setIsEditing(false)}
-                            />
-                        ) : (
-                            <CategoryItemInfo
-                                name={category.name}
-                                image={category.image}
-                                productCount={productCount}
-                            />
-                        )}
-                    </div>
+                    <CategoryItemInfo
+                        name={category.name}
+                        image={category.image}
+                        productCount={productCount}
+                    />
                 </div>
 
-                {/* Sağ: Aksiyon Butonları */}
-                {!isEditing && (
-                    <div
-                        style={{
-                            flexShrink: 0,
-                            display: 'flex',
-                            justifyContent: isMobile ? 'flex-end' : 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <CategoryItemActions
-                            categoryId={category.id}
-                            categoryName={category.name}
-                            onEditClick={() => setIsEditing(true)}
-                            onDeleteClick={deleteCategory}
-                            onImageUpdate={updateImage}
-                            isMobile={isMobile}
-                        />
-                    </div>
-                )}
+                <div
+                    style={{
+                        flexShrink: 0,
+                        display: 'flex',
+                        justifyContent: isMobile ? 'flex-end' : 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <CategoryItemActions
+                        categoryId={category.id}
+                        categoryName={category.name}
+                        onEditClick={() => onEditCategory(category)}
+                        onDeleteClick={deleteCategory}
+                        isMobile={isMobile}
+                    />
+                </div>
             </div>
         </div>
     );
