@@ -1,7 +1,9 @@
 import {lazy, Suspense} from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
-const WelcomeScreen = lazy(() => import('@/pages/welcomeScreen/WelcomeScreen'));
+const WelcomeScreen = lazy(
+    () => import('@/pages/welcomeScreen/pages/welcomeScreen/WelcomeScreen')
+);
 
 const RestaurantMenuPage = lazy(() => import('@/pages/RestaurantMenuPage'));
 
