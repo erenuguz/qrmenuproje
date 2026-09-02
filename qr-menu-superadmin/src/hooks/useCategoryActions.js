@@ -1,133 +1,49 @@
-import {
-    getDocs,
-    query,
-    where,
-    limit,
-    deleteField,
-    collection,
-    doc,
-    updateDoc,
-    writeBatch,
-    runTransaction,
-    increment,
-    serverTimestamp,
-} from 'firebase/firestore';
-import {db} from '@/firebaseConfig';
 import {useToast} from '@/hooks/useToast';
-import {COLLECTIONS} from '@/constants/firestore';
+import {
+    addCategoryService,
+    updateCategoryNameService,
+    updateImageService,
+} from '@/hooks/services/category/categoryMutations';
+import {deleteCategoryService} from '@/hooks/services/category/deleteCategory';
+import {
+    moveCategoryUpService,
+    moveCategoryDownService,
+} from '@/hooks/services/category/reorderCategories';
 
 export const useCategoryActions = (restaurantId, categories) => {
     const toast = useToast();
 
     const addCategory = async (newName) => {
-        const name = String(newName || '').trim();
-
-        if (!name) return false;
-
-        const normalizedName = name.toLocaleLowerCase('tr-TR');
-
-        const alreadyExists = categories.some(
-            (category) =>
-                String(category.name || '')
-                    .trim()
-                    .toLocaleLowerCase('tr-TR') === normalizedName
-        );
-
-        if (alreadyExists) {
-            toast.error('Bu kategori zaten mevcut!');
-            return false;
-        }
-
-        const newOrder =
-            categories.length > 0
-                ? Math.max(
-                      ...categories.map(
-                          (category) => Number(category.order) || 0
-                      )
-                  ) + 1
-                : 0;
-
         try {
-            const restaurantReference = doc(
-                db,
-                COLLECTIONS.RESTAURANTS,
-                restaurantId
-            );
-
-            const categoryReference = doc(
-                collection(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES
-                )
-            );
-
-            const batch = writeBatch(db);
-
-            batch.set(categoryReference, {
-                name,
-                image: '',
-                order: newOrder,
-                isInactive: false,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp(),
-            });
-
-            batch.update(restaurantReference, {
-                categoryCount: increment(1),
-                updatedAt: serverTimestamp(),
-            });
-
-            await batch.commit();
-
+            await addCategoryService(restaurantId, categories, newName);
             return true;
         } catch (error) {
             console.error('Kategori eklenirken hata:', error);
-            toast.error('Kategori eklenemedi.');
-
+            if (error.message === 'ALREADY_EXISTS') {
+                toast.error('Bu kategori zaten mevcut!');
+            } else {
+                toast.error('Kategori eklenemedi.');
+            }
             return false;
         }
     };
 
     const updateCategoryName = async (id, oldName, newName) => {
-        const trimmedName = String(newName ?? '').trim();
-        const trimmedOldName = String(oldName ?? '').trim();
-
-        if (!trimmedName || trimmedOldName === trimmedName) return;
-
-        const normalizedName = trimmedName.toLocaleLowerCase('tr-TR');
-
-        const alreadyExists = categories.some(
-            (category) =>
-                category.id !== id &&
-                String(category.name ?? '')
-                    .trim()
-                    .toLocaleLowerCase('tr-TR') === normalizedName
-        );
-
-        if (alreadyExists) {
-            toast.error('Bu isimde başka kategori var!');
-            return;
-        }
-
         try {
-            await updateDoc(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    id
-                ),
-                {
-                    name: trimmedName,
-                    updatedAt: serverTimestamp(),
-                }
+            await updateCategoryNameService(
+                restaurantId,
+                categories,
+                id,
+                oldName,
+                newName
             );
         } catch (error) {
             console.error('Kategori ismi güncellenirken hata:', error);
-            toast.error('Güncelleme başarısız.');
+            if (error.message === 'ALREADY_EXISTS') {
+                toast.error('Bu isimde başka kategori var!');
+            } else {
+                toast.error('Güncelleme başarısız.');
+            }
         }
     };
 
@@ -138,135 +54,25 @@ export const useCategoryActions = (restaurantId, categories) => {
 
         if (!confirmed) return;
 
-        const categoryReference = doc(
-            db,
-            COLLECTIONS.RESTAURANTS,
-            restaurantId,
-            COLLECTIONS.CATEGORIES,
-            id
-        );
-
-        const restaurantReference = doc(
-            db,
-            COLLECTIONS.RESTAURANTS,
-            restaurantId
-        );
-
-        let categoryLocked = false;
-
         try {
-            const wasLocked = await runTransaction(db, async (transaction) => {
-                const categorySnapshot =
-                    await transaction.get(categoryReference);
+            const status = await deleteCategoryService(restaurantId, id);
 
-                if (!categorySnapshot.exists()) {
-                    return false;
-                }
-
-                if (categorySnapshot.data().isDeleting === true) {
-                    throw new Error(
-                        'Bu kategori için zaten silme işlemi devam ediyor.'
-                    );
-                }
-
-                transaction.update(categoryReference, {
-                    isDeleting: true,
-                    updatedAt: serverTimestamp(),
-                });
-
-                return true;
-            });
-
-            if (!wasLocked) {
-                toast.info('Kategori zaten silinmiş.');
-                return;
-            }
-
-            categoryLocked = true;
-
-            const menuReference = collection(
-                db,
-                COLLECTIONS.RESTAURANTS,
-                restaurantId,
-                COLLECTIONS.MENU
-            );
-
-            const productsSnapshot = await getDocs(
-                query(menuReference, where('categoryId', '==', id), limit(1))
-            );
-
-            if (!productsSnapshot.empty) {
-                await updateDoc(categoryReference, {
-                    isDeleting: deleteField(),
-                    updatedAt: serverTimestamp(),
-                });
-
-                categoryLocked = false;
-
-                toast.error(
-                    `"${name}" kategorisinde ürün var. Önce ürünleri silin!`
-                );
-
-                return;
-            }
-
-            const wasDeleted = await runTransaction(db, async (transaction) => {
-                const [categorySnapshot, restaurantSnapshot] =
-                    await Promise.all([
-                        transaction.get(categoryReference),
-                        transaction.get(restaurantReference),
-                    ]);
-
-                if (!categorySnapshot.exists()) {
-                    return false;
-                }
-
-                if (!restaurantSnapshot.exists()) {
-                    throw new Error('Restoran bulunamadı.');
-                }
-
-                if (categorySnapshot.data().isDeleting !== true) {
-                    throw new Error('Kategori silme kilidi bulunamadı.');
-                }
-
-                const currentCategoryCount = Number(
-                    restaurantSnapshot.data().categoryCount || 0
-                );
-
-                transaction.delete(categoryReference);
-
-                transaction.update(restaurantReference, {
-                    categoryCount: Math.max(0, currentCategoryCount - 1),
-                    updatedAt: serverTimestamp(),
-                });
-
-                return true;
-            });
-
-            categoryLocked = false;
-
-            if (!wasDeleted) {
+            if (status === 'ALREADY_DELETED') {
                 toast.info('Kategori zaten silinmiş.');
                 return;
             }
 
             toast.success(`"${name}" kategorisi silindi.`);
         } catch (error) {
-            if (categoryLocked) {
-                await updateDoc(categoryReference, {
-                    isDeleting: deleteField(),
-                    updatedAt: serverTimestamp(),
-                }).catch((unlockError) => {
-                    console.error(
-                        'Kategori kilidi kaldırılamadı:',
-                        unlockError
-                    );
-                });
-            }
-
             console.error('Kategori silinirken hata:', error);
 
-            if (error.code === 'permission-denied') {
+            if (error.message === 'ALREADY_DELETING') {
+                toast.info('Bu kategori için zaten silme işlemi devam ediyor.');
+            } else if (error.message === 'HAS_PRODUCTS') {
+                toast.error(
+                    `"${name}" kategorisinde ürün var. Önce ürünleri silin!`
+                );
+            } else if (error.code === 'permission-denied') {
                 toast.error(
                     'Kategori silinemedi. Restoran pasif veya işlem yetkiniz bulunmuyor.'
                 );
@@ -278,19 +84,7 @@ export const useCategoryActions = (restaurantId, categories) => {
 
     const updateImage = async (id, url) => {
         try {
-            await updateDoc(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    id
-                ),
-                {
-                    image: url,
-                    updatedAt: serverTimestamp(),
-                }
-            );
+            await updateImageService(restaurantId, id, url);
         } catch (error) {
             console.error('Görsel güncellenirken hata:', error);
             toast.error('Görsel güncellenemedi.');
@@ -298,33 +92,8 @@ export const useCategoryActions = (restaurantId, categories) => {
     };
 
     const moveCategoryUp = async (index) => {
-        if (index === 0) return;
-        const activeCategory = categories[index];
-        const upperCategory = categories[index - 1];
-
         try {
-            const batch = writeBatch(db);
-            batch.update(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    activeCategory.id
-                ),
-                {order: upperCategory.order}
-            );
-            batch.update(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    upperCategory.id
-                ),
-                {order: activeCategory.order}
-            );
-            await batch.commit();
+            await moveCategoryUpService(restaurantId, categories, index);
         } catch (error) {
             console.error('Kategori yukarı taşınırken hata:', error);
             toast.error('Sıralama güncellenemedi.');
@@ -332,33 +101,8 @@ export const useCategoryActions = (restaurantId, categories) => {
     };
 
     const moveCategoryDown = async (index) => {
-        if (index === categories.length - 1) return;
-        const activeCategory = categories[index];
-        const lowerCategory = categories[index + 1];
-
         try {
-            const batch = writeBatch(db);
-            batch.update(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    activeCategory.id
-                ),
-                {order: lowerCategory.order}
-            );
-            batch.update(
-                doc(
-                    db,
-                    COLLECTIONS.RESTAURANTS,
-                    restaurantId,
-                    COLLECTIONS.CATEGORIES,
-                    lowerCategory.id
-                ),
-                {order: activeCategory.order}
-            );
-            await batch.commit();
+            await moveCategoryDownService(restaurantId, categories, index);
         } catch (error) {
             console.error('Kategori aşağı taşınırken hata:', error);
             toast.error('Sıralama güncellenemedi.');
