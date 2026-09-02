@@ -1,111 +1,67 @@
 # ScanMenu Müşteri Menüsü
 
-ScanMenu Müşteri Menüsü, restoranların kategori ve ürünlerini QR kod üzerinden ziyaretçilere gösteren React ve Firebase tabanlı web uygulamasıdır.
+Restoranların kategori ve ürünlerini QR kod üzerinden gösteren React uygulamasıdır.
 
-Her restoran kendine ait URL ile açılır:
+- Production: `https://scanmenu.com.tr/{restaurantId}`
+- Yönetim paneli: `https://admin.scanmenu.com.tr`
+- Firebase projesi: `qr-menu-database`
 
-```text
-https://scanmenu.com.tr/{restaurantId}
-```
+## Teknolojiler
 
-Örnek:
-
-```text
-https://scanmenu.com.tr/ornek-restoran
-```
-
-Yönetim işlemleri ayrı uygulamada yapılır:
-
-```text
-https://admin.scanmenu.com.tr
-```
-
-## Kullanılan teknolojiler
-
-- React
-- Vite
+- React 19
+- Vite 8
+- Firebase 12
 - Cloud Firestore
 - Firebase Hosting
 - ESLint
 
-## URL yapısı
+## Proje sınırı
 
-Uygulama restoran ID’sini URL yolundan alır.
-
-Ana adres:
+Bu klasör bağımsız bir uygulamadır. Komutlar `qr-menu-react` klasöründe çalıştırılmalıdır. Ortam ve deploy dosyaları bu klasörde tutulur:
 
 ```text
-https://scanmenu.com.tr
+qr-menu-react/
+├── .env.example
+├── .firebaserc
+├── .gitignore
+├── firebase.json
+├── package.json
+└── README.md
 ```
 
-Ana adres açıldığında `WelcomeScreen` gösterilir.
-
-Restoran adresi:
-
-```text
-https://scanmenu.com.tr/{restaurantId}
-```
-
-Restoran ID’si Firestore’daki restoran belge ID’siyle aynı olmalıdır:
-
-```text
-restaurants/{restaurantId}
-```
-
-Restoran bulunamazsa veya `isInactive` değeri `true` ise kullanıcıya restoranın bulunamadığı bilgisi gösterilir.
-
-## Gereksinimler
-
-Projeyi çalıştırmak için aşağıdakiler gereklidir:
-
-- Node.js
-- npm
-- Bir Firebase projesi
-- Firebase CLI
-
-Firebase CLI kurulumu:
-
-```bash
-npm install -g firebase-tools
-```
+Gerçek `.env` dosyaları commit edilmez. Repoda yalnızca `.env.example` tutulur.
 
 ## Kurulum
 
-Bağımlılıkları yükleyin:
-
 ```bash
+cd qr-menu-react
 npm ci
 ```
 
-`.env.example` dosyasını `.env` adıyla kopyalayın ve Firebase değerlerini doldurun.
+Windows:
 
-Development sunucusunu başlatın:
+```powershell
+Copy-Item .env.example .env
+```
+
+macOS/Linux:
+
+```bash
+cp .env.example .env
+```
+
+Ardından `.env` içindeki Firebase değerlerini doldurun ve uygulamayı başlatın:
 
 ```bash
 npm run dev
 ```
 
-Ana ekranı açmak için:
-
-```text
-http://localhost:5173
-```
-
-Belirli bir restoranı açmak için:
-
-```text
-http://localhost:5173/{restaurantId}
-```
-
-Örnek:
-
-```text
-http://localhost:5173/ornek-restoran
-```
+- Ana ekran: `http://localhost:5173`
+- Restoran menüsü: `http://localhost:5173/{restaurantId}`
 
 ## Ortam değişkenleri
 
-Proje aşağıdaki environment değişkenlerini kullanır:
+Zorunlu:
 
 ```env
 VITE_FIREBASE_API_KEY=
@@ -114,230 +70,57 @@ VITE_FIREBASE_PROJECT_ID=
 VITE_FIREBASE_STORAGE_BUCKET=
 VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
+```
+
+Opsiyonel:
+
+```env
 VITE_FIREBASE_MEASUREMENT_ID=
 ```
 
-Gerçek `.env` dosyası GitHub’a gönderilmemelidir.
+`VITE_` değişkenleri tarayıcı bundle'ına eklenir; gizli anahtar saklamak için kullanılmamalıdır. Uygulama açılırken `src/config/env.js` zorunlu değişkenleri doğrular.
 
-`VITE_` ile başlayan değerlerin tarayıcı bundle’ına eklendiği ve gizli olmadığı unutulmamalıdır.
+## URL ve veri modeli
 
-## Firebase servisleri
-
-Uygulamada aşağıdaki Firebase servisleri kullanılmaktadır:
-
-- Cloud Firestore: Restoran, kategori ve ürün verilerinin okunması
-- Firebase Hosting: Uygulamanın yayınlanması
-
-Cloud Functions kullanılmamaktadır.
-
-Müşteri uygulaması veri oluşturmaz, güncellemez veya silmez. Yönetim işlemleri SuperAdmin uygulaması üzerinden gerçekleştirilir.
-
-## Firestore veri modeli
-
-Ana restoran belgesi:
+Restoran ID'si URL yolundan alınır:
 
 ```text
 restaurants/{restaurantId}
-```
-
-Müşteri uygulamasının kullandığı temel restoran alanları:
-
-```js
-{
-    name: string,
-    logo: string,
-    isInactive: boolean,
-    wifiNetworkName: string,
-    wifiPassword: string,
-    instagram: string,
-    whatsapp: string
-}
-```
-
-Bazı sosyal medya veya Wi-Fi alanları restoran tercihine göre boş olabilir.
-
-Kategori alt koleksiyonu:
-
-```text
 restaurants/{restaurantId}/categories/{categoryId}
-```
-
-Temel kategori alanları:
-
-```js
-{
-    name: string,
-    image: string,
-    order: number,
-    isInactive: boolean
-}
-```
-
-Kategori sıralaması `order` alanına göre yapılır.
-
-`isActive` kullanılmaz. Aktiflik modeli için yalnızca `isInactive` alanı kullanılır.
-
-Ürün alt koleksiyonu:
-
-```text
 restaurants/{restaurantId}/menu/{productId}
 ```
 
-Temel ürün alanları:
+Aktiflik için `isActive` değil, yalnızca `isInactive` kullanılır. Ürün-kategori ilişkisi `categoryId` ile kurulur. Müşteri uygulaması Firestore verilerini okur; yönetim işlemleri SuperAdmin uygulamasında yapılır.
 
-```js
-{
-    name: string,
-    description: string,
-    price: number,
-    image: string,
-    categoryId: string
-}
-```
-
-## Veri akışı
-
-Restoran sayfası açıldığında aşağıdaki sıra izlenir:
-
-1. Restoran ID’si URL’den alınır.
-2. `useRestaurantDoc` restoran belgesini dinler.
-3. Restoran yoksa hata durumu gösterilir.
-4. Restoranın `isInactive` değeri `true` ise menü kapalı gösterilir.
-5. `useCategories` kategorileri gerçek zamanlı olarak dinler.
-6. `useMenu` ürünleri gerçek zamanlı olarak dinler.
-7. Ürünler `categoryId` değerine göre kategorilere gruplanır.
-8. Firestore snapshot hataları kullanıcıya hata ekranı olarak gösterilir.
-
-Hook’lar restoran değiştiğinde eski restorana ait verileri göstermez. Yeni snapshot gelene kadar loading durumu döndürülür.
-
-## Menü görünümü
-
-Müşteri menüsü iki temel görünüm destekler:
-
-- Kategori görünümü
-- Ürün listesi görünümü
-
-Kategori ve ürün ilişkisi şu alan üzerinden sağlanır:
-
-```js
-product.categoryId === category.id;
-```
-
-Ürünler kategori başına tekrar tekrar filtrelenmek yerine önceden gruplanmış veri yapısından okunmalıdır.
-
-## Scroll-spy
-
-Kategori çubuğundaki aktif kategori takibi `IntersectionObserver` kullanılarak yapılır.
-
-Bu yapı:
-
-- Her scroll sırasında bütün kategorileri dolaşmaz.
-- DOM ölçümlerini sürekli tekrarlamaz.
-- Aktif kategori butonunu görünür alanda tutar.
-- Kullanıcının kategori seçimiyle yapılan smooth scroll işlemini destekler.
-
-## Tema sistemi
-
-Ortak tasarım değerleri `src/styles` altında tutulur.
-
-Tema sistemi aşağıdaki değerleri yönetir:
-
-- Renkler
-- Font değerleri
-- Radius değerleri
-- Spacing değerleri
-- Z-index katmanları
-- Motion süreleri
-- Form kontrol yükseklikleri
-- Breakpoint değerleri
-
-Tek kullanımlık bileşen ölçülerinin tamamının token yapılması zorunlu değildir. Yalnızca gerçekten tekrar eden değerler merkezileştirilir.
-
-## Proje yapısı
-
-```text
-src/
-├── components/
-│   ├── common/
-│   ├── customerMenu/
-│   └── layout/
-├── context/
-├── hooks/
-├── styles/
-├── firebaseConfig.js
-├── App.jsx
-└── main.jsx
-```
-
-Tekrar kullanılan UI bileşenleri `components/common` altında tutulur.
-
-Firebase snapshot işlemleri ilgili hook’larda yönetilir.
-
-`WelcomeScreen` bağımsız tutulur ve genel refaktör kapsamına dahil edilmez.
-
-## Güvenlik
-
-Müşteri menüsünün restoran, kategori ve ürün verilerini okuyabilmesi için Firestore read kuralları herkese açık olabilir.
-
-Yazma izinleri yalnızca:
-
-- Restoran sahibi
-- Super Admin
-
-ile sınırlandırılmalıdır.
-
-Arayüzde yazma butonu bulunmaması güvenlik sağlamaz. Asıl güvenlik Firestore Rules tarafından uygulanmalıdır.
-
-## Kod kontrolü
-
-Lint çalıştırmak için:
+## Komutlar
 
 ```bash
+npm run dev
 npm run lint
-```
-
-Production build almak için:
-
-```bash
 npm run build
-```
-
-Production build’i yerelde önizlemek için:
-
-```bash
 npm run preview
 ```
 
-## Deployment
+## Firebase Hosting
 
-Önce lint ve production build kontrolü yapılır:
+Önce Firebase CLI oturumu açın:
+
+```bash
+firebase login
+```
+
+Deploy işlemini bu klasörde çalıştırın:
 
 ```bash
 npm run lint
 npm run build
-```
-
-Ardından Firebase Hosting deploy işlemi yapılır:
-
-```bash
 firebase deploy --only hosting
 ```
 
-Firebase Hosting yapılandırmasında bütün URL yolları `index.html` dosyasına yönlendirilir. Böylece:
+`firebase.json`, bütün URL yollarını `index.html` dosyasına yönlendirir. Böylece `/{restaurantId}` adresleri doğrudan açılabilir.
 
-```text
-/{restaurantId}
-```
+## Güvenlik
 
-adresleri doğrudan açıldığında React uygulaması çalışmaya devam eder.
+Müşteri uygulamasında yazma arayüzü olmaması tek başına güvenlik sağlamaz. Yazma izinleri Firestore Rules ile restoran sahibi ve Super Admin hesaplarıyla sınırlandırılmalıdır.
 
-## Önemli notlar
-
-- Cloud Functions kullanılmaz.
-- `WelcomeScreen` genel refaktör kapsamı dışındadır.
-- Restoran aktifliği `isInactive` alanıyla yönetilir.
-- `isActive` kullanılmaz.
-- Ürün kategori alanı olarak `categoryId` kullanılır.
-- Büyük base64 görseller Firestore belgelerinde tutulmamalıdır.
-- Görsel alanlarında URL saklanmalıdır.
-- Müşteri uygulamasında ImgBB API anahtarına ihtiyaç yoktur.
+Cloud Functions kullanılmaz. `WelcomeScreen` bağımsız tutulur.
