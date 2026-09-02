@@ -1,9 +1,6 @@
+import {useState} from 'react';
 import {useToast} from '@/hooks/useToast';
-import {
-    addCategoryService,
-    updateCategoryNameService,
-    updateImageService,
-} from '@/hooks/services/category/categoryMutations';
+import {saveCategoryService} from '@/hooks/services/category/categoryMutations';
 import {deleteCategoryService} from '@/hooks/services/category/deleteCategory';
 import {
     moveCategoryUpService,
@@ -11,39 +8,58 @@ import {
 } from '@/hooks/services/category/reorderCategories';
 
 export const useCategoryActions = (restaurantId, categories) => {
+    const [isProcessing, setIsProcessing] = useState(false);
     const toast = useToast();
 
-    const addCategory = async (newName) => {
-        try {
-            await addCategoryService(restaurantId, categories, newName);
-            return true;
-        } catch (error) {
-            console.error('Kategori eklenirken hata:', error);
-            if (error.message === 'ALREADY_EXISTS') {
-                toast.error('Bu kategori zaten mevcut!');
-            } else {
-                toast.error('Kategori eklenemedi.');
-            }
+    const saveCategory = async (activeForm, isImageLoading, onSuccess) => {
+        if (isImageLoading || isProcessing) {
             return false;
         }
-    };
 
-    const updateCategoryName = async (id, oldName, newName) => {
+        setIsProcessing(true);
+
         try {
-            await updateCategoryNameService(
+            const result = await saveCategoryService(
                 restaurantId,
                 categories,
-                id,
-                oldName,
-                newName
+                activeForm
             );
-        } catch (error) {
-            console.error('Kategori ismi güncellenirken hata:', error);
-            if (error.message === 'ALREADY_EXISTS') {
-                toast.error('Bu isimde başka kategori var!');
-            } else {
-                toast.error('Güncelleme başarısız.');
+
+            if (result === 'CREATED') {
+                toast.success(
+                    `"${String(activeForm?.name || '').trim()}" kategorisi eklendi.`
+                );
             }
+
+            if (result === 'UPDATED') {
+                toast.success(
+                    `"${String(activeForm?.name || '').trim()}" kategorisi güncellendi.`
+                );
+            }
+
+            onSuccess?.();
+
+            return true;
+        } catch (error) {
+            console.error('Kategori kaydedilirken hata:', error);
+
+            if (error.message === 'NAME_REQUIRED') {
+                toast.error('Kategori adı boş bırakılamaz.');
+            } else if (error.message === 'ALREADY_EXISTS') {
+                toast.error('Bu isimde başka kategori var.');
+            } else if (error.message === 'RESTAURANT_REQUIRED') {
+                toast.error('Restoran bilgisi bulunamadı.');
+            } else if (error.code === 'permission-denied') {
+                toast.error(
+                    'Kategori kaydedilemedi. Restoran pasif veya işlem yetkiniz bulunmuyor.'
+                );
+            } else {
+                toast.error('Kategori kaydedilemedi.');
+            }
+
+            return false;
+        } finally {
+            setIsProcessing(false);
         }
     };
 
@@ -82,20 +98,12 @@ export const useCategoryActions = (restaurantId, categories) => {
         }
     };
 
-    const updateImage = async (id, url) => {
-        try {
-            await updateImageService(restaurantId, id, url);
-        } catch (error) {
-            console.error('Görsel güncellenirken hata:', error);
-            toast.error('Görsel güncellenemedi.');
-        }
-    };
-
     const moveCategoryUp = async (index) => {
         try {
             await moveCategoryUpService(restaurantId, categories, index);
         } catch (error) {
             console.error('Kategori yukarı taşınırken hata:', error);
+
             toast.error('Sıralama güncellenemedi.');
         }
     };
@@ -105,16 +113,16 @@ export const useCategoryActions = (restaurantId, categories) => {
             await moveCategoryDownService(restaurantId, categories, index);
         } catch (error) {
             console.error('Kategori aşağı taşınırken hata:', error);
+
             toast.error('Sıralama güncellenemedi.');
         }
     };
 
     return {
-        addCategory,
-        updateCategoryName,
+        saveCategory,
         deleteCategory,
-        updateImage,
         moveCategoryUp,
         moveCategoryDown,
+        isProcessing,
     };
 };

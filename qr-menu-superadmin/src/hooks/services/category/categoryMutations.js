@@ -9,13 +9,28 @@ import {
 import {db} from '@/firebaseConfig';
 import {COLLECTIONS} from '@/constants/firestore';
 
-export const addCategoryService = async (restaurantId, categories, newName) => {
-    const name = String(newName || '').trim();
-    if (!name) return false;
+export const saveCategoryService = async (
+    restaurantId,
+    categories,
+    activeForm
+) => {
+    const id = activeForm?.id;
+    const name = String(activeForm?.name || '').trim();
+    const image = String(activeForm?.image || '').trim();
+
+    if (!restaurantId) {
+        throw new Error('RESTAURANT_REQUIRED');
+    }
+
+    if (!name) {
+        throw new Error('NAME_REQUIRED');
+    }
 
     const normalizedName = name.toLocaleLowerCase('tr-TR');
+
     const alreadyExists = categories.some(
         (category) =>
+            category.id !== id &&
             String(category.name || '')
                 .trim()
                 .toLocaleLowerCase('tr-TR') === normalizedName
@@ -23,6 +38,25 @@ export const addCategoryService = async (restaurantId, categories, newName) => {
 
     if (alreadyExists) {
         throw new Error('ALREADY_EXISTS');
+    }
+
+    if (id) {
+        await updateDoc(
+            doc(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                restaurantId,
+                COLLECTIONS.CATEGORIES,
+                id
+            ),
+            {
+                name,
+                image,
+                updatedAt: serverTimestamp(),
+            }
+        );
+
+        return 'UPDATED';
     }
 
     const newOrder =
@@ -33,6 +67,7 @@ export const addCategoryService = async (restaurantId, categories, newName) => {
             : 0;
 
     const restaurantReference = doc(db, COLLECTIONS.RESTAURANTS, restaurantId);
+
     const categoryReference = doc(
         collection(
             db,
@@ -46,7 +81,7 @@ export const addCategoryService = async (restaurantId, categories, newName) => {
 
     batch.set(categoryReference, {
         name,
-        image: '',
+        image,
         order: newOrder,
         isInactive: false,
         createdAt: serverTimestamp(),
@@ -59,64 +94,6 @@ export const addCategoryService = async (restaurantId, categories, newName) => {
     });
 
     await batch.commit();
-    return true;
-};
 
-export const updateCategoryNameService = async (
-    restaurantId,
-    categories,
-    id,
-    oldName,
-    newName
-) => {
-    const trimmedName = String(newName ?? '').trim();
-    const trimmedOldName = String(oldName ?? '').trim();
-
-    if (!trimmedName || trimmedOldName === trimmedName) return false;
-
-    const normalizedName = trimmedName.toLocaleLowerCase('tr-TR');
-    const alreadyExists = categories.some(
-        (category) =>
-            category.id !== id &&
-            String(category.name ?? '')
-                .trim()
-                .toLocaleLowerCase('tr-TR') === normalizedName
-    );
-
-    if (alreadyExists) {
-        throw new Error('ALREADY_EXISTS');
-    }
-
-    await updateDoc(
-        doc(
-            db,
-            COLLECTIONS.RESTAURANTS,
-            restaurantId,
-            COLLECTIONS.CATEGORIES,
-            id
-        ),
-        {
-            name: trimmedName,
-            updatedAt: serverTimestamp(),
-        }
-    );
-
-    return true;
-};
-
-export const updateImageService = async (restaurantId, id, url) => {
-    await updateDoc(
-        doc(
-            db,
-            COLLECTIONS.RESTAURANTS,
-            restaurantId,
-            COLLECTIONS.CATEGORIES,
-            id
-        ),
-        {
-            image: url,
-            updatedAt: serverTimestamp(),
-        }
-    );
-    return true;
+    return 'CREATED';
 };
