@@ -62,9 +62,7 @@ export const useCategories = (restaurantId) => {
 
     return {
         categories: belongsToCurrentRestaurant ? snapshotState.categories : [],
-
         loading: Boolean(restaurantId) && !belongsToCurrentRestaurant,
-
         error: belongsToCurrentRestaurant ? snapshotState.error : null,
     };
 };

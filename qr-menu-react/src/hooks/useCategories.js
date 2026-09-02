@@ -18,7 +18,12 @@ export const useCategories = (restaurantId) => {
         }
 
         const categoriesQuery = query(
-            collection(db, COLLECTIONS.RESTAURANTS, restaurantId, COLLECTIONS.CATEGORIES),
+            collection(
+                db,
+                COLLECTIONS.RESTAURANTS,
+                restaurantId,
+                COLLECTIONS.CATEGORIES
+            ),
             orderBy('order', 'asc')
         );
 
@@ -57,9 +62,7 @@ export const useCategories = (restaurantId) => {
 
     return {
         categories: belongsToCurrentRestaurant ? snapshotState.categories : [],
-
         loading: Boolean(restaurantId) && !belongsToCurrentRestaurant,
-
         error: belongsToCurrentRestaurant ? snapshotState.error : null,
     };
 };
