@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {FAQS} from '@/pages/welcomeScreen/constants/welcomeData';
+import {FAQS} from '@/constants/welcomeData';
 
 const FAQSection = () => {
     const [openIndex, setOpenIndex] = useState(null);

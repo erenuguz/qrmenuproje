@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {DEMO_INFO} from '@/pages/welcomeScreen/constants/welcomeData';
+import {DEMO_INFO} from '@/constants/welcomeData';
 
 const DemoSection = () => {
     const [copiedField, setCopiedField] = useState(null);

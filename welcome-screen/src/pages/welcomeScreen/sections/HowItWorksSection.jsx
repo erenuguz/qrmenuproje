@@ -1,4 +1,4 @@
-import {HOW_IT_WORKS_STEPS} from '@/pages/welcomeScreen/constants/welcomeData';
+import {HOW_IT_WORKS_STEPS} from '@/constants/welcomeData';
 
 const HowItWorksSection = () => {
     return (

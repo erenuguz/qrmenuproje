@@ -2,7 +2,7 @@ import {
     CONTACT_EMAIL,
     CONTACT_PHONE,
     WHATSAPP_LINK,
-} from '@/pages/welcomeScreen/constants/welcomeData';
+} from '@/constants/welcomeData';
 
 const ContactSection = () => {
     return (

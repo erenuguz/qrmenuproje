@@ -1,23 +1,24 @@
-import {lazy, Suspense} from 'react';
+﻿import {lazy, Suspense, useEffect} from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-
-const WelcomeScreen = lazy(
-    () => import('@/pages/welcomeScreen/pages/welcomeScreen/WelcomeScreen')
-);
 
 const RestaurantMenuPage = lazy(() => import('@/pages/RestaurantMenuPage'));
 
 const App = () => {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
-
     const restaurantId = pathParts[pathParts.length - 1];
 
+    useEffect(() => {
+        if (!restaurantId) {
+            window.location.replace('https://www.scanmenu.com.tr');
+        }
+    }, [restaurantId]);
+
     return (
-        <Suspense fallback={<LoadingSpinner message="Sayfa Yükleniyor..." />}>
+        <Suspense fallback={<LoadingSpinner message="Sayfa Yukleniyor..." />}>
             {restaurantId ? (
                 <RestaurantMenuPage restaurantId={restaurantId} />
             ) : (
-                <WelcomeScreen />
+                <LoadingSpinner message="Yonlendiriliyor..." />
             )}
         </Suspense>
     );

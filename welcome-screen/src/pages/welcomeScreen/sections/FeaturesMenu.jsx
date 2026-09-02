@@ -1,4 +1,4 @@
-import {MENU_ITEMS} from '@/pages/welcomeScreen/constants/welcomeData';
+import {MENU_ITEMS} from '@/constants/welcomeData';
 
 const FeaturesMenu = () => {
     return (

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
-import {MENU_ITEMS} from '@/pages/welcomeScreen/constants/welcomeData';
-import QrIcon from '@/pages/welcomeScreen/assets/icons/QrIcon';
+import {MENU_ITEMS} from '@/constants/welcomeData';
+import QrIcon from '@/assets/icons/QrIcon';
 
 const HeroSection = () => {
     const [revealed, setRevealed] = useState(0);

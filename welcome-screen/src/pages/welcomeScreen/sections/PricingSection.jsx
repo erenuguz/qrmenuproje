@@ -1,4 +1,4 @@
-import {PRICING_PLANS} from '@/pages/welcomeScreen/constants/welcomeData';
+import {PRICING_PLANS} from '@/constants/welcomeData';
 
 const PricingSection = () => {
     return (
