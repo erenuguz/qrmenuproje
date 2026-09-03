@@ -9,7 +9,7 @@ const App = () => {
 
     useEffect(() => {
         if (!restaurantId) {
-            window.location.replace('https://www.scanmenu.com.tr');
+            window.location.replace('https://scanmenu.com.tr');
         }
     }, [restaurantId]);
 

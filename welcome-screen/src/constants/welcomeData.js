@@ -114,6 +114,6 @@ export const DEMO_INFO = {
     adminUrl: 'https://admin.scanmenu.com.tr',
     adminEmail: 'demo@scanmenu.com.tr',
     adminPass: 'demo1234',
-    menuUrl: 'https://scanmenu.com.tr/demo',
+    menuUrl: 'https://menu.scanmenu.com.tr/demo',
     menuName: 'Örnek Cafe & Brasserie',
 };

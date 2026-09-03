@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "qr-menu-database"
-  }
+  },
+  "targets": {
+    "qr-menu-database": {
+      "hosting": {
+        "welcome": [
+          "scanmenu-welcome"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
