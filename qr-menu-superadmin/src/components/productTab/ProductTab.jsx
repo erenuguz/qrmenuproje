@@ -1,47 +1,45 @@
-import {useState, useMemo, useCallback} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import ProductHeader from '@/components/productTab/ProductHeader';
-import RestaurantSelector from '@/components/productTab/RestaurantSelector';
 import ProductFilters from '@/components/productTab/ProductFilters';
 import ProductList from '@/components/productTab/ProductList';
 import ProductForm from '@/components/productTab/ProductForm';
+import SnapshotErrorState from '@/components/common/SnapshotErrorState';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 import {useProductActions} from '@/hooks/useProductActions';
 import {useCategories} from '@/hooks/useCategories';
 import {useSearch} from '@/hooks/useSearch';
-import SnapshotErrorState from '@/components/common/SnapshotErrorState';
 import {useMenuIndex} from '@/hooks/useMenuIndex';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 const PRODUCT_SEARCH_KEYS = ['name'];
 
-const ProductTab = ({
-    restaurantId,
-    menu = [],
-    restaurants,
-    selectedRestaurantId,
-    setSelectedRestaurantId,
-}) => {
+const ProductTab = ({restaurantId, menu = []}) => {
     const [activeForm, setActiveForm] = useState(null);
     const [isImageLoading, setIsImageLoading] = useState(false);
     const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
+
     const {
         categories,
         loading: categoriesLoading,
         error: categoriesError,
     } = useCategories(restaurantId);
+
     const {productsByCategory, categoryNameById} = useMenuIndex(
         menu,
         categories
     );
+
     const {deleteProduct, saveForm, bulkDeleteProducts, isProcessing} =
         useProductActions(restaurantId);
+
     const categoryFilter = useCallback(
         (product) =>
             selectedCategoryFilter === 'all' ||
             product.categoryId === selectedCategoryFilter,
         [selectedCategoryFilter]
     );
+
     const {
         searchQuery,
         setSearchQuery,
@@ -49,32 +47,39 @@ const ProductTab = ({
     } = useSearch(menu, PRODUCT_SEARCH_KEYS, {
         extraFilter: categoryFilter,
     });
+
     const handleSaveForm = () => {
         saveForm(activeForm, isImageLoading, () => {
             setActiveForm(null);
         });
     };
+
     const handleBulkDelete = () => {
         bulkDeleteProducts(selectedProducts, () => {
             setSelectedProducts([]);
             setIsBulkDeleteMode(false);
         });
     };
+
     const handleProductSelectionChange = (productId) => {
         if (selectedProducts.includes(productId)) {
             setSelectedProducts(
                 selectedProducts.filter((id) => id !== productId)
             );
-        } else {
-            setSelectedProducts([...selectedProducts, productId]);
+            return;
         }
+
+        setSelectedProducts([...selectedProducts, productId]);
     };
+
     const displayedCategories = useMemo(() => {
-        return selectedCategoryFilter === 'all'
-            ? categories
-            : categories.filter(
-                  (category) => category.id === selectedCategoryFilter
-              );
+        if (selectedCategoryFilter === 'all') {
+            return categories;
+        }
+
+        return categories.filter(
+            (category) => category.id === selectedCategoryFilter
+        );
     }, [categories, selectedCategoryFilter]);
 
     if (categoriesError) {
@@ -114,15 +119,6 @@ const ProductTab = ({
                         bulkDeleteProducts={handleBulkDelete}
                         isProcessing={isProcessing}
                     />
-
-                    {restaurants && (
-                        <RestaurantSelector
-                            restaurants={restaurants}
-                            selectedRestaurantId={selectedRestaurantId}
-                            setSelectedRestaurantId={setSelectedRestaurantId}
-                            totalProducts={menu.length}
-                        />
-                    )}
 
                     <ProductFilters
                         searchQuery={searchQuery}

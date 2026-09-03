@@ -1,7 +1,6 @@
 /**
  * Sayaç/etiket göstermek için kullanılan küçük rozet.
  * Kaynak: CategoryList ("X kategori"), ProductList kategori başlıkları
- * ("X ürün"), RestaurantSelector ("toplam ürün").
  */
 const Badge = ({children}) => (
     <span

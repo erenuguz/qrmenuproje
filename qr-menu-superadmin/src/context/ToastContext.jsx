@@ -48,12 +48,14 @@ export function ToastProvider({children}) {
     );
 
     useEffect(() => {
+        const timers = timersRef.current;
+
         return () => {
-            timersRef.current.forEach((timerId) => {
+            timers.forEach((timerId) => {
                 clearTimeout(timerId);
             });
 
-            timersRef.current.clear();
+            timers.clear();
         };
     }, []);
 

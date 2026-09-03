@@ -1,9 +1,9 @@
 # ScanMenu Yönetim Paneli
 
-Restoranları, kategorileri, ürünleri ve menü ayarlarını yöneten React uygulamasıdır.
+Super Admin restoran hesaplarını yönetir. Restoran yöneticileri kendi ürünlerini, kategorilerini ve menü ayarlarını yönetir.
 
 - Production: `https://admin.scanmenu.com.tr`
-- Müşteri menüsü: `https://scanmenu.com.tr/{restaurantId}`
+- Müşteri menüsü: `https://menu.scanmenu.com.tr/{restaurantId}`
 - Firebase projesi: `qr-menu-database`
 - Firebase Hosting target: `superadmin`
 
@@ -135,7 +135,7 @@ firebase deploy --only firestore:rules,hosting:superadmin
 
 ## Güvenlik
 
-- Super Admin bütün restoranları yönetebilir.
+- Super Admin arayüzünde yalnızca restoran hesapları listelenebilir, oluşturulabilir ve silinebilir.
 - Restoran sahibi yalnızca kendisine bağlı restoranı değiştirebilir.
 - Pasif restoran sahibi yazma yapamaz.
 - Ürün geçerli ve silinmekte olmayan bir kategoriye bağlanmalıdır.
