@@ -3,8 +3,7 @@ import {onAuthStateChanged} from 'firebase/auth';
 import {collection, getDocs, query, where} from 'firebase/firestore';
 import {auth, db} from '@/firebaseConfig';
 import {COLLECTIONS} from '@/constants/firestore';
-
-const SUPER_ADMIN_EMAIL = 'erenuguz301@gmail.com';
+import {SUPER_ADMIN_EMAIL} from '@/constants/auth';
 
 export const useAuthUser = () => {
     const [user, setUser] = useState(null);
@@ -76,9 +75,12 @@ export const useAuthUser = () => {
         };
     }, []);
 
+    const isSuperAdmin = user?.email === SUPER_ADMIN_EMAIL;
+
     return {
         user,
         restaurantId,
         loading,
+        isSuperAdmin,
     };
 };

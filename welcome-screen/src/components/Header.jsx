@@ -27,7 +27,7 @@ const Header = () => {
                 >
                     Giriş Yap
                 </a>
-                <a href="#fiyatlar" className="dm-btn-primary">
+                <a href="#iletisim" className="dm-btn-primary">
                     Ücretsiz Dene →
                 </a>
             </div>
@@ -60,8 +60,12 @@ const Header = () => {
                     </a>
                     <hr />
                     <a href="https://admin.scanmenu.com.tr">Giriş Yap</a>
-                    <a href="#fiyatlar" className="dm-drawer-primary">
-                        Ücretsiz Dene →
+                    <a
+                        href="#iletisim"
+                        className="dm-drawer-primary"
+                        onClick={() => setIsMobileOpen(false)}
+                    >
+                        14 Gün Ücretsiz Dene →
                     </a>
                 </div>
             )}

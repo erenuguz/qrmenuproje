@@ -16,7 +16,7 @@ const ContactSection = () => {
                     rel="noreferrer"
                     className="dm-btn-primary dm-cta-large"
                 >
-                    Ücretsiz Başla →
+                    14 Gün Ücretsiz Dene →
                 </a>
             </div>
 

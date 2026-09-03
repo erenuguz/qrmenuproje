@@ -13,7 +13,7 @@ import {AlertCircleIcon} from '@/components/common/icon/Icons';
 import {SignOutButton} from '@/components/common/button/Buttons';
 
 function App() {
-    const {user, restaurantId, loading} = useAuthUser();
+    const {user, restaurantId, loading, isSuperAdmin} = useAuthUser();
 
     if (loading) {
         return <LoadingSpinner />;
@@ -23,7 +23,7 @@ function App() {
         <Suspense fallback={<LoadingSpinner message="Sayfa Yükleniyor..." />}>
             {!user ? (
                 <Login />
-            ) : user.email === 'erenuguz301@gmail.com' ? (
+            ) : isSuperAdmin ? (
                 <SuperAdminPanel />
             ) : restaurantId ? (
                 <div>

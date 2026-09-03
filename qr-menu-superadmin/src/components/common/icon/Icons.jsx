@@ -13,19 +13,6 @@ export const WifiIcon = ({
     </BaseIcon>
 );
 
-export const CopyIcon = ({size = 13, strokeWidth = 2.2, ...props}) => (
-    <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
-        <rect x="9" y="9" width="12" height="12" rx="2" />
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </BaseIcon>
-);
-
-export const CheckIcon = ({size = 13, strokeWidth = 2.6, ...props}) => (
-    <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
-        <polyline points="20 6 9 17 4 12" />
-    </BaseIcon>
-);
-
 export const InstagramIcon = ({size = 16, strokeWidth = 2, ...props}) => (
     <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
         <rect x="2" y="2" width="20" height="20" rx="5" />
@@ -149,13 +136,6 @@ export const TrashIcon = ({size = 18, strokeWidth = 2, ...props}) => (
     <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
         <polyline points="3 6 5 6 21 6" />
         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-    </BaseIcon>
-);
-export const StoreIcon = ({size = 18, strokeWidth = 2, ...props}) => (
-    <BaseIcon size={size} strokeWidth={strokeWidth} {...props}>
-        <path d="M3 9h18v2" />
-        <path d="M4 11v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9" />
-        <path d="M2 7h20l-2-5H4L2 7z" />
     </BaseIcon>
 );
 

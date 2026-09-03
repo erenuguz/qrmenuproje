@@ -2,8 +2,7 @@ import {useEffect, useState} from 'react';
 import {collection, onSnapshot} from 'firebase/firestore';
 import {db} from '@/firebaseConfig';
 import {COLLECTIONS} from '@/constants/firestore';
-
-const TEMPLATE_ID = 'DyY8GVi99ZAiwNCA7RXp';
+import {TEMPLATE_ID} from '@/hooks/services/restaurant/restaurantTemplate';
 
 export const useRestaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
