@@ -12,18 +12,30 @@ const RestaurantTab = ({restaurants = []}) => {
     const [newId, setNewId] = useState('');
     const [newName, setNewName] = useState('');
     const [newEmail, setNewEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const {addRestaurant, deleteRestaurant, isProcessing} =
         useRestaurantActions();
 
-    const handleAddNewRestaurant = (e) => {
-        e.preventDefault();
-        addRestaurant(newId, newName, newEmail, () => {
-            setNewId('');
-            setNewName('');
-            setNewEmail('');
-            setIsModalOpen(false);
-        });
+    const handleAddNewRestaurant = (event) => {
+        event.preventDefault();
+
+        addRestaurant(
+            newId,
+            newName,
+            newEmail,
+            newPassword,
+            confirmPassword,
+            () => {
+                setNewId('');
+                setNewName('');
+                setNewEmail('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setIsModalOpen(false);
+            }
+        );
     };
 
     // Arama Filtresi
@@ -56,6 +68,10 @@ const RestaurantTab = ({restaurants = []}) => {
                 setNewName={setNewName}
                 newEmail={newEmail}
                 setNewEmail={setNewEmail}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
                 isProcessing={isProcessing}
             />
         </div>

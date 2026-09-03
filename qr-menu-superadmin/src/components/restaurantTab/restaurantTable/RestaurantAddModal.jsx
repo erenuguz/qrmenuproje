@@ -1,4 +1,3 @@
-
 import Input from '@/components/common/Input';
 import {CancelButton, CreateButton} from '@/components/common/button/Buttons';
 import {cardStyle} from '@/styles/shared';
@@ -13,6 +12,10 @@ const RestaurantAddModal = ({
     setNewName,
     newEmail,
     setNewEmail,
+    newPassword,
+    setNewPassword,
+    confirmPassword,
+    setConfirmPassword,
     isProcessing,
 }) => {
     if (!isModalOpen) return null;
@@ -82,6 +85,30 @@ const RestaurantAddModal = ({
                         required
                         value={newEmail}
                         onChange={(e) => setNewEmail(e.target.value)}
+                    />
+
+                    <Input
+                        label="Geçici Şifre"
+                        type="password"
+                        placeholder="En az 8 karakter"
+                        required
+                        minLength={8}
+                        autoComplete="new-password"
+                        value={newPassword}
+                        onChange={(event) => setNewPassword(event.target.value)}
+                    />
+
+                    <Input
+                        label="Şifre Tekrar"
+                        type="password"
+                        placeholder="Şifreyi tekrar girin"
+                        required
+                        minLength={8}
+                        autoComplete="new-password"
+                        value={confirmPassword}
+                        onChange={(event) =>
+                            setConfirmPassword(event.target.value)
+                        }
                     />
 
                     <div

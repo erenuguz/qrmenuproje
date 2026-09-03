@@ -5,24 +5,16 @@ import {
     writeBatch,
     serverTimestamp,
 } from 'firebase/firestore';
-import {
-    createUserWithEmailAndPassword,
-    deleteUser,
-    sendPasswordResetEmail,
-} from 'firebase/auth';
-import {auth, db, secondaryAuth} from '@/firebaseConfig';
+import {createUserWithEmailAndPassword, deleteUser} from 'firebase/auth';
+import {db, secondaryAuth} from '@/firebaseConfig';
 import {COLLECTIONS} from '@/constants/firestore';
 import {getValidatedTemplate} from './restaurantTemplate';
-
-const createTemporaryPassword = () => {
-    const randomPart = crypto.randomUUID().replaceAll('-', '').slice(0, 16);
-    return `${randomPart}Aa1!`;
-};
 
 export const createRestaurantService = async ({
     cleanId,
     cleanName,
     cleanEmail,
+    password,
 }) => {
     const newRestaurantReference = doc(db, COLLECTIONS.RESTAURANTS, cleanId);
     const existingRestaurantSnapshot = await getDoc(newRestaurantReference);
@@ -34,13 +26,12 @@ export const createRestaurantService = async ({
     const {templateData, templateCategoriesSnapshot, templateMenuSnapshot} =
         await getValidatedTemplate();
 
-    const temporaryPassword = createTemporaryPassword();
     let createdUser;
 
     const userCredential = await createUserWithEmailAndPassword(
         secondaryAuth,
         cleanEmail,
-        temporaryPassword
+        password
     );
     createdUser = userCredential.user;
 
@@ -131,13 +122,5 @@ export const createRestaurantService = async ({
         throw firestoreError;
     }
 
-    let emailSent = true;
-    try {
-        await sendPasswordResetEmail(auth, cleanEmail);
-    } catch (emailError) {
-        console.error('Davet e-postası gönderilemedi:', emailError);
-        emailSent = false;
-    }
-
-    return {emailSent};
+    return true;
 };

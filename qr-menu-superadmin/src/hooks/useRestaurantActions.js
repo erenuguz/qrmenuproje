@@ -8,7 +8,14 @@ export const useRestaurantActions = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const toast = useToast();
 
-    const addRestaurant = async (newId, newName, newEmail, onSuccess) => {
+    const addRestaurant = async (
+        newId,
+        newName,
+        newEmail,
+        newPassword,
+        confirmPassword,
+        onSuccess
+    ) => {
         const cleanId = String(newId || '')
             .trim()
             .toLowerCase();
@@ -16,8 +23,10 @@ export const useRestaurantActions = () => {
         const cleanEmail = String(newEmail || '')
             .trim()
             .toLowerCase();
+        const password = String(newPassword ?? '');
+        const passwordConfirmation = String(confirmPassword ?? '');
 
-        if (!cleanId || !cleanName || !cleanEmail) {
+        if (!cleanId || !cleanName || !cleanEmail || !password) {
             toast.error('Tüm alanları doldurun!');
             return;
         }
@@ -34,6 +43,21 @@ export const useRestaurantActions = () => {
             return;
         }
 
+        if (password !== passwordConfirmation) {
+            toast.error('Girdiğiniz şifreler eşleşmiyor.');
+            return;
+        }
+
+        if (password.length < 6) {
+            toast.error('Şifre en az 6 karakter olmalıdır.');
+            return;
+        }
+
+        if (/\s/.test(password)) {
+            toast.error('Şifre boşluk içeremez.');
+            return;
+        }
+
         const confirmed = window.confirm(
             `"${cleanName}" oluşturulup ${cleanEmail} adresine davet gönderilecek. Onaylıyor musunuz?`
         );
@@ -43,24 +67,30 @@ export const useRestaurantActions = () => {
         try {
             setIsProcessing(true);
 
-            const {emailSent} = await createRestaurantService({
+            await createRestaurantService({
                 cleanId,
                 cleanName,
                 cleanEmail,
+                password,
             });
 
-            if (emailSent) {
-                toast.success(
-                    'Restoran oluşturuldu ve davet e-postası gönderildi!'
-                );
-            } else {
-                toast.info(
-                    'Restoran oluşturuldu fakat davet e-postası gönderilemedi. Şifre sıfırlama e-postasını daha sonra tekrar gönderebilirsiniz.'
-                );
-            }
+            toast.success(
+                'Restoran ve yönetici hesabı oluşturuldu. Giriş bilgilerini kullanıcıyla paylaşabilirsiniz.'
+            );
 
             onSuccess?.();
         } catch (error) {
+            if (error.code === 'auth/email-already-in-use') {
+                toast.error(
+                    'Bu e-posta adresi zaten başka bir hesapta kullanılıyor.'
+                );
+                return;
+            }
+
+            if (error.code === 'auth/weak-password') {
+                toast.error('Girdiğiniz şifre yeterince güçlü değil.');
+                return;
+            }
             console.error('Restoran oluşturma hatası:', error);
             toast.error(
                 error?.message
