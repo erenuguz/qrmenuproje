@@ -6,11 +6,16 @@ import {
 
 const ContactSection = () => {
     return (
-        <section className="dm-contact-cta">
+        <section className="dm-contact-cta" id="iletisim">
             <div className="dm-final-cta-box">
                 <h2>Hâlâ kararsız mısınız?</h2>
                 <p>14 gün ücretsiz deneyin, beğenmezseniz ödemezsiniz.</p>
-                <a href="/register" className="dm-btn-primary dm-cta-large">
+                <a
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="dm-btn-primary dm-cta-large"
+                >
                     Ücretsiz Başla →
                 </a>
             </div>

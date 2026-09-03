@@ -64,7 +64,7 @@ export const PRICING_PLANS = [
             'Standart destek',
         ],
         btnText: 'Aylık Başla →',
-        btnLink: '/register?plan=monthly',
+        btnLink: '#iletisim',
     },
     {
         name: 'YILLIK — EN POPÜLER',
@@ -83,7 +83,7 @@ export const PRICING_PLANS = [
             'Detaylı istatistikler',
         ],
         btnText: 'En İyi Fırsatı Al →',
-        btnLink: '/register?plan=yearly',
+        btnLink: '#iletisim',
     },
 ];
 
