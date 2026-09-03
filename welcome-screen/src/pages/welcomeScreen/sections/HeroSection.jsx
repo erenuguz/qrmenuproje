@@ -7,11 +7,11 @@ const HeroSection = () => {
 
     useEffect(() => {
         if (revealed >= 3) return;
-        const t = setTimeout(
-            () => setRevealed((r) => r + 1),
+        const timerId = setTimeout(
+            () => setRevealed((current) => current + 1),
             500 + revealed * 350
         );
-        return () => clearTimeout(t);
+        return () => clearTimeout(timerId);
     }, [revealed]);
 
     return (
@@ -52,7 +52,7 @@ const HeroSection = () => {
             </div>
 
             <div className="dm-hero-actions">
-                <a className="dm-btn-primary dm-hero-btn" href="/register">
+                <a className="dm-btn-primary dm-hero-btn" href="#iletisim">
                     Ücretsiz 14 Gün Dene →
                 </a>
                 <a className="dm-btn-secondary dm-hero-btn" href="#demo">
