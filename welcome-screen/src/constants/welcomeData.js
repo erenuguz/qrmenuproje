@@ -50,12 +50,29 @@ export const HOW_IT_WORKS_STEPS = [
 
 export const PRICING_PLANS = [
     {
-        name: 'AYLIK',
-        price: '349',
+        name: 'ERKEN ERİŞİM',
+        price: '0',
+        currency: '₺',
+        period: '/ay',
+        oldPrice: '349',
+        badge: 'SINIRLI SAYIDA İŞLETMEYE ÖZEL 🎯',
+        popular: true,
+        features: [
+            'Tamamen ücretsiz, kredi kartı bilgisi gerekmez',
+            'Sınırsız ürün & kategori yönetimi',
+            'Sistemin tüm özelliklerine tam erişim',
+            'Birebir kurulum ve entegrasyon desteği',
+        ],
+        btnText: "WhatsApp'tan Başvur →",
+        btnLink: `https://wa.me/${CONTACT_PHONE.replace(/\D/g, '')}?text=${encodeURIComponent('Merhaba, QR menü erken erişim kampanyası için başvurmak istiyorum.')}`,
+    },
+    {
+        name: 'STANDART (YAKINDA)',
+        price: '-',
         currency: '₺',
         period: '/ay',
         oldPrice: null,
-        badge: null,
+        badge: 'ÇOK YAKINDA',
         popular: false,
         features: [
             'Sınırsız ürün & kategori',
@@ -63,27 +80,8 @@ export const PRICING_PLANS = [
             'QR kod yönetimi',
             'Müşteri destek hattı',
         ],
-        btnText: 'Aylık Planı Seç →',
-        btnLink: '#iletisim',
-    },
-    {
-        name: 'YILLIK',
-        price: '249',
-        currency: '₺',
-        period: '/ay',
-        oldPrice: '4188',
-        yearlyTotal: '2990',
-        badge: '2 AY BEDAVA 🎁',
-        popular: true,
-        features: [
-            'Sınırsız ürün & kategori',
-            'Anında fiyat & içerik güncelleme',
-            'QR kod yönetimi',
-            'Müşteri destek hattı',
-            '₺1.198 tasarruf — yılda bir öde, unut',
-        ],
-        btnText: 'Yıllık Planı Seç →',
-        btnLink: '#iletisim',
+        btnText: 'Şu An Satışa Kapalı',
+        btnLink: '#',
     },
 ];
 
