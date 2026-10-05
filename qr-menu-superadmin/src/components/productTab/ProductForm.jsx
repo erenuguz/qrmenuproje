@@ -198,6 +198,21 @@ export default function ProductForm({
                 </div>
             </div>
 
+            <div style={formFieldStyle}>
+                <Input
+                    label="Kalori (kcal)"
+                    labelStyle={{
+                        fontSize: 'var(--font-caption)',
+                        color: 'var(--text)',
+                    }}
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={activeForm.calories ?? ''}
+                    onChange={handleChange('calories')}
+                />
+            </div>
+
             {/* Açıklama */}
             <div style={{marginBottom: '30px'}}>
                 <TextArea

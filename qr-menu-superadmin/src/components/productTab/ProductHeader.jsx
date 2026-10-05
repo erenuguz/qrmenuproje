@@ -25,6 +25,7 @@ const ProductHeader = ({
             price: '',
             image: '',
             description: '',
+            calories: '',
         });
         setIsBulkDeleteMode(false);
     };
