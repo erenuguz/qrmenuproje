@@ -198,7 +198,7 @@ export default function ProductForm({
                 </div>
             </div>
 
-            <div style={formFieldStyle}>
+            <div style={{...formFieldStyle, marginBottom: '20px'}}>
                 <Input
                     label="Kalori (kcal)"
                     labelStyle={{

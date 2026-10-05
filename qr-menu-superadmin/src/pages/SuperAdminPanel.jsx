@@ -33,7 +33,7 @@ const SuperAdminPanel = () => {
                 backgroundColor: 'var(--background)',
             }}
         >
-            <Header showMenuButton={false} title="Super Admin Paneli" />
+            <Header showMenuButton={false} title="Super Admin" />
 
             <main
                 style={{

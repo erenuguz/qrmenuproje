@@ -39,7 +39,31 @@ export default function ProductCard({
     isLast,
 }) {
     const {isMobile} = useResponsive();
-    const priceLabel = <span style={textStyles.price}>₺{product.price}</span>;
+    const priceLabel = (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: isMobile ? 'flex-end' : 'flex-start',
+                gap: '2px',
+                flexShrink: 0,
+            }}
+        >
+            <span style={textStyles.price}>₺{product.price}</span>
+
+            {typeof product.calories === 'number' &&
+                Number.isFinite(product.calories) && (
+                    <span
+                        style={{
+                            fontSize: 'var(--font-small)',
+                            color: 'var(--textSecondary)',
+                        }}
+                    >
+                        {product.calories} kcal
+                    </span>
+                )}
+        </div>
+    );
 
     return (
         <div

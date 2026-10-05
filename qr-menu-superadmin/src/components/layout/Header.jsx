@@ -4,7 +4,6 @@ import {
     HamburgerButton,
     SignOutButton,
 } from '@/components/common/button/Buttons';
-import {CubeIcon} from '@/components/common/icon/Icons';
 
 const Header = ({
     isSidebarOpen = false,
@@ -57,20 +56,20 @@ const Header = ({
                     />
                 )}
 
-                <div
-                    style={{
-                        backgroundColor: 'var(--primary)',
-                        color: 'var(--textWhite)',
-                        padding: '8px',
-                        borderRadius: 'var(--radiusSmall)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: 'var(--shadow)',
-                    }}
-                >
-                    <CubeIcon size={20} />
-                </div>
+                {restaurantData?.logo && (
+                    <img
+                        src={restaurantData.logo}
+                        alt={`${restaurantData.name || 'Restoran'} logosu`}
+                        style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: 'var(--radiusCircle)',
+                            objectFit: 'cover',
+                            border: '1px solid var(--border)',
+                            flexShrink: 0,
+                        }}
+                    />
+                )}
 
                 <h2
                     style={{
