@@ -64,16 +64,38 @@ const MenuItemCard = ({item}) => {
                         {item.description}
                     </p>
                 )}
-                <span
+                <div
                     style={{
-                        color: 'var(--primary)',
-                        fontWeight: 'var(--font-bold)',
-                        fontSize: 'var(--font-body)',
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        justifyContent: 'space-between',
+                        gap: '8px',
+                        flexWrap: 'wrap',
                         marginTop: '2px',
                     }}
                 >
-                    {item.price} ₺
-                </span>
+                    <span
+                        style={{
+                            color: 'var(--primary)',
+                            fontWeight: 'var(--font-bold)',
+                            fontSize: 'var(--font-body)',
+                        }}
+                    >
+                        {item.price} ₺
+                    </span>
+
+                    {typeof item.calories === 'number' &&
+                        Number.isFinite(item.calories) && (
+                            <span
+                                style={{
+                                    color: 'var(--textSecondary)',
+                                    fontSize: 'var(--font-small)',
+                                }}
+                            >
+                                {item.calories} kcal
+                            </span>
+                        )}
+                </div>
             </div>
         </Card>
     );

@@ -60,6 +60,12 @@ export const useProductActions = (restaurantId) => {
                 toast.error('Geçerli bir fiyat girin!');
                 return;
             }
+            if (error.message === 'INVALID_CALORIES') {
+                toast.error(
+                    'Kalori için sıfır veya pozitif bir tam sayı girin!'
+                );
+                return;
+            }
 
             if (error.code === 'permission-denied') {
                 toast.error(
