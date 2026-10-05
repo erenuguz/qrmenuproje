@@ -12,23 +12,20 @@ const SideBar = ({
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // Eğer sidebar açık ise VE tıklanan yer sidebar'ın veya hamburger butonunun içinde DEĞİLSE kapat
             if (
                 isSidebarOpen &&
                 sidebarRef.current &&
                 !sidebarRef.current.contains(event.target) &&
-                !event.target.closest('.hamburger-btn') // Hamburger butonunu tıklama dışı bırakıyoruz
+                !event.target.closest('.hamburger-btn')
             ) {
                 setIsSidebarOpen(false);
             }
         };
 
-        // Dinleyiciyi ekle
         document.addEventListener('mousedown', handleClickOutside);
         document.addEventListener('touchstart', handleClickOutside);
 
         return () => {
-            // Temizlik
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('touchstart', handleClickOutside);
         };

@@ -1,10 +1,7 @@
 import {lazy, Suspense} from 'react';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-
 const ProductTab = lazy(() => import('@/components/productTab/ProductTab'));
-
 const CategoryTab = lazy(() => import('@/components/categoryTab/CategoryTab'));
-
 const SettingsTab = lazy(() => import('@/components/settingsTab/SettingsTab'));
 import Header from '@/components/layout/Header';
 import SideBar from '@/components/layout/SideBar';

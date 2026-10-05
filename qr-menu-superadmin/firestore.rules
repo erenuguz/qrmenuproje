@@ -88,9 +88,11 @@ service cloud.firestore {
           if restaurantWriteAllowed(restaurantId);
 
         // Kategori önce isDeleting=true yapılarak kilitlenmeli.
-        allow delete:
-          if restaurantWriteAllowed(restaurantId) &&
-             resource.data.get("isDeleting", false) == true;
+        allow delete: if superAdminMi() ||
+  (
+    ownerWriteAllowed(restaurantId) &&
+    resource.data.get("isDeleting", false) == true
+  );
       }
 
       match /menu/{productId} {

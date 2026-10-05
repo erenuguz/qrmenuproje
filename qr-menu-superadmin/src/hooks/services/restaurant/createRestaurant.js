@@ -102,6 +102,12 @@ export const createRestaurantService = async ({
             name: String(oldItem.name ?? '').trim(),
             description: String(oldItem.description ?? '').trim(),
             price: Number(oldItem.price) || 0,
+            calories:
+                typeof oldItem.calories === 'number' &&
+                Number.isInteger(oldItem.calories) &&
+                oldItem.calories >= 0
+                    ? oldItem.calories
+                    : null,
             image: oldItem.image ?? '',
             categoryId: newCategoryId,
             createdAt: serverTimestamp(),
